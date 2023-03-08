@@ -85,6 +85,17 @@ const ChatAppEdit = () => {
           });
         }, 300);
       }
+
+      if (context.isSendingMessage) {
+        const aiReplied = msgs.length > oldMsgLength && !msgs[msgs.length - 1].authoremail;
+        if (aiReplied) {
+          context.setIsSendingMessage(false);
+        }
+      }
+
+      if (msgs && msgs[msgs.length - 1].content.toLowerCase().includes("@ai")) {
+        context.setIsSendingMessage(true);
+      }
     });
   };
 
