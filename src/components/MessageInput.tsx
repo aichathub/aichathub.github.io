@@ -44,14 +44,18 @@ export const MessageInput: React.FC<{
   const inputRef = useRef<HTMLInputElement>(null);
   const context = useContext(AppContext);
   const { username, postid, sessionid } = useParams();
-  const [inputText, setInputText] = useState("");
+  const [inputText, setInputText] = useState("@AI ");
 
   const handleSend = async () => {
     if (!inputRef.current) return;
     const ref = inputRef.current!;
     if (ref.value.trim().length !== 0) {
       const content = ref.value;
-      setInputText("");
+      if (content.toLowerCase().indexOf("@ai") !== -1) {
+        setInputText("@AI ");
+      } else {
+        setInputText("");
+      }
       ref.focus();
       context.setIsSendingMessage(true);
       let optionalSocketId: string | undefined;
@@ -124,7 +128,7 @@ export const MessageInput: React.FC<{
       <div className={classes.wrapForm}>
         <TextField
           id="standard-text"
-          label="Your Message, use @AI to trigger AI response"
+          label="Your Message, use @AI/@ai to trigger AI response"
           className={classes.wrapText}
           //margin="normal"
           inputRef={inputRef}
