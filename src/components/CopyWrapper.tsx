@@ -6,13 +6,14 @@ const CopyWrapper: React.FC<{
   children: JSX.Element;
   isEditing?: boolean;
   setIsEditing?: (isEditing: boolean) => void;
+  hasRightToEdit?: boolean;
 }> = (props) => {
   return (
     <>
       <Grid style={{ position: "relative" }}>
         <CopyButton content={props.content} />
         {
-          !props.isEditing && props.setIsEditing && <EditButton setIsEditing={props.setIsEditing} />
+          props.hasRightToEdit && !props.isEditing && props.setIsEditing && <EditButton setIsEditing={props.setIsEditing} />
         }
         {props.children}
       </Grid>

@@ -10,7 +10,7 @@ const EditButton: React.FC<{
     props.setIsEditing(true);
   };
   return (
-    <Tooltip title="Edit">
+    <Tooltip title="Edit" arrow>
       <div
         style={{
           padding: ".1rem",

@@ -12,12 +12,14 @@ import { Box, Button, TextField, Tooltip } from "@material-ui/core";
 import CopyWrapper from "./CopyWrapper";
 import Typewriter from 'react-ts-typewriter';
 import { GUEST_EMAIL } from "../util/constants";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { light } from "@material-ui/core/styles/createPalette";
 import LikeButton from "./LikeButton";
 import DislikeButton from "./DislikeButton";
 import LikeDislikePanel from "./LikeDislikePanel";
 import EditButton from "./EditButton";
+import { editMessage } from "../util/db";
+import { AppContext } from "../store/AppContext";
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -40,10 +42,11 @@ const Message: React.FC<{
   let avatarName = "You";
   const avatarColor = props.message.sender === "ai" ? deepOrange[500] : deepPurple[500];
   if (props.message.sender === GUEST_EMAIL) {
-    avatarName = "You";
+    avatarName = props.message.sender.substring(0, 2);
   } else if (props.message.sender === "ai") {
     avatarName = "AI";
   }
+  const context = useContext(AppContext);
   const tooLong = props.message.content.length > 200;
   const messages = props.message.content.split("```");
   const trimmedMsg = props.message.content.substring(0, 200).split("```");
@@ -87,21 +90,25 @@ const Message: React.FC<{
   if (justNow(props.message.time)) {
     timeText = <Typography variant="overline" color="common.grey">Now</Typography>;
   }
+  const hasRightToEdit = context.auth.loggedEmail === props.message.sender;
   const editor = <>
-  <TextField multiline
-    value={editedMsg}
-    style={{ width: "100%" }}
-    onChange={(e) => {
-      setEditedMsg(e.target.value);
-    }}
-  />
-  <Button variant="text" onClick={() => {
-    props.message.content = editedMsg;
-    setIsEditing(false);
-  }}>Save</Button>
-  <Button variant="text" onClick={() => {
-    setIsEditing(false);
-  }}>Cancel</Button>
+    <TextField multiline
+      value={editedMsg}
+      style={{ width: "100%" }}
+      onChange={(e) => {
+        setEditedMsg(e.target.value);
+      }}
+    />
+    <Button variant="text" onClick={() => {
+      props.message.content = editedMsg;
+      editMessage(props.message.mid, context.auth.loggedEmail, context.auth.token, editedMsg).then(res => {
+        context.showSnack(res.message);
+      });
+      setIsEditing(false);
+    }}>Save</Button>
+    <Button variant="text" onClick={() => {
+      setIsEditing(false);
+    }}>Cancel</Button>
   </>;
   return (
     <StyledPaper
@@ -115,7 +122,7 @@ const Message: React.FC<{
     >
       <Grid container wrap="nowrap" spacing={2}>
         <Grid item xs={10}>
-          <CopyWrapper content={props.message.content} isEditing={isEditing} setIsEditing={setIsEditing}>
+          <CopyWrapper content={props.message.content} isEditing={isEditing} setIsEditing={setIsEditing} hasRightToEdit={hasRightToEdit}>
             <Grid container spacing={2}>
               <Grid item>
                 <Avatar sx={{ bgcolor: avatarColor }}>{avatarName}</Avatar>

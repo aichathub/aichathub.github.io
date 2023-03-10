@@ -389,3 +389,21 @@ export const isDisliked = async (messageid: number, useremail: string, token: st
   const responseJson = await response.json();
   return responseJson;
 }
+
+export const editMessage = async (messageid: number, useremail: string, token: string, message: string) => {
+  const response = await fetch(`http://localhost:3001/api/editmessage`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    mode: "cors",
+    body: JSON.stringify({
+      mid: messageid,
+      useremail: useremail,
+      token: token,
+      message: message
+    })
+  });
+  const responseJson = await response.json();
+  return responseJson;
+}
