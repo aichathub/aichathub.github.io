@@ -8,7 +8,7 @@ import { MessageModel } from "../models/MessageModel";
 import Timeago from "react-timeago";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CodeBlock from "./CodeBlock";
-import { Box, Button, Tooltip } from "@material-ui/core";
+import { Box, Button, TextField, Tooltip } from "@material-ui/core";
 import CopyWrapper from "./CopyWrapper";
 import Typewriter from 'react-ts-typewriter';
 import { GUEST_EMAIL } from "../util/constants";
@@ -17,6 +17,7 @@ import { light } from "@material-ui/core/styles/createPalette";
 import LikeButton from "./LikeButton";
 import DislikeButton from "./DislikeButton";
 import LikeDislikePanel from "./LikeDislikePanel";
+import EditButton from "./EditButton";
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -47,6 +48,8 @@ const Message: React.FC<{
   const messages = props.message.content.split("```");
   const trimmedMsg = props.message.content.substring(0, 200).split("```");
   const [showFullMsg, setShowFullMsg] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedMsg, setEditedMsg] = useState(props.message.content);
   const justNow = (date: Date) => {
     if (date === undefined) return false;
     const now = new Date();
@@ -84,6 +87,22 @@ const Message: React.FC<{
   if (justNow(props.message.time)) {
     timeText = <Typography variant="overline" color="common.grey">Now</Typography>;
   }
+  const editor = <>
+  <TextField multiline
+    value={editedMsg}
+    style={{ width: "100%" }}
+    onChange={(e) => {
+      setEditedMsg(e.target.value);
+    }}
+  />
+  <Button variant="text" onClick={() => {
+    props.message.content = editedMsg;
+    setIsEditing(false);
+  }}>Save</Button>
+  <Button variant="text" onClick={() => {
+    setIsEditing(false);
+  }}>Cancel</Button>
+  </>;
   return (
     <StyledPaper
       sx={{
@@ -96,7 +115,7 @@ const Message: React.FC<{
     >
       <Grid container wrap="nowrap" spacing={2}>
         <Grid item xs={10}>
-          <CopyWrapper content={props.message.content}>
+          <CopyWrapper content={props.message.content} isEditing={isEditing} setIsEditing={setIsEditing}>
             <Grid container spacing={2}>
               <Grid item>
                 <Avatar sx={{ bgcolor: avatarColor }}>{avatarName}</Avatar>
@@ -134,15 +153,16 @@ const Message: React.FC<{
               </Grid>
             </Grid>
           </CopyWrapper>
-          {!tooLong && messagesView}
+          {!isEditing && !tooLong && messagesView}
           {tooLong &&
             <>
-              {!showFullMsg && trimmedMessagesView}
-              {showFullMsg && messagesView}
-              {!showFullMsg && <Button variant="text" onClick={() => { setShowFullMsg(true) }}>Read More</Button>}
-              {showFullMsg && <Button variant="text" onClick={() => { setShowFullMsg(false) }}>Read Less</Button>}
+              {!isEditing && !showFullMsg && trimmedMessagesView}
+              {!isEditing && showFullMsg && messagesView}
+              {!isEditing && !showFullMsg && <Button variant="text" onClick={() => { setShowFullMsg(true) }}>Read More</Button>}
+              {!isEditing && showFullMsg && <Button variant="text" onClick={() => { setShowFullMsg(false) }}>Read Less</Button>}
             </>
           }
+          {isEditing && editor}
           {props.message.sender === "ai" && <LikeDislikePanel message={props.message}/>}
         </Grid>
       </Grid>
