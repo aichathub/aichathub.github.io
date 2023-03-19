@@ -20,6 +20,7 @@ import { Typography } from "@material-ui/core";
 import ErrorIcon from '@mui/icons-material/Error';
 import { PostModel } from "../models/PostModel";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
+import { backendServer } from "../models/constants";
 
 const drawerWidth = 240;
 
@@ -116,7 +117,7 @@ const ChatAppSession = () => {
 
   useEffect(() => {
     if (!socket || socket === null) {
-      setSocket(io("http://localhost:3001"));
+      setSocket(io(`${backendServer}`));
     } else {
       socket.off(`${username}/${postid}`);
       socket.on("connection:sid", (socketId) => {

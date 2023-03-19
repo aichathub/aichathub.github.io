@@ -14,6 +14,7 @@ import { AppContext } from "../store/AppContext";
 import EmptyCard from "./EmptyCard";
 import { LocalPostModel } from "../models/LocalPostModel";
 import { useParams } from "react-router-dom";
+import { backendServer } from "../models/constants";
 
 const drawerWidth = 240;
 
@@ -75,7 +76,7 @@ const ChatApp = () => {
 
   useEffect(() => {
     if (!socket || socket === null) {
-      setSocket(io("http://localhost:3001"));
+      setSocket(io(`${backendServer}`));
     } else {
       socket!.off("replies");
       socket!.on("replies", (content) => {

@@ -13,6 +13,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useParams } from "react-router-dom";
 import { useContext, useEffect } from "react";
 import { AppContext } from "../store/AppContext";
+import { backendServer } from "../models/constants";
 
 function Copyright(props: any) {
   return (
@@ -39,7 +40,7 @@ export default function SignInByToken() {
   const { token } = useParams();
   const [status, setStatus] = React.useState("Checking the token...");
   useEffect(() => {
-    const response = fetch(`http://localhost:3001/api/signin/t`, {
+    const response = fetch(`${backendServer}/api/signin/t`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

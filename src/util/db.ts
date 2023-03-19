@@ -1,8 +1,9 @@
 import { PostModel } from "../models/PostModel";
 import { TagModel } from "../models/TagModel";
+import { backendServer } from "../models/constants";
 
 export const verify = async (authObj: object) => {
-  const response = await fetch("http://localhost:3001/verify/", {
+  const response = await fetch(`${backendServer}/verify/`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -15,7 +16,7 @@ export const verify = async (authObj: object) => {
 };
 
 export const getPostByUsernameAndPid = async (username: string, pid: string, token = "") => {
-  const response = await fetch(`http://localhost:3001/api/post/${username}/${pid}`, {
+  const response = await fetch(`${backendServer}/api/post/${username}/${pid}`, {
     method: "GET",
     mode: "cors",
     headers: {
@@ -27,7 +28,7 @@ export const getPostByUsernameAndPid = async (username: string, pid: string, tok
 };
 
 export const getMessagesByUsernameAndPid = async (username: string, pid: string, token = "") => {
-  const response = await fetch(`http://localhost:3001/api/messages/${username}/${pid}`, {
+  const response = await fetch(`${backendServer}/api/messages/${username}/${pid}`, {
     method: "GET",
     mode: "cors",
     headers: {
@@ -39,7 +40,7 @@ export const getMessagesByUsernameAndPid = async (username: string, pid: string,
 };
 
 export const getMessagesByUsernameAndPidAndSessionid = async (username: string, pid: string, sessionid: string) => {
-  const response = await fetch(`http://localhost:3001/api/messages/${username}/${pid}/${sessionid}`, {
+  const response = await fetch(`${backendServer}/api/messages/${username}/${pid}/${sessionid}`, {
     method: "GET",
     mode: "cors"
   });
@@ -48,7 +49,7 @@ export const getMessagesByUsernameAndPidAndSessionid = async (username: string, 
 };
 
 export const insertSessionMessage = async (insertMsgObj: { username: string, pid: string, content: string, sessionid: string}) => {
-  const response = await fetch("http://localhost:3001/api/insert/sessionmessages", {
+  const response = await fetch(`${backendServer}/api/insert/sessionmessages`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -61,7 +62,7 @@ export const insertSessionMessage = async (insertMsgObj: { username: string, pid
 }
 
 export const insertMessage = async (insertMsgObj: { username: string, pid: string, content: string, token: string, triggerAI: boolean, authoremail: string, socketId?: string }) => {
-  const response = await fetch("http://localhost:3001/api/insert/messages", {
+  const response = await fetch(`${backendServer}/api/insert/messages`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -75,7 +76,7 @@ export const insertMessage = async (insertMsgObj: { username: string, pid: strin
 
 export const findPostsByAuthoremail = async (authoremail: string) => {
   console.log(authoremail, "authoremail");
-  const response = await fetch(`http://localhost:3001/api/retrieve/posts`, {
+  const response = await fetch(`${backendServer}/api/retrieve/posts`, {
     method: "POST",
     mode: "cors",
     headers: {
@@ -88,7 +89,7 @@ export const findPostsByAuthoremail = async (authoremail: string) => {
 }
 
 export const deletePostByUsernameAndPid = async (username: string, pid: string, token: string) => {
-  const response = await fetch(`http://localhost:3001/api/delete/post/`, {
+  const response = await fetch(`${backendServer}/api/delete/post/`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json"
@@ -101,7 +102,7 @@ export const deletePostByUsernameAndPid = async (username: string, pid: string, 
 }
 
 export const insertPostByUsernameAndTitle = async (username: string, title: string, token: string, tags: TagModel[], isprivate: boolean) => {
-  const response = await fetch(`http://localhost:3001/api/insert/post/`, {
+  const response = await fetch(`${backendServer}/api/insert/post/`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -115,7 +116,7 @@ export const insertPostByUsernameAndTitle = async (username: string, title: stri
 
 export const updatePost = async (post: PostModel, token: string) => {
   console.log("[client]: going to update post: ", post);
-  const response = await fetch(`http://localhost:3001/api/update/post/`, {
+  const response = await fetch(`${backendServer}/api/update/post/`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -128,7 +129,7 @@ export const updatePost = async (post: PostModel, token: string) => {
 }
 
 export const searchPostsByKeyword = async (keyword: string) => {
-  const response = await fetch(`http://localhost:3001/api/search/${keyword}`, {
+  const response = await fetch(`${backendServer}/api/search/${keyword}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json"
@@ -140,7 +141,7 @@ export const searchPostsByKeyword = async (keyword: string) => {
 }
 
 export const searchPostsByTag = async (tag: string) => {
-  const response = await fetch(`http://localhost:3001/api/search/tag/${tag}`, {
+  const response = await fetch(`${backendServer}/api/search/tag/${tag}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json"
@@ -152,7 +153,7 @@ export const searchPostsByTag = async (tag: string) => {
 }
 
 export const getRecommendations = async (username: string) => {
-  const response = await fetch(`http://localhost:3001/api/recommend/${username}`, {
+  const response = await fetch(`${backendServer}/api/recommend/${username}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json"
@@ -164,7 +165,7 @@ export const getRecommendations = async (username: string) => {
 }
 
 export const getUsernameByEmail = async (email: string) => {
-  const response = await fetch(`http://localhost:3001/api/username/${email}`, {
+  const response = await fetch(`${backendServer}/api/username/${email}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json"
@@ -177,7 +178,7 @@ export const getUsernameByEmail = async (email: string) => {
 
 export const getStarCount = async (username: string, pid: string) => {
   if (username === "" || pid === "") return Promise.resolve({result: 0});
-  const response = await fetch(`http://localhost:3001/api/starcount/${username}/${pid}`, {
+  const response = await fetch(`${backendServer}/api/starcount/${username}/${pid}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json"
@@ -189,7 +190,7 @@ export const getStarCount = async (username: string, pid: string) => {
 }
 
 export const getStarredPosts = async (username: string) => {
-  const response = await fetch(`http://localhost:3001/api/retrieve/starredpost`, {
+  const response = await fetch(`${backendServer}/api/retrieve/starredpost`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -205,7 +206,7 @@ export const getStarredPosts = async (username: string) => {
 }
 
 export const starPost = async (authoremail: string, pid: string, useremail: string, token: string) => {
-  const response = await fetch(`http://localhost:3001/api/star`, {
+  const response = await fetch(`${backendServer}/api/star`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -223,7 +224,7 @@ export const starPost = async (authoremail: string, pid: string, useremail: stri
 }
 
 export const unstarPost = async (authoremail: string, pid: string, useremail: string, token: string) => {
-  const response = await fetch(`http://localhost:3001/api/unstar`, {
+  const response = await fetch(`${backendServer}/api/unstar`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -241,7 +242,7 @@ export const unstarPost = async (authoremail: string, pid: string, useremail: st
 }
 
 export const getGeneratedSessionid = async (username: string, pid: string) => {
-  const response = await fetch(`http://localhost:3001/api/${username}/${pid}/createsession`, {
+  const response = await fetch(`${backendServer}/api/${username}/${pid}/createsession`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json"
@@ -253,7 +254,7 @@ export const getGeneratedSessionid = async (username: string, pid: string) => {
 }
 
 export const getTags = async () => {
-  const response = await fetch(`http://localhost:3001/api/tags`, {
+  const response = await fetch(`${backendServer}/api/tags`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json"
@@ -265,7 +266,7 @@ export const getTags = async () => {
 }
 
 export const likeMessage = async (messageid: number, useremail: string, token: string) => {
-  const response = await fetch(`http://localhost:3001/api/likemessage`, {
+  const response = await fetch(`${backendServer}/api/likemessage`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -282,7 +283,7 @@ export const likeMessage = async (messageid: number, useremail: string, token: s
 }
 
 export const unlikeMessage = async (messageid: number, useremail: string, token: string) => {
-  const response = await fetch(`http://localhost:3001/api/unlikemessage`, {
+  const response = await fetch(`${backendServer}/api/unlikemessage`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -299,7 +300,7 @@ export const unlikeMessage = async (messageid: number, useremail: string, token:
 }
 
 export const dislikeMessage = async (messageid: number, useremail: string, token: string) => {
-  const response = await fetch(`http://localhost:3001/api/dislikemessage`, {
+  const response = await fetch(`${backendServer}/api/dislikemessage`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -316,7 +317,7 @@ export const dislikeMessage = async (messageid: number, useremail: string, token
 }
 
 export const undislikeMessage = async (messageid: number, useremail: string, token: string) => {
-  const response = await fetch(`http://localhost:3001/api/undislikemessage`, {
+  const response = await fetch(`${backendServer}/api/undislikemessage`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -333,7 +334,7 @@ export const undislikeMessage = async (messageid: number, useremail: string, tok
 }
 
 export const getLikeCount = async (messageid: number) => {
-  const response = await fetch(`http://localhost:3001/api/likecount/${messageid}`, {
+  const response = await fetch(`${backendServer}/api/likecount/${messageid}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json"
@@ -345,7 +346,7 @@ export const getLikeCount = async (messageid: number) => {
 }
 
 export const getDislikeCount = async (messageid: number) => {
-  const response = await fetch(`http://localhost:3001/api/dislikecount/${messageid}`, {
+  const response = await fetch(`${backendServer}/api/dislikecount/${messageid}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json"
@@ -357,7 +358,7 @@ export const getDislikeCount = async (messageid: number) => {
 }
 
 export const isLiked = async (messageid: number, useremail: string, token: string) => {
-  const response = await fetch(`http://localhost:3001/api/isliked`, {
+  const response = await fetch(`${backendServer}/api/isliked`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -374,7 +375,7 @@ export const isLiked = async (messageid: number, useremail: string, token: strin
 }
 
 export const isDisliked = async (messageid: number, useremail: string, token: string) => {
-  const response = await fetch(`http://localhost:3001/api/isdisliked`, {
+  const response = await fetch(`${backendServer}/api/isdisliked`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -391,7 +392,7 @@ export const isDisliked = async (messageid: number, useremail: string, token: st
 }
 
 export const editMessage = async (messageid: number, useremail: string, token: string, message: string) => {
-  const response = await fetch(`http://localhost:3001/api/editmessage`, {
+  const response = await fetch(`${backendServer}/api/editmessage`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"

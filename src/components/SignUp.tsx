@@ -14,6 +14,7 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useContext } from "react";
 import { AppContext } from "../store/AppContext";
+import { backendServer } from "../models/constants";
 
 function Copyright(props: any) {
   return (
@@ -44,7 +45,7 @@ export default function SignUp() {
       email: data.get("email"),
       username: data.get("username")
     };
-    const response = await fetch("http://localhost:3001/signup/", {
+    const response = await fetch(`${backendServer}/signup/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

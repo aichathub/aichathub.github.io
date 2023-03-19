@@ -22,6 +22,7 @@ import { PostModel } from "../models/PostModel";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import LockIcon from '@mui/icons-material/Lock';
 import StarButton from "./StarButton";
+import { backendServer } from "../models/constants";
 
 const drawerWidth = 240;
 
@@ -130,7 +131,7 @@ const ChatAppEdit = () => {
 
   useEffect(() => {
     if (!socket || socket === null) {
-      setSocket(io("http://localhost:3001"));
+      setSocket(io(`http://localhost:3001`));
     } else {
       socket.off(`${username}/${postid}`);
       socket.on("connection:sid", (socketId) => {
