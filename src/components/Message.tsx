@@ -47,7 +47,7 @@ const Message: React.FC<{
     avatarName = "AI";
   }
   const context = useContext(AppContext);
-  const tooLong = props.message.content.length > 200;
+  const tooLong = props.message.content.length > 2000;
   const messages = props.message.content.split("```");
   const trimmedMsg = props.message.content.substring(0, 200).split("```");
   const [showFullMsg, setShowFullMsg] = useState(false);
