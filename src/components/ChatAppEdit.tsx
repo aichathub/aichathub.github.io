@@ -149,7 +149,7 @@ const ChatAppEdit = () => {
     if (context.isSendingMessage) {
       const interval = setInterval(() => {
         reloadMessage();
-      }, 3000);
+      }, 500);
       setReloadInterval(interval);
     } else {
       if (reloadInterval) clearInterval(reloadInterval);
