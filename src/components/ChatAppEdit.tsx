@@ -142,6 +142,10 @@ const ChatAppEdit = () => {
       });
     }
   }, [socket, context, username, postid]);
+ 
+  setInterval(() => {
+    reloadMessage();
+  }, 3000);
 
   useEffect(() => {
     console.log(username, postid);
