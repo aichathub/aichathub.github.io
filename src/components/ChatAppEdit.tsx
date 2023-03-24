@@ -54,6 +54,7 @@ const ChatAppEdit = () => {
   const { username, postid } = useParams();
   const [messages, setMessages] = useState<MessageModel[]>([]);
   const [curPost, setCurPost] = useState<PostModel | undefined>(undefined);
+  const [reloadInterval, setReloadInterval] = useState<NodeJS.Timeout | undefined>(undefined);
 
   const reloadMessage = () => {
     console.log(username, postid);
@@ -78,7 +79,8 @@ const ChatAppEdit = () => {
       }
       const oldMsgLength = messages.length === 0 ? Infinity : messages.length;
       setMessages(msgmodels);
-      if (msgs.length > oldMsgLength) {
+      // if there is new message and the scroll is at the bottom, scroll to the bottom
+      if (msgs.length > oldMsgLength && window.scrollY + window.innerHeight >= document.body.offsetHeight) {
         setTimeout(() => {
           window.scroll({
             top: document.body.offsetHeight,
@@ -142,10 +144,18 @@ const ChatAppEdit = () => {
       });
     }
   }, [socket, context, username, postid]);
- 
-  setInterval(() => {
-    reloadMessage();
-  }, 3000);
+
+  useEffect(() => {
+    if (context.isSendingMessage) {
+      const interval = setInterval(() => {
+        reloadMessage();
+      }, 3000);
+      setReloadInterval(interval);
+    } else {
+      if (reloadInterval) clearInterval(reloadInterval);
+      setReloadInterval(undefined);
+    }
+  }, [context.isSendingMessage]);
 
   useEffect(() => {
     console.log(username, postid);
