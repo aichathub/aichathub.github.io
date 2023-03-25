@@ -161,21 +161,22 @@ const Message: React.FC<{
               </Grid>
             </Grid>
           </CopyWrapper>
-          <ReactMarkdown
-            children={props.message.content}
-            components={{
-              code({ node, inline, className, children, ...props }) {
-                const match = /language-(\w+)/.exec(className || '')
-                return !inline && match ? (
-                  <CodeBlock content={String(children).replace(/\n$/, '')} />
-                ) : (
-                  <code className={className} {...props}>
-                    {children}
-                  </code>
-                )
-              }
-            }}
-          />
+          {!isEditing &&
+            <ReactMarkdown
+              children={props.message.content}
+              components={{
+                code({ node, inline, className, children, ...props }) {
+                  return !inline ? (
+                    <CodeBlock content={String(children).replace(/\n$/, '')} />
+                  ) : (
+                    <code className={className} {...props}>
+                      {children}
+                    </code>
+                  )
+                }
+              }}
+            />
+          }
           {/* {!isEditing && !tooLong && messagesView}
           {tooLong &&
             <>
