@@ -20,6 +20,7 @@ import LikeDislikePanel from "./LikeDislikePanel";
 import EditButton from "./EditButton";
 import { editMessage } from "../util/db";
 import { AppContext } from "../store/AppContext";
+import ReactMarkdown from "react-markdown";
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -160,7 +161,22 @@ const Message: React.FC<{
               </Grid>
             </Grid>
           </CopyWrapper>
-          {!isEditing && !tooLong && messagesView}
+          <ReactMarkdown
+            children={props.message.content}
+            components={{
+              code({ node, inline, className, children, ...props }) {
+                const match = /language-(\w+)/.exec(className || '')
+                return !inline && match ? (
+                  <CodeBlock content={String(children).replace(/\n$/, '')} />
+                ) : (
+                  <code className={className} {...props}>
+                    {children}
+                  </code>
+                )
+              }
+            }}
+          />
+          {/* {!isEditing && !tooLong && messagesView}
           {tooLong &&
             <>
               {!isEditing && !showFullMsg && trimmedMessagesView}
@@ -168,9 +184,9 @@ const Message: React.FC<{
               {!isEditing && !showFullMsg && <Button variant="text" onClick={() => { setShowFullMsg(true) }}>Read More</Button>}
               {!isEditing && showFullMsg && <Button variant="text" onClick={() => { setShowFullMsg(false) }}>Read Less</Button>}
             </>
-          }
+          } */}
           {isEditing && editor}
-          {props.message.sender === "ai" && <LikeDislikePanel message={props.message}/>}
+          {props.message.sender === "ai" && <LikeDislikePanel message={props.message} />}
         </Grid>
       </Grid>
     </StyledPaper>
