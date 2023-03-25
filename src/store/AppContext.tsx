@@ -218,7 +218,6 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
     const { key } = event;
     const isCtrlKey = event.ctrlKey || event.metaKey;
     const isB = key.toLowerCase() === "b";
-    console.log("keyDownHandler", key, isCtrlKey, isB);
     if (isCtrlKey && isB) {
       if (topLeftBarOpen) {
         setTopLeftBarOpen(false);

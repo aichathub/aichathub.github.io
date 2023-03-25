@@ -128,7 +128,7 @@ export const MessageInput: React.FC<{
       <div className={classes.wrapForm}>
         <TextField
           id="standard-text"
-          label="Your Message, use @AI/@ai to trigger AI response"
+          label="Use @AI/@ai to trigger AI response"
           className={classes.wrapText}
           //margin="normal"
           inputRef={inputRef}
