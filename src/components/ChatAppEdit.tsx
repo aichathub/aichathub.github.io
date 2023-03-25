@@ -23,6 +23,7 @@ import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import LockIcon from '@mui/icons-material/Lock';
 import StarButton from "./StarButton";
 import { backendServer } from "../models/constants";
+import QRButton from "./QRButton";
 
 const drawerWidth = 240;
 
@@ -238,6 +239,11 @@ const ChatAppEdit = () => {
               {curPost &&
                 <Box style={{ marginTop: "-5px", marginLeft: "25px" }}>
                   <StarButton post={curPost!} />
+                </Box>
+              }
+              {curPost &&
+                <Box style={{ marginTop: "-4px", marginLeft: "25px" }}>
+                  <QRButton post={curPost!} />
                 </Box>
               }
             </Box>
