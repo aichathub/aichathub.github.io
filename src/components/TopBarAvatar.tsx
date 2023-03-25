@@ -8,6 +8,7 @@ import Button from '@mui/material/Button';
 import { useNavigate } from "react-router-dom";
 import LoginIcon from "@mui/icons-material/Login";
 import Typography from "@mui/material/Typography";
+import { generateColor } from "../util/avatarColor";
 
 const TopBarAvatar = () => {
   const context = useContext(AppContext);
@@ -34,11 +35,17 @@ const TopBarAvatar = () => {
       <Button color="inherit" onClick={() => navigate("/signup")}>Signup</Button>
     </>;
   }
+  // const avatarColor = deepPurple[500];
+  const avatarColor = generateColor(context.auth.loggedEmail);
   return <Box sx={{ flexGrow: 0 }}>
     <Tooltip title={context.auth.loggedEmail}>
       <IconButton onClick={handleMenu} >
-        <Avatar alt={context.auth.loggedEmail} src="">
-          {context.auth.loggedEmail.charAt(0).toUpperCase() + context.auth.loggedEmail.charAt(1).toLowerCase()}
+        <Avatar 
+          alt={context.auth.loggedEmail} 
+          src=""
+          style={{ background: avatarColor }}
+        >
+          {context.auth.loggedEmail.substring(0, 2).toUpperCase()}
         </Avatar>
       </IconButton>
     </Tooltip>

@@ -21,6 +21,7 @@ import EditButton from "./EditButton";
 import { editMessage } from "../util/db";
 import { AppContext } from "../store/AppContext";
 import ReactMarkdown from "react-markdown";
+import { generateColor } from "../util/avatarColor";
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -41,11 +42,11 @@ const Message: React.FC<{
   typeEffect?: boolean;
 }> = (props) => {
   let avatarName = "You";
-  const avatarColor = props.message.sender === "ai" ? deepOrange[500] : deepPurple[500];
-  if (props.message.sender === GUEST_EMAIL) {
-    avatarName = props.message.sender.substring(0, 2);
-  } else if (props.message.sender === "ai") {
+  const avatarColor = props.message.sender === "ai" ? deepOrange[500] : generateColor(props.message.sender);
+  if (props.message.sender === "ai") {
     avatarName = "AI";
+  } else {
+    avatarName = props.message.sender.substring(0, 2).toUpperCase();
   }
   const context = useContext(AppContext);
   const tooLong = props.message.content.length > 2000;
