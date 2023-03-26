@@ -20,7 +20,7 @@ const LikeButton: React.FC<{
   }} onClick={props.handleLikeBtnClick}>
     {props.liked && <ThumbUpIcon />}
     {!props.liked && <ThumbUpOffAltIcon />}
-    <span style={{ color: props.liked ? '#000' : '#777', fontSize: "17px" }}>{props.likeCount === -1 ? '-' : props.likeCount}</span>
+    <span style={{ color: props.liked ? (context.darkMode ? '#fff' : '#000') : '#777', fontSize: "17px" }}>{props.likeCount === -1 ? '-' : props.likeCount}</span>
   </Box>;
 }
 export default LikeButton;

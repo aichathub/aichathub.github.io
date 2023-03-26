@@ -52,7 +52,7 @@ const StarButton: React.FC<{
     }} onClick={handleStarClick}>
       {starred && <StarIcon />}
       {!starred && <StarBorderIcon style={{ fill: "grey" }} />}
-      <span style={{ color: starred ? '#000' : '#777', fontSize: "17px" }}>{starCount}</span>
+      <span style={{ color: starred ? (context.darkMode ? '#fff' : '#000') : '#777', fontSize: "17px" }}>{starCount}</span>
     </Box>
   </Tooltip>;
 }

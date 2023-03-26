@@ -226,7 +226,7 @@ const TopLeftBar: React.FC<{
           {/* <Typography variant="h6" noWrap component="div">
             {post && post.title}
           </Typography> */}
-          <Search sx={{ flexGrow: 1 }}>
+          <Search sx={{ flexGrow: 0 }}>
             <SearchIconWrapper>
               <SearchIcon />
             </SearchIconWrapper>
@@ -243,6 +243,7 @@ const TopLeftBar: React.FC<{
               }}
             />
           </Search>
+          <div style={{ flexGrow: 1 }} />
           <TopBarAvatar />
         </Toolbar>
       </AppBar>

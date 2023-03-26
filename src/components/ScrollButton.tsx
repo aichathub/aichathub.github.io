@@ -64,11 +64,11 @@ const ScrollButton = () => {
       onMouseEnter={handleOnMouseEnter}
       onMouseLeave={handleOnMouseLeave}
     >
-      <Tooltip title="Scroll to top" placement="top" arrow>
+      <Tooltip title="Scroll to top" placement="left-start" arrow>
         <Fab
           style={{
-            // background: "black",
-            // color: "white",
+            background: context.darkMode ? "#181818" : "white",
+            color: context.darkMode ? "white" : "#181818",
             display: "block",
             borderRadius: "0px",
           }}
@@ -78,11 +78,11 @@ const ScrollButton = () => {
           <KeyboardArrowUpIcon />
         </Fab>
       </Tooltip>
-      <Tooltip title="Scroll to bottom" placement="bottom" arrow>
+      <Tooltip title="Scroll to bottom" placement="left-start" arrow>
         <Fab
           style={{
-            // background: "black",
-            // color: "white",
+            background: context.darkMode ? "#181818" : "white",
+            color: context.darkMode ? "white" : "#181818",
             borderRadius: "0px"
           }}
           size="small"

@@ -19,7 +19,7 @@ const DislikeButton: React.FC<{
   }} onClick={props.handleDislikeBtnClick}>
     {props.disliked && <ThumbDownIcon />}
     {!props.disliked && <ThumbDownOffAltIcon />}
-    <span style={{ color: props.disliked ? '#000' : '#777', fontSize: "17px" }}>{props.dislikeCount === -1 ? '-' : props.dislikeCount}</span>
+    <span style={{ color: props.disliked ? (context.darkMode ? '#fff' : '#000') : '#777', fontSize: "17px" }}>{props.dislikeCount === -1 ? '-' : props.dislikeCount}</span>
   </Box>;
 }
 export default DislikeButton;
