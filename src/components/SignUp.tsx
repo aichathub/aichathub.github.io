@@ -15,6 +15,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useContext } from "react";
 import { AppContext } from "../store/AppContext";
 import { backendServer } from "../util/constants";
+import { uniqueNamesGenerator, colors, adjectives, animals, NumberDictionary } from 'unique-names-generator';
 
 function Copyright(props: any) {
   return (
@@ -67,7 +68,12 @@ export default function SignUp() {
       alert("UNKNOWN ERROR, PLEASE TRY AGAIN LATER");
     }
   };
-
+  const numberDictionary = NumberDictionary.generate({ min: 100, max: 999 });
+  const randomUsername = uniqueNamesGenerator({
+    dictionaries: [adjectives, Math.random() > .5 ? animals : colors, numberDictionary],
+    separator: '-',
+    style: 'lowerCase'
+  });
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
@@ -113,6 +119,7 @@ export default function SignUp() {
                   fullWidth
                   id="username"
                   label="Username"
+                  defaultValue={randomUsername}
                 />
               </Grid>
               {/* <Grid item xs={12}>
