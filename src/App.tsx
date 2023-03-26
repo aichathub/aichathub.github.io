@@ -3,7 +3,7 @@ import ChatApp from "./components/ChatApp";
 import ChatAppEdit from "./components/ChatAppEdit";
 import SignUp from "./components/SignUp";
 import SignIn from "./components/SignIn";
-import { AppContextProvider } from "./store/AppContext";
+import { AppContext, AppContextProvider } from "./store/AppContext";
 import { BrowserRouter } from "react-router-dom";
 import { Navigate } from "react-router-dom";
 import SearchPage from "./components/SearchPage";
@@ -13,6 +13,8 @@ import ExplorePage from "./components/ExplorePage";
 import SearchTagPage from "./components/SearchTagPage";
 import ForgetPassword from "./components/ForgetPassword";
 import SignInByToken from "./components/SignInByToken";
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { useContext } from "react";
 
 const App = () => {
   return (

@@ -1,1 +1,0 @@
-export const backendServer = "https://aichathub.azurewebsites.net";

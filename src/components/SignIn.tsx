@@ -10,7 +10,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { backendServer } from "../models/constants";
+import { backendServer } from "../util/constants";
 
 function Copyright(props: any) {
   return (

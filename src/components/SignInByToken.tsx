@@ -13,7 +13,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useParams } from "react-router-dom";
 import { useContext, useEffect } from "react";
 import { AppContext } from "../store/AppContext";
-import { backendServer } from "../models/constants";
+import { backendServer } from "../util/constants";
 
 function Copyright(props: any) {
   return (

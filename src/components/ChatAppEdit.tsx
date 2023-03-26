@@ -22,7 +22,7 @@ import { PostModel } from "../models/PostModel";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import LockIcon from '@mui/icons-material/Lock';
 import StarButton from "./StarButton";
-import { backendServer } from "../models/constants";
+import { backendServer } from "../util/constants";
 import QRButton from "./QRButton";
 
 const drawerWidth = 240;

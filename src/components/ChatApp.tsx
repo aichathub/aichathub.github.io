@@ -14,7 +14,7 @@ import { AppContext } from "../store/AppContext";
 import EmptyCard from "./EmptyCard";
 import { LocalPostModel } from "../models/LocalPostModel";
 import { useParams } from "react-router-dom";
-import { backendServer } from "../models/constants";
+import { backendServer } from "../util/constants";
 
 const drawerWidth = 240;
 

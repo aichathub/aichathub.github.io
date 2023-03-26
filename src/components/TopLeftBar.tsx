@@ -30,6 +30,8 @@ import { useParams } from "react-router-dom";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
 import HomeIcon from '@mui/icons-material/Home';
+import DarkModeIcon from '@mui/icons-material/DarkMode';
+import LightModeIcon from '@mui/icons-material/LightMode';
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
@@ -92,8 +94,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     [theme.breakpoints.up("sm")]: {
       width: window.innerWidth * 0.5,
       // "&:focus": {
-        // width: window.innerWidth,
-        // width: "70ch"
+      // width: window.innerWidth,
+      // width: "70ch"
       // }
     }
   }
@@ -176,6 +178,10 @@ const TopLeftBar: React.FC<{
     }
   }, [context.auth.loggedEmail, context.lastPostsRefresh]);
 
+  const handleThemeBtnClick = () => {
+    context.setDarkMode(!context.darkMode);
+    localStorage.setItem("darkMode", (!context.darkMode).toString());
+  };
   const newPostForm = <NewPostDialog handleClose={handleNewPostFormClose} />
   let menuBtnHint = "Sidebar";
   const platform = (navigator?.platform || 'unknown').toLowerCase();
@@ -192,7 +198,7 @@ const TopLeftBar: React.FC<{
       <AppBar
         position="fixed"
         open={props.open}
-        sx={{ bgcolor: "white", color: "black" }}
+        sx={!context.darkMode ? { bgcolor: "white", color: "black" } : {}}
       >
         <Toolbar variant="dense">
           <Tooltip title={menuBtnHint} arrow>
@@ -293,6 +299,20 @@ const TopLeftBar: React.FC<{
               <ListItemText
                 primary={"New Post"}
                 onClick={handleNewPostBtnClick}
+              />
+            </ListItemButton>
+
+          </ListItem>
+          <ListItem disablePadding>
+            <ListItemButton>
+              <ListItemIcon>
+                {
+                  context.darkMode ? <LightModeIcon /> : <DarkModeIcon />
+                }
+              </ListItemIcon>
+              <ListItemText
+                primary={context.darkMode ? "Light Theme" : "Dark Theme (Beta)"}
+                onClick={handleThemeBtnClick}
               />
             </ListItemButton>
           </ListItem>

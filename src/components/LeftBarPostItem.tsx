@@ -56,16 +56,12 @@ const LeftBarPostItem: React.FC<{ post: PostModel }> = (props) => {
       {showEditPostDialog && <EditPostDialog handleClose={handleCloseEditPostDialog} post={post} />}
       <ListItem key={post.pid} disablePadding>
         <ListItemButton onClick={handleClickPostItem}>
-          <ListItemIcon>
-            {post.isprivate ? <LockIcon /> : <ChatBubbleOutlineIcon />}
-          </ListItemIcon>
-          <ListItemText primary={post.title} />
+          {post.isprivate ? <LockIcon /> : <ChatBubbleOutlineIcon />}
+          <ListItemText primary={post.title} style={{marginLeft: "10px"}}/>
         </ListItemButton>
         <Grid xs={3}>
           <ListItemButton onClick={handleClickPostItemMore}>
-            <ListItemIcon >
-              <MoreHorizIcon />
-            </ListItemIcon>
+            <MoreHorizIcon />
           </ListItemButton>
         </Grid>
         <Menu

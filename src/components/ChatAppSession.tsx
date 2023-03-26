@@ -20,7 +20,7 @@ import { Typography } from "@material-ui/core";
 import ErrorIcon from '@mui/icons-material/Error';
 import { PostModel } from "../models/PostModel";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
-import { backendServer } from "../models/constants";
+import { backendServer } from "../util/constants";
 
 const drawerWidth = 240;
 

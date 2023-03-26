@@ -35,6 +35,7 @@ const SearchItem: React.FC<{
 }> = (props) => {
   const navigate = useNavigate();
   const [author, setAuthor] = useState("");
+  const context = useContext(AppContext);
   useEffect(() => {
     getUsernameByEmail(props.post.authoremail).then((res) => {
       if (res.message === "SUCCESS") {
@@ -95,6 +96,7 @@ const SearchItem: React.FC<{
                           onClick={() => { navigate(`/tag?q=${tag.tag}`) }}
                           style={{
                             marginRight: "5px",
+                            color: context.darkMode ? "white" : "black",
                           }}
                         />
                       )

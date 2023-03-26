@@ -10,6 +10,7 @@ import useDidMountEffect from "../util/useDidMountEffect";
 import Alert from "../components/Alert";
 import { PostModel } from "../models/PostModel";
 import { TagModel } from "../models/TagModel";
+import { createTheme, ThemeProvider } from "@mui/material";
 
 type AuthObj = {
   loggedEmail: string;
@@ -29,7 +30,9 @@ type AppContextObj = {
   starredPosts: PostModel[];
   tags: TagModel[];
   topLeftBarOpen: boolean;
+  darkMode: boolean;
 
+  setDarkMode: (darkMode: boolean) => void;
   setTopLeftBarOpen: (open: boolean) => void;
   isPostStarred: (authoremail: string, pid: string) => boolean;
   setStarredPosts: (starredPosts: PostModel[]) => void;
@@ -68,7 +71,9 @@ export const AppContext = createContext<AppContextObj>({
   starredPosts: [],
   tags: [],
   topLeftBarOpen: false,
+  darkMode: false,
 
+  setDarkMode: () => { },
   setTopLeftBarOpen: () => { },
   isPostStarred: () => false,
   setStarredPosts: () => { },
@@ -106,6 +111,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
   const [doesPostExist, setDoesPostExist] = useState(false);
   const [tags, setTags] = useState<TagModel[]>([]);
   const [topLeftBarOpen, setTopLeftBarOpen] = useState(false);
+  const [darkMode, setDarkMode] = useState(localStorage.getItem("darkMode") === "true");
 
   const isPostStarred = (authoremail: string, postId: string) => {
     return starredPosts.filter(x => x.authoremail === authoremail && x.pid === postId).length > 0;
@@ -194,7 +200,9 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
     starredPosts: starredPosts,
     tags: tags,
     topLeftBarOpen: topLeftBarOpen,
+    darkMode: darkMode,
 
+    setDarkMode: setDarkMode,
     setTopLeftBarOpen: setTopLeftBarOpen,
     isPostStarred: isPostStarred,
     setStarredPosts: setStarredPosts,
@@ -283,19 +291,47 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
       }
     });
   }, []);
+
+  useEffect(() => {
+    function checkDarkMode() {
+      const darkMode = localStorage.getItem("darkMode");
+
+      if (darkMode === "true") {
+        setDarkMode(true);
+      } else {
+        setDarkMode(false);
+      }
+    }
+
+    window.addEventListener('storage', checkDarkMode)
+
+    return () => {
+      window.removeEventListener('storage', checkDarkMode)
+    }
+  }, [])
+
   const getSeverity = (message: string) => {
     if (message.toLowerCase().indexOf("error") !== -1) return "error";
     if (message.toLowerCase().indexOf("success") !== -1) return "success";
     return "info";
   }
+
+  const theme = createTheme({
+    palette: {
+      mode: darkMode ? 'dark' : 'light',
+    },
+  });
+
   return (
     <AppContext.Provider value={contextValue}>
+      <ThemeProvider theme={theme}>
       <Snackbar open={isSnackShown} autoHideDuration={4000} onClose={snackOnClose}>
         <Alert onClose={snackOnClose} severity={getSeverity(snackMessage)} sx={{ width: '100%' }}>
           {snackMessage}
         </Alert>
       </Snackbar>
       {props.children}
+      </ThemeProvider>
     </AppContext.Provider>
   );
 };

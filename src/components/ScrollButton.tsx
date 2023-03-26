@@ -2,13 +2,15 @@ import Grid from "@material-ui/core/Grid";
 import { Fab } from "@material-ui/core";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useContext } from "react";
 import { Tooltip } from "@material-ui/core";
+import { AppContext } from "../store/AppContext";
 
 const ScrollButton = () => {
   const [showScrollButton, setShowScrollButton] = useState(false);
   const [userHovering, setUserHovering] = useState(false);
   const timeOutHideBtnFunc = useRef<NodeJS.Timeout>();
+  const context = useContext(AppContext);
   const extendTimer = () => {
     if (timeOutHideBtnFunc.current) {
       clearTimeout(timeOutHideBtnFunc.current!);
@@ -65,7 +67,8 @@ const ScrollButton = () => {
       <Tooltip title="Scroll to top" placement="top" arrow>
         <Fab
           style={{
-            background: "white",
+            // background: "black",
+            // color: "white",
             display: "block",
             borderRadius: "0px",
           }}
@@ -77,7 +80,11 @@ const ScrollButton = () => {
       </Tooltip>
       <Tooltip title="Scroll to bottom" placement="bottom" arrow>
         <Fab
-          style={{ background: "white", borderRadius: "0px" }}
+          style={{
+            // background: "black",
+            // color: "white",
+            borderRadius: "0px"
+          }}
           size="small"
           onClick={handleScrollBottomBtnClick}
         >

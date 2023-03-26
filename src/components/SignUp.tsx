@@ -14,7 +14,7 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useContext } from "react";
 import { AppContext } from "../store/AppContext";
-import { backendServer } from "../models/constants";
+import { backendServer } from "../util/constants";
 
 function Copyright(props: any) {
   return (

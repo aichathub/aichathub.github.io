@@ -1,6 +1,6 @@
 import { PostModel } from "../models/PostModel";
 import { TagModel } from "../models/TagModel";
-import { backendServer } from "../models/constants";
+import { backendServer } from "../util/constants";
 
 export const verify = async (authObj: object) => {
   const response = await fetch(`${backendServer}/verify/`, {
