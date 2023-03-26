@@ -1,8 +1,9 @@
-import { Checkbox, ClickAwayListener, FormControlLabel, Grow, IconButton, MenuItem, MenuList, Paper, Popper, Tooltip } from "@material-ui/core";
+import { Checkbox, ClickAwayListener, FormControlLabel, Grow, MenuItem, MenuList, Paper, Popper, Tooltip } from "@material-ui/core";
 import { useState, useContext, useRef, useEffect } from "react";
 import { AppContext } from "../store/AppContext";
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import { useParams } from "react-router-dom";
+import { IconButton } from "@mui/material";
 
 const MessageInputUpload: React.FC<{
   setInputText: (msg: string) => void;

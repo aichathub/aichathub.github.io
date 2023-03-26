@@ -1,5 +1,5 @@
 import React, { useContext, useRef, useState } from "react";
-import { TextField, IconButton, Tooltip, CircularProgress } from "@material-ui/core";
+import { Tooltip, CircularProgress } from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import SendIcon from "@material-ui/icons/Send";
 import { MessageModel } from "../models/MessageModel";
@@ -11,6 +11,7 @@ import { AppContext } from "../store/AppContext";
 import { GUEST_EMAIL } from "../util/constants";
 import { AutoFixHighRounded } from "@mui/icons-material";
 import MessageInputUpload from "./MessageInputUpload";
+import { IconButton, TextField } from "@mui/material";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -21,12 +22,17 @@ const useStyles = makeStyles((theme: Theme) =>
       margin: `${theme.spacing(0)} auto`,
       position: "sticky",
       bottom: "0px",
-      background: "#FEFEFE",
+      // background: "#FEFEFE",
+      // background: "#010101",
       padding: "10px",
-      borderTop: "1px #DDD solid;"
+      borderTop: "1px #DDD solid;",
+      // input: {
+      //   color: "#FEFEFE",
+      // }
     },
     wrapText: {
       width: "100%",
+      color: "#FEFEFE",
     },
     button: {
       margin: theme.spacing(1),
@@ -120,25 +126,28 @@ export const MessageInput: React.FC<{
       style={{ borderRadius: 0, borderLeft: '0.1em solid lightgrey', padding: '0.5em' }}
       disabled={context.isSendingMessage}
     >
-      {context.isSendingMessage ? <CircularProgress color="inherit" size="24px"/> : <SendIcon />}
+      {context.isSendingMessage ? <CircularProgress color="inherit" size="24px" /> : <SendIcon />}
     </IconButton>
   </Tooltip>;
   return (
     <>
-      <div className={classes.wrapForm}>
+      <div className={classes.wrapForm}
+        style={{ background: context.darkMode ? "rgb(39,39,39)" : "white" }}
+      >
         <TextField
           id="standard-text"
-          label="Use @AI/@ai to trigger AI response"
+          label="Use @AI to trigger AI response"
           className={classes.wrapText}
+          // inputProps={{ style: { color: context.darkMode ? "white" : "black" } }}
           //margin="normal"
           inputRef={inputRef}
           value={inputText}
-          onChange={(e) => setInputText(e.target.value)}
+          onChange={(e: any) => setInputText(e.target.value)}
           multiline
           onKeyDownCapture={handleInputOnKeyDown}
           onKeyUpCapture={handleInputOnKeyUp}
         />
-        <MessageInputUpload setInputText={setInputText}/>
+        <MessageInputUpload setInputText={setInputText} />
         {/* <MessageInputSettings /> */}
         {sendBtn}
       </div>
