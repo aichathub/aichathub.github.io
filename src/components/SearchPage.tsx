@@ -51,7 +51,7 @@ const SearchPage = () => {
 
   useEffect(() => {
     document.title = `Search · ${searchQuery}`;
-    searchPostsByKeyword(searchQuery!).then((result) => {
+    searchPostsByKeyword(searchQuery!, { username: context.loggedUser, token: context.auth.token }).then((result) => {
       if (result.message !== "SUCCESS") {
         console.log(result.message);
         return;
@@ -72,17 +72,17 @@ const SearchPage = () => {
   </>;
 
   if (resultNotFound) {
-    bodyContent = 
-    <Box sx={{marginTop: "30px"}}>
-      <Box display="flex" justifyContent="center">
-        <SearchIcon />
-      </Box>
-      <Box display="flex" justifyContent="center">
-        <Typography variant="h6" component="h6" gutterBottom>
-          We couldn’t find any repositories matching '{searchQuery}'
-        </Typography>
-      </Box>
-    </Box>;
+    bodyContent =
+      <Box sx={{ marginTop: "30px" }}>
+        <Box display="flex" justifyContent="center">
+          <SearchIcon />
+        </Box>
+        <Box display="flex" justifyContent="center">
+          <Typography variant="h6" component="h6" gutterBottom>
+            We couldn’t find any repositories matching '{searchQuery}'
+          </Typography>
+        </Box>
+      </Box>;
   }
 
   return (

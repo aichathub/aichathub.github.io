@@ -128,12 +128,19 @@ export const updatePost = async (post: PostModel, token: string) => {
   return responseJson;
 }
 
-export const searchPostsByKeyword = async (keyword: string) => {
+export const searchPostsByKeyword = async (keyword: string, auth?: {
+  username: string,
+  token: string
+}) => {
+  let headers = {
+    "Content-Type": "application/json"
+  };
+  if (auth) {
+    headers = {...headers, ...auth};
+  }
   const response = await fetch(`${backendServer}/api/search/${keyword}`, {
     method: "GET",
-    headers: {
-      "Content-Type": "application/json"
-    },
+    headers: headers,
     mode: "cors",
   });
   const responseJson = await response.json();

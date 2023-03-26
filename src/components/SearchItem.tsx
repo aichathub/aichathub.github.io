@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { AppContext } from "../store/AppContext";
 import { TagModel } from "../models/TagModel";
 import StarButton from "./StarButton";
+import LockIcon from '@mui/icons-material/Lock';
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -63,7 +64,10 @@ const SearchItem: React.FC<{
               }}
             >
               <Grid>
-                <ChatBubbleOutlineIcon fontSize="small" sx={{ marginRight: "10px" }} />
+                {props.post.isprivate ?
+                  <LockIcon fontSize="small" sx={{ marginRight: "10px" }} /> :
+                  <ChatBubbleOutlineIcon fontSize="small" sx={{ marginRight: "10px" }} />
+                }
                 <Link
                   component="button"
                   variant="body2"
