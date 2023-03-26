@@ -19,6 +19,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: "flex",
       justifyContent: "center",
       width: "100%",
+      height: "68px",
       margin: `${theme.spacing(0)} auto`,
       position: "sticky",
       bottom: "0px",
