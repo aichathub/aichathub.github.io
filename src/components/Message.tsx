@@ -122,7 +122,7 @@ const Message: React.FC<{
         paddingLeft: 5,
       }}
     >
-      <Grid container wrap="nowrap" spacing={2}>
+      <Grid container wrap="nowrap" spacing={2} style={{marginBottom: "2px"}}>
         <Grid item xs={10}>
           <CopyWrapper content={props.message.content} isEditing={isEditing} setIsEditing={setIsEditing} hasRightToEdit={hasRightToEdit}>
             <Grid container spacing={2}>

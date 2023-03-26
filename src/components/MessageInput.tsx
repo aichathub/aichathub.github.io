@@ -19,17 +19,11 @@ const useStyles = makeStyles((theme: Theme) =>
       display: "flex",
       justifyContent: "center",
       width: "100%",
-      height: "68px",
       margin: `${theme.spacing(0)} auto`,
       position: "sticky",
       bottom: "0px",
-      // background: "#FEFEFE",
-      // background: "#010101",
       padding: "10px",
       borderTop: "1px #DDD solid;",
-      // input: {
-      //   color: "#FEFEFE",
-      // }
     },
     wrapText: {
       width: "100%",
