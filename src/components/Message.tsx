@@ -23,6 +23,7 @@ import { AppContext } from "../store/AppContext";
 import ReactMarkdown from "react-markdown";
 import { generateColor } from "../util/avatarColor";
 import { TextField, Button } from "@mui/material";
+import remarkGfm from "remark-gfm";
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -176,6 +177,7 @@ const Message: React.FC<{
           </CopyWrapper>
           {!isEditing &&
             <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
               children={props.message.content}
               components={{
                 code({ node, inline, className, children, ...props }) {
