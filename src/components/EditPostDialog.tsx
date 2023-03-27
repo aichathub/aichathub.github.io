@@ -9,7 +9,7 @@ import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
-import { Checkbox, FormControlLabel, FormGroup, TextField, Tooltip } from '@material-ui/core';
+import { Checkbox, FormControlLabel, FormGroup, Tooltip } from '@material-ui/core';
 import { makeStyles } from "@material-ui/core/styles";
 import { AppContext } from '../store/AppContext';
 import { useContext, useRef, useState } from 'react';
@@ -18,6 +18,7 @@ import { updatePost } from '../util/db';
 import TagsInput from './TagsInput';
 import { TagModel } from '../models/TagModel';
 import LockIcon from '@mui/icons-material/Lock';
+import { TextField } from '@mui/material';
 
 const useStyles = makeStyles(theme => ({
   textField: {

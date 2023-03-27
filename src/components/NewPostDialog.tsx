@@ -13,7 +13,6 @@ import {
   Checkbox,
   FormControlLabel,
   FormGroup,
-  TextField,
   Tooltip,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
@@ -25,6 +24,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import TagsInput from "./TagsInput";
 import { TagModel } from "../models/TagModel";
 import LockIcon from '@mui/icons-material/Lock';
+import { TextField } from "@mui/material";
 
 const useStyles = makeStyles((theme) => ({
   textField: {
@@ -132,8 +132,8 @@ const NewPostDialog: React.FC<{
               }
               label={
                 <>
-                  <label style={{verticalAlign: "text-bottom"}}>Is Private</label>
-                  <LockIcon fontSize="small" style={{marginLeft: "5px", marginTop: "2px"}}/>
+                  <label style={{ verticalAlign: "text-bottom" }}>Is Private</label>
+                  <LockIcon fontSize="small" style={{ marginLeft: "5px", marginTop: "2px" }} />
                 </>
               }
             />
