@@ -9,7 +9,7 @@ import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
-import { Checkbox, FormControlLabel, FormGroup, Tooltip } from '@material-ui/core';
+import { Checkbox, Tooltip } from '@material-ui/core';
 import { makeStyles } from "@material-ui/core/styles";
 import { AppContext } from '../store/AppContext';
 import { useContext, useRef, useState } from 'react';
@@ -18,14 +18,13 @@ import { updatePost } from '../util/db';
 import TagsInput from './TagsInput';
 import { TagModel } from '../models/TagModel';
 import LockIcon from '@mui/icons-material/Lock';
-import { TextField } from '@mui/material';
+import { TextField, FormControlLabel, FormGroup } from '@mui/material';
 
 const useStyles = makeStyles(theme => ({
   textField: {
+    width: 400,
     marginTop: theme.spacing(2),
     marginLeft: theme.spacing(5),
-    marginRight: theme.spacing(1),
-    width: 400,
   }
 }));
 
@@ -103,7 +102,7 @@ const EditPostDialog: React.FC<{
             label="Title"
             name="title"
             defaultValue={props.post.title}
-            className={classes.textField}
+            style={{ marginLeft: "40px", marginTop: "5px", width: "400px" }}
             helperText="Enter your title"
             inputRef={titleRef}
             autoFocus
