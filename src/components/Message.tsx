@@ -122,7 +122,7 @@ const Message: React.FC<{
         paddingLeft: 5,
       }}
     >
-      <Grid container wrap="nowrap" spacing={2} style={{marginBottom: "2px"}}>
+      <Grid container wrap="nowrap" spacing={2} style={{ marginBottom: "2px" }}>
         <Grid item xs={10}>
           <CopyWrapper content={props.message.content} isEditing={isEditing} setIsEditing={setIsEditing} hasRightToEdit={hasRightToEdit}>
             <Grid container spacing={2}>
@@ -138,7 +138,6 @@ const Message: React.FC<{
                 <Box
                   style={{
                     position: "relative",
-                    top: "15%",
                   }}
                 >
                   <ThemeProvider theme={theme}>
@@ -157,6 +156,18 @@ const Message: React.FC<{
                         {timeText}
                       </Typography>
                     </Tooltip>
+                  </ThemeProvider>
+                </Box>
+                <Box
+                  style={{
+                    position: "relative",
+                    marginTop: "-10px",
+                  }}
+                >
+                  <ThemeProvider theme={theme}>
+                    <Typography variant="overline" color={props.message.sender === 'ai' ? "darkred" : "common.grey"}>
+                      @{props.message.sender === 'ai' ? "AI" : props.message.sender.substring(0, props.message.sender.indexOf("@"))}
+                    </Typography>
                   </ThemeProvider>
                 </Box>
               </Grid>
