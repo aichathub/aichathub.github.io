@@ -8,7 +8,7 @@ import { MessageModel } from "../models/MessageModel";
 import Timeago from "react-timeago";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CodeBlock from "./CodeBlock";
-import { Box, Button, TextField, Tooltip } from "@material-ui/core";
+import { Box, Tooltip } from "@material-ui/core";
 import CopyWrapper from "./CopyWrapper";
 import Typewriter from 'react-ts-typewriter';
 import { GUEST_EMAIL } from "../util/constants";
@@ -22,6 +22,7 @@ import { editMessage } from "../util/db";
 import { AppContext } from "../store/AppContext";
 import ReactMarkdown from "react-markdown";
 import { generateColor } from "../util/avatarColor";
+import { TextField, Button } from "@mui/material";
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",

@@ -57,7 +57,13 @@ export const MessageInput: React.FC<{
       } else {
         setInputText("");
       }
-      ref.focus();
+      // Focus back to the input field if the user is from desktop
+      if (window.innerWidth > 600) {
+        ref.focus();
+      } else {
+        // If the user is from mobile, hide the keyboard
+        ref.blur();
+      }
       context.setIsSendingMessage(true);
       let optionalSocketId: string | undefined;
       if (localStorage.getItem("socketId")) {
