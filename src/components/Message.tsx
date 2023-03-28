@@ -168,7 +168,7 @@ const Message: React.FC<{
                 >
                   <ThemeProvider theme={theme}>
                     <Typography variant="overline" color={props.message.sender === 'ai' ? "darkred" : "common.grey"}>
-                      @{props.message.sender === 'ai' ? "AI" : props.message.sender.substring(0, props.message.sender.indexOf("@"))}
+                      @{props.message.sender === 'ai' ? "AI" : props.message.authorusername}
                     </Typography>
                   </ThemeProvider>
                 </Box>
