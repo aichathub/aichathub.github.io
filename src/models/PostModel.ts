@@ -7,4 +7,5 @@ export type PostModel = {
   createdate: string;
   tags: TagModel[];
   isprivate?: boolean;
+  username?: string;
 }

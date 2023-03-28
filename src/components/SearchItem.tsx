@@ -35,15 +35,7 @@ const SearchItem: React.FC<{
   typeEffect?: boolean;
 }> = (props) => {
   const navigate = useNavigate();
-  const [author, setAuthor] = useState("");
   const context = useContext(AppContext);
-  useEffect(() => {
-    getUsernameByEmail(props.post.authoremail).then((res) => {
-      if (res.message === "SUCCESS") {
-        setAuthor(res.result);
-      }
-    });
-  }, []);
   return (
     <StyledPaper
       sx={{
@@ -72,11 +64,11 @@ const SearchItem: React.FC<{
                   component="button"
                   variant="body2"
                   onClick={() => {
-                    navigate(`/${author}/${props.post.pid}`);
+                    navigate(`/${props.post.username}/${props.post.pid}`);
                   }}
                   sx={{ marginBottom: "12px" }}
                 >
-                  {author}/{props.post.pid}
+                  {props.post.username}/{props.post.pid}
                 </Link>
               </Grid>
               <Grid>
