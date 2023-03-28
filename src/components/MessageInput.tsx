@@ -88,7 +88,8 @@ export const MessageInput: React.FC<{
           mid: -1,
           sender: context.auth.loggedEmail,
           content: content,
-          time: new Date()
+          time: new Date(),
+          authorusername: context.loggedUser
         });
         const result = await insertMessage({
           username: username!,
