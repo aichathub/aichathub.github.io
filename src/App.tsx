@@ -7,8 +7,6 @@ import { AppContext, AppContextProvider } from "./store/AppContext";
 import { BrowserRouter } from "react-router-dom";
 import { Navigate } from "react-router-dom";
 import SearchPage from "./components/SearchPage";
-import ChatAppSession from "./components/ChatAppSession";
-import ChatAppNewSession from "./components/ChatAppNewSession";
 import ExplorePage from "./components/ExplorePage";
 import SearchTagPage from "./components/SearchTagPage";
 import ForgetPassword from "./components/ForgetPassword";

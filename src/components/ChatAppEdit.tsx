@@ -51,7 +51,6 @@ const ChatAppEdit = () => {
   const pagePostId = context.pagePostId;
   const post = context.getPostById(pagePostId);
   // const messages = post ? post.messages : [];
-  const [socket, setSocket] = useState<Socket>();
   const { username, postid } = useParams();
   const [messages, setMessages] = useState<MessageModel[]>([]);
   const [curPost, setCurPost] = useState<PostModel | undefined>(undefined);
@@ -117,16 +116,6 @@ const ChatAppEdit = () => {
     }, 300);
   };
 
-  const sendMessage = (msg: MessageModel) => {
-    if (socket) {
-      let newMessages = post ? [...post!.messages, msg] : [msg];
-      socket!.emit("message", {
-        ...post,
-        messages: newMessages,
-      } as LocalPostModel);
-    }
-  };
-
   const [open, setOpen] = useState(false);
   const handleDrawerOpen = () => {
     context.setTopLeftBarOpen(true);
@@ -135,20 +124,6 @@ const ChatAppEdit = () => {
   const handleDrawerClose = () => {
     context.setTopLeftBarOpen(false);
   };
-
-  useEffect(() => {
-    if (!socket || socket === null) {
-      setSocket(io(`http://localhost:3001`));
-    } else {
-      socket.off(`${username}/${postid}`);
-      socket.on("connection:sid", (socketId) => {
-        localStorage.setItem("socketId", socketId);
-      });
-      socket.on(`${username}/${postid}`, () => {
-        reloadMessage();
-      });
-    }
-  }, [socket, context, username, postid]);
 
   useEffect(() => {
     if (context.isSendingMessage) {
@@ -275,7 +250,7 @@ const ChatAppEdit = () => {
         }}
       >
         <ScrollButton />
-        {context.loggedUser !== "" && curPost?.authoremail === context.auth.loggedEmail && context.doesPostExist && <MessageInput addMessage={addMessage} sendMessage={sendMessage} reloadMessage={reloadMessage} />}
+        {context.loggedUser !== "" && curPost?.authoremail === context.auth.loggedEmail && context.doesPostExist && <MessageInput addMessage={addMessage} reloadMessage={reloadMessage} />}
       </footer>
     </>
   );

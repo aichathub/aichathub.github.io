@@ -38,7 +38,6 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const MessageInput: React.FC<{
   addMessage: (newMsg: MessageModel) => void;
-  sendMessage: (msg: MessageModel) => void;
   reloadMessage: () => void;
 }> = (props) => {
   const classes = useStyles();
