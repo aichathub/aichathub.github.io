@@ -58,11 +58,14 @@ const ChatAppEdit = () => {
   const [reloadInterval, setReloadInterval] = useState<NodeJS.Timeout | undefined>(undefined);
 
   const reloadMessage = () => {
+    if (messages.length === 0) {
+      context.setIsLoadingMessages(true);
+    }
     console.log(username, postid);
     if (!username || !postid) return;
     getMessagesByUsernameAndPid(username, postid, context.auth.token).then(response => {
       console.log(response);
-      if (context.isLoadingMessages) context.setIsLoadingMessages(false);
+      context.setIsLoadingMessages(false);
       if (response.message !== "SUCCESS") {
         context.setDoesPostExist(false);
         return;
@@ -162,6 +165,7 @@ const ChatAppEdit = () => {
   useEffect(() => {
     console.log(username, postid);
     document.title = `${username}/${postid}`;
+    context.setIsLoadingMessages(true);
     reloadMessage();
     if (!username || !postid) return;
     getPostByUsernameAndPid(username, postid, context.auth.token).then(response => {

@@ -14,6 +14,7 @@ import SearchItem from "./SearchItem";
 import { PostModel } from "../models/PostModel";
 import { getRecommendations, searchPostsByKeyword } from "../util/db";
 import SearchIcon from "@mui/icons-material/Search";
+import CircularProgress from '@mui/material/CircularProgress';
 
 const drawerWidth = 240;
 
@@ -47,7 +48,9 @@ const ExplorePage = () => {
   };
 
   useEffect(() => {
+    context.setIsLoadingMessages(true);
     getRecommendations(context.loggedUser).then((result) => {
+      context.setIsLoadingMessages(false);
       if (result.message !== "SUCCESS") {
         console.log(result.message);
         return;
@@ -65,6 +68,10 @@ const ExplorePage = () => {
       }
     </Grid>
   </>;
+
+  if (context.isLoadingMessages) {
+    bodyContent = <Box sx={{ textAlign: "center", marginTop: "20%" }}><CircularProgress color="inherit" /></Box>;
+  }
 
   return (
     <>
