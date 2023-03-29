@@ -65,6 +65,7 @@ const SearchItem: React.FC<{
                   variant="body2"
                   onClick={() => {
                     context.setIsLoadingMessages(true);
+                    context.setMessages([]);
                     navigate(`/${props.post.username}/${props.post.pid}`);
                   }}
                   sx={{ marginBottom: "12px" }}
@@ -90,7 +91,7 @@ const SearchItem: React.FC<{
                           key={index}
                           label={tag.tag}
                           variant="outlined"
-                          onClick={() => { navigate(`/tag?q=${tag.tag}`) }}
+                          onClick={() => { (`/tag?q=${tag.tag}`) }}
                           style={{
                             marginRight: "5px",
                             color: context.darkMode ? "white" : "black",
