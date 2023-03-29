@@ -1,8 +1,10 @@
 import { Grid, ListItemText } from "@material-ui/core";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import LockIcon from '@mui/icons-material/Lock';
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import { ListItemButton } from "@mui/material";
+import { ListItemButton, ListItemIcon } from "@mui/material";
 import ListItem from "@mui/material/ListItem";
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -74,8 +76,22 @@ const LeftBarPostItem: React.FC<{ post: PostModel }> = (props) => {
             'aria-labelledby': 'basic-button',
           }}
         >
-          <MenuItem onClick={handleDeletePost}>Delete</MenuItem>
-          <MenuItem onClick={handleEditTitle}>Edit</MenuItem>
+          <MenuItem
+            onClick={handleEditTitle}
+          >
+            <ListItemIcon>
+              <EditIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>Edit</ListItemText>
+          </MenuItem>
+          <MenuItem
+            onClick={handleDeletePost}
+          >
+            <ListItemIcon>
+              <DeleteIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>Delete</ListItemText>
+          </MenuItem>
         </Menu>
       </ListItem>
     </>
