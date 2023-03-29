@@ -23,6 +23,7 @@ const LeftBarPostItem: React.FC<{ post: PostModel }> = (props) => {
   const navigate = useNavigate();
 
   const handleClickPostItem = () => {
+    context.setIsFirstLoad(true);
     navigate(`/${context.loggedUser}/${post.pid}`);
   };
   const handleClickPostItemMore = (

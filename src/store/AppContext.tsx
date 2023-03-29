@@ -1,16 +1,13 @@
-import { createContext, ReactNode, useCallback, useState } from "react";
+import { createTheme, ThemeProvider } from "@mui/material";
+import Snackbar from '@mui/material/Snackbar';
+import { createContext, ReactNode, useCallback, useEffect, useState } from "react";
+import Alert from "../components/Alert";
 import { LocalPostModel } from "../models/LocalPostModel";
 import { MessageModel } from "../models/MessageModel";
-import { useEffect } from "react";
-import Snackbar from '@mui/material/Snackbar';
-import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
-import { getStarredPosts, getTags, verify } from "../util/db";
-import useDidMountEffect from "../util/useDidMountEffect";
-import Alert from "../components/Alert";
 import { PostModel } from "../models/PostModel";
 import { TagModel } from "../models/TagModel";
-import { createTheme, ThemeProvider } from "@mui/material";
+import { getStarredPosts, getTags, verify } from "../util/db";
+import useDidMountEffect from "../util/useDidMountEffect";
 
 type AuthObj = {
   loggedEmail: string;
@@ -33,7 +30,9 @@ type AppContextObj = {
   darkMode: boolean;
   curPost?: PostModel;
   messages: MessageModel[];
+  isFirstLoad: boolean;
 
+  setIsFirstLoad: (isFirstLoad: boolean) => void;
   deleteMessage: (messageId: number) => void;
   setMessages: (messages: MessageModel[]) => void;
   setCurPost: (post: PostModel) => void;
@@ -79,7 +78,9 @@ export const AppContext = createContext<AppContextObj>({
   darkMode: false,
   curPost: undefined,
   messages: [],
+  isFirstLoad: true,
 
+  setIsFirstLoad: () => { },
   deleteMessage: () => { },
   setMessages: () => { },
   setCurPost: () => { },
@@ -124,6 +125,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
   const [darkMode, setDarkMode] = useState(localStorage.getItem("darkMode") === "true");
   const [curPost, setCurPost] = useState<PostModel>();
   const [messages, setMessages] = useState<MessageModel[]>([]);
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
 
   const isPostStarred = (authoremail: string, postId: string) => {
     return starredPosts.filter(x => x.authoremail === authoremail && x.pid === postId).length > 0;
@@ -209,7 +211,9 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
     darkMode: darkMode,
     curPost: curPost,
     messages: messages,
+    isFirstLoad: isFirstLoad,
 
+    setIsFirstLoad: setIsFirstLoad,
     deleteMessage: deleteMessage,
     setMessages: setMessages,
     setCurPost: setCurPost,

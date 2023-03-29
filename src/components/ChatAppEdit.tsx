@@ -78,7 +78,7 @@ const ChatAppEdit = () => {
       const oldMsgLength = context.messages.length === 0 ? Infinity : context.messages.length;
       context.setMessages(msgmodels);
       // if there is new message and the scroll is at the bottom, scroll to the bottom
-      if (msgs.length > oldMsgLength && window.scrollY + window.innerHeight >= document.body.offsetHeight) {
+      if (!context.isFirstLoad && msgs.length > oldMsgLength && window.scrollY + window.innerHeight >= document.body.offsetHeight) {
         setTimeout(() => {
           window.scroll({
             top: document.body.offsetHeight,
