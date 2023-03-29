@@ -17,7 +17,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v1
       
-      - name: Install and deploy
-        run: npm install --legacy-peer-deps && npm run deploy
+      - name: Install and build
+        run: npm install --legacy-peer-deps && npm run build
         env:
-         CI: ""
+          CI: ""
+
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@4.1.1
+        with:
+          branch: gh-pages
+          folder: build
