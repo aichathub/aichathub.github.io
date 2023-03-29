@@ -48,7 +48,7 @@ export const getMessagesByUsernameAndPidAndSessionid = async (username: string, 
   return responseJson;
 };
 
-export const insertSessionMessage = async (insertMsgObj: { username: string, pid: string, content: string, sessionid: string}) => {
+export const insertSessionMessage = async (insertMsgObj: { username: string, pid: string, content: string, sessionid: string }) => {
   const response = await fetch(`${backendServer}/api/insert/sessionmessages`, {
     method: "POST",
     headers: {
@@ -95,7 +95,20 @@ export const deletePostByUsernameAndPid = async (username: string, pid: string, 
       "Content-Type": "application/json"
     },
     mode: "cors",
-    body: JSON.stringify({username: username, pid: pid, token: token})
+    body: JSON.stringify({ username: username, pid: pid, token: token })
+  });
+  const responseJson = await response.json();
+  return responseJson;
+}
+
+export const deleteMessageByMid = async (mid: number, token: string, username: string) => {
+  const response = await fetch(`${backendServer}/api/delete/message/`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    mode: "cors",
+    body: JSON.stringify({ mid: mid, token: token, username: username })
   });
   const responseJson = await response.json();
   return responseJson;
@@ -108,7 +121,7 @@ export const insertPostByUsernameAndTitle = async (username: string, title: stri
       "Content-Type": "application/json"
     },
     mode: "cors",
-    body: JSON.stringify({username: username, title: title, token: token, tags: tags, isprivate: isprivate})
+    body: JSON.stringify({ username: username, title: title, token: token, tags: tags, isprivate: isprivate })
   });
   const responseJson = await response.json();
   return responseJson;
@@ -122,7 +135,7 @@ export const updatePost = async (post: PostModel, token: string) => {
       "Content-Type": "application/json"
     },
     mode: "cors",
-    body: JSON.stringify({...post, token: token})
+    body: JSON.stringify({ ...post, token: token })
   });
   const responseJson = await response.json();
   return responseJson;
@@ -136,7 +149,7 @@ export const searchPostsByKeyword = async (keyword: string, auth?: {
     "Content-Type": "application/json"
   };
   if (auth) {
-    headers = {...headers, ...auth};
+    headers = { ...headers, ...auth };
   }
   const response = await fetch(`${backendServer}/api/search/${keyword}`, {
     method: "GET",
@@ -184,7 +197,7 @@ export const getUsernameByEmail = async (email: string) => {
 }
 
 export const getStarCount = async (username: string, pid: string) => {
-  if (username === "" || pid === "") return Promise.resolve({result: 0});
+  if (username === "" || pid === "") return Promise.resolve({ result: 0 });
   const response = await fetch(`${backendServer}/api/starcount/${username}/${pid}`, {
     method: "GET",
     headers: {

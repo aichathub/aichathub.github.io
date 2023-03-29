@@ -31,7 +31,12 @@ type AppContextObj = {
   tags: TagModel[];
   topLeftBarOpen: boolean;
   darkMode: boolean;
+  curPost?: PostModel;
+  messages: MessageModel[];
 
+  deleteMessage: (messageId: number) => void;
+  setMessages: (messages: MessageModel[]) => void;
+  setCurPost: (post: PostModel) => void;
   setDarkMode: (darkMode: boolean) => void;
   setTopLeftBarOpen: (open: boolean) => void;
   isPostStarred: (authoremail: string, pid: string) => boolean;
@@ -72,7 +77,12 @@ export const AppContext = createContext<AppContextObj>({
   tags: [],
   topLeftBarOpen: false,
   darkMode: false,
+  curPost: undefined,
+  messages: [],
 
+  deleteMessage: () => { },
+  setMessages: () => { },
+  setCurPost: () => { },
   setDarkMode: () => { },
   setTopLeftBarOpen: () => { },
   isPostStarred: () => false,
@@ -112,6 +122,8 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
   const [tags, setTags] = useState<TagModel[]>([]);
   const [topLeftBarOpen, setTopLeftBarOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(localStorage.getItem("darkMode") === "true");
+  const [curPost, setCurPost] = useState<PostModel>();
+  const [messages, setMessages] = useState<MessageModel[]>([]);
 
   const isPostStarred = (authoremail: string, postId: string) => {
     return starredPosts.filter(x => x.authoremail === authoremail && x.pid === postId).length > 0;
@@ -138,17 +150,11 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
     setPosts((prevState) => prevState.filter(post => post.id !== postId));
   }
   const addMessage = (newMsg: MessageModel) => {
-    setPosts((prevState) => {
-      const post = getPostById(pagePostId, prevState);
-      if (!post) return prevState;
-      const newPost = {
-        ...post,
-        messages: [...post.messages, newMsg],
-      } as LocalPostModel;
-      const result = [...prevState.filter((x) => x.id !== post.id), newPost];
-      return result;
-    });
+    setMessages((prevState) => [...prevState, newMsg]);
   };
+  const deleteMessage = (msgId: number) => {
+    setMessages((prevState) => prevState.filter(x => x.mid !== msgId));
+  }
   const updateSummary = (newSummary: string) => {
     setPosts((prevState) => {
       const post = getPostById(pagePostId, prevState);
@@ -201,7 +207,12 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
     tags: tags,
     topLeftBarOpen: topLeftBarOpen,
     darkMode: darkMode,
+    curPost: curPost,
+    messages: messages,
 
+    deleteMessage: deleteMessage,
+    setMessages: setMessages,
+    setCurPost: setCurPost,
     setDarkMode: setDarkMode,
     setTopLeftBarOpen: setTopLeftBarOpen,
     isPostStarred: isPostStarred,
@@ -325,12 +336,12 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
   return (
     <AppContext.Provider value={contextValue}>
       <ThemeProvider theme={theme}>
-      <Snackbar open={isSnackShown} autoHideDuration={4000} onClose={snackOnClose}>
-        <Alert onClose={snackOnClose} severity={getSeverity(snackMessage)} sx={{ width: '100%' }}>
-          {snackMessage}
-        </Alert>
-      </Snackbar>
-      {props.children}
+        <Snackbar open={isSnackShown} autoHideDuration={4000} onClose={snackOnClose}>
+          <Alert onClose={snackOnClose} severity={getSeverity(snackMessage)} sx={{ width: '100%' }}>
+            {snackMessage}
+          </Alert>
+        </Snackbar>
+        {props.children}
       </ThemeProvider>
     </AppContext.Provider>
   );

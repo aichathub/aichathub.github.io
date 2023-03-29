@@ -9,6 +9,8 @@ import { useContext } from "react";
 import { AppContext } from "../store/AppContext";
 import EditIcon from '@mui/icons-material/Edit';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { deleteMessageByMid } from "../util/db";
 
 const MessageMoreButton: React.FC<{
   message: MessageModel;
@@ -19,6 +21,7 @@ const MessageMoreButton: React.FC<{
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const hasRightToEdit = props.message.authorusername === context.loggedUser;
+  const hasRightToDelete = context.auth && context.curPost && context.curPost.authoremail === context.auth.loggedEmail;
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -39,6 +42,13 @@ const MessageMoreButton: React.FC<{
     // window.speechSynthesis.speak(utterance);
     context.showSnack("Coming soon!");
     handleClose();
+  }
+  const handleDeleteClick = async () => {
+    const result = await deleteMessageByMid(props.message.mid, context.auth.token, context.loggedUser);
+    if (result.message === "SUCCESS") {
+      context.deleteMessage(props.message.mid);
+    }
+    context.showSnack("DELETE MESSAGE: " + result.message);
   }
   return (
     <>
@@ -91,6 +101,16 @@ const MessageMoreButton: React.FC<{
                     </MenuItem>
                   )
                   }
+                  {hasRightToDelete && (
+                    <MenuItem
+                      onClick={handleDeleteClick}
+                    >
+                      <ListItemIcon>
+                        <DeleteIcon fontSize="small" />
+                      </ListItemIcon>
+                      <ListItemText>Delete</ListItemText>
+                    </MenuItem>
+                  )}
                   <MenuItem onClick={handleSpeakClick}>
                     <ListItemIcon>
                       <VolumeUpIcon fontSize="small" />

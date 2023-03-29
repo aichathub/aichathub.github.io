@@ -52,12 +52,10 @@ const ChatAppEdit = () => {
   const post = context.getPostById(pagePostId);
   // const messages = post ? post.messages : [];
   const { username, postid } = useParams();
-  const [messages, setMessages] = useState<MessageModel[]>([]);
-  const [curPost, setCurPost] = useState<PostModel | undefined>(undefined);
   const [reloadInterval, setReloadInterval] = useState<NodeJS.Timeout | undefined>(undefined);
 
   const reloadMessage = () => {
-    if (messages.length === 0) {
+    if (context.messages.length === 0) {
       context.setIsLoadingMessages(true);
     }
     console.log(username, postid);
@@ -81,8 +79,8 @@ const ChatAppEdit = () => {
           authorusername: msgs[i].authorusername,
         });
       }
-      const oldMsgLength = messages.length === 0 ? Infinity : messages.length;
-      setMessages(msgmodels);
+      const oldMsgLength = context.messages.length === 0 ? Infinity : context.messages.length;
+      context.setMessages(msgmodels);
       // if there is new message and the scroll is at the bottom, scroll to the bottom
       if (msgs.length > oldMsgLength && window.scrollY + window.innerHeight >= document.body.offsetHeight) {
         setTimeout(() => {
@@ -107,7 +105,7 @@ const ChatAppEdit = () => {
   };
 
   const addMessage = (newMsg: MessageModel) => {
-    setMessages(prevState => [...prevState, newMsg]);
+    context.addMessage(newMsg);
     setTimeout(() => {
       window.scroll({
         top: document.body.offsetHeight,
@@ -147,7 +145,7 @@ const ChatAppEdit = () => {
       if (response.message !== "SUCCESS") {
         return;
       }
-      setCurPost(response.result);
+      context.setCurPost(response.result);
     });
   }, [username, postid, context.auth.token]);
 
@@ -157,7 +155,7 @@ const ChatAppEdit = () => {
       if (response.message !== "SUCCESS") {
         return;
       }
-      setCurPost(response.result);
+      context.setCurPost(response.result);
     });
   }, [context.lastPostsRefresh]);
 
@@ -178,21 +176,21 @@ const ChatAppEdit = () => {
         {username}/{postid} does not exist
       </Typography>
     </Box>);
-  } else if (messages.length === 0) {
+  } else if (context.messages.length === 0) {
     bodyContent = (<Box sx={{ textAlign: "center" }}>
       <EmptyCard title={post ? post.title : ""} />
     </Box>);
   } else {
     bodyContent = (
       <Grid container>
-        {messages.map((x, index) => (
-          <Message key={index} message={x} typeEffect={index === messages.length - 1 && x.sender === 'ai'} />
+        {context.messages.map((x, index) => (
+          <Message key={index} message={x} typeEffect={index === context.messages.length - 1 && x.sender === 'ai'} />
         ))}
       </Grid>
     );
   }
   let icon = <ChatBubbleOutlineIcon fontSize="small" />;
-  if (context.doesPostExist && curPost && curPost.isprivate) {
+  if (context.doesPostExist && context.curPost && context.curPost.isprivate) {
     icon = <Tooltip title="This is a private post" arrow>
       <LockIcon fontSize="small" />
     </Tooltip>;
@@ -213,17 +211,17 @@ const ChatAppEdit = () => {
               {icon}
               <Box sx={{ marginTop: "-7px", marginLeft: "5px" }}>
                 <Typography variant="h6" component="h6" gutterBottom>
-                  {curPost ? curPost.title : ""}
+                  {context.curPost ? context.curPost.title : ""}
                 </Typography>
               </Box>
-              {curPost &&
+              {context.curPost &&
                 <Box style={{ marginTop: "-5px", marginLeft: "25px" }}>
-                  <StarButton post={curPost!} />
+                  <StarButton post={context.curPost!} />
                 </Box>
               }
-              {curPost &&
+              {context.curPost &&
                 <Box style={{ marginTop: "-4px", marginLeft: "25px" }}>
-                  <QRButton post={curPost!} />
+                  <QRButton post={context.curPost!} />
                 </Box>
               }
             </Box>
@@ -250,7 +248,7 @@ const ChatAppEdit = () => {
         }}
       >
         <ScrollButton />
-        {context.loggedUser !== "" && curPost?.authoremail === context.auth.loggedEmail && context.doesPostExist && <MessageInput addMessage={addMessage} reloadMessage={reloadMessage} />}
+        {context.loggedUser !== "" && context.curPost?.authoremail === context.auth.loggedEmail && context.doesPostExist && <MessageInput addMessage={addMessage} reloadMessage={reloadMessage} />}
       </footer>
     </>
   );
