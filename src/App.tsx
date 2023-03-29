@@ -1,5 +1,4 @@
 import { Route, Routes } from "react-router-dom";
-import ChatApp from "./components/ChatApp";
 import ChatAppEdit from "./components/ChatAppEdit";
 import SignUp from "./components/SignUp";
 import SignIn from "./components/SignIn";
