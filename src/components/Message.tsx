@@ -24,6 +24,7 @@ import ReactMarkdown from "react-markdown";
 import { generateColor } from "../util/avatarColor";
 import { TextField, Button } from "@mui/material";
 import remarkGfm from "remark-gfm";
+import MessageWrapper from "./MessageWrapper";
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -126,7 +127,8 @@ const Message: React.FC<{
     >
       <Grid container wrap="nowrap" spacing={2} style={{ marginBottom: "2px" }}>
         <Grid item xs={10}>
-          <CopyWrapper content={props.message.content} isEditing={isEditing} setIsEditing={setIsEditing} hasRightToEdit={hasRightToEdit}>
+          <MessageWrapper message={props.message} isEditing={isEditing} setIsEditing={setIsEditing}>
+            {/* <CopyWrapper content={props.message.content} isEditing={isEditing} setIsEditing={setIsEditing} hasRightToEdit={hasRightToEdit}> */}
             <Grid container spacing={2}>
               <Grid item>
                 <Avatar sx={{ bgcolor: avatarColor }}>{avatarName}</Avatar>
@@ -174,7 +176,8 @@ const Message: React.FC<{
                 </Box>
               </Grid>
             </Grid>
-          </CopyWrapper>
+          </MessageWrapper>
+          {/* </CopyWrapper> */}
           {!isEditing &&
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
