@@ -19,3 +19,5 @@ jobs:
       
       - name: Install and deploy
         run: npm install --legacy-peer-deps && npm run deploy
+        env:
+         CI: ""
