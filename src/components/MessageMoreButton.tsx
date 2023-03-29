@@ -68,6 +68,11 @@ const MessageMoreButton: React.FC<{
         <Button
           variant="contained"
           size="small"
+          style={{
+            background: "white",
+            color: "black",
+            borderRadius: "0px"
+          }}
         >
           <MoreHorizIcon fontSize="small" />
         </Button>
