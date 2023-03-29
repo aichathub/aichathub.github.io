@@ -1,20 +1,18 @@
-import Grid from "@material-ui/core/Grid";
-import { styled } from "@mui/material/styles";
-import Paper from "@mui/material/Paper";
-import Typography from "@mui/material/Typography";
-import Timeago from "react-timeago";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Box, Chip, Tooltip } from "@material-ui/core";
-import { PostModel } from "../models/PostModel";
-import { useEffect, useState, useContext } from "react";
-import { getUsernameByEmail, starPost, unstarPost } from "../util/db";
-import Link from '@mui/material/Link';
+import Grid from "@material-ui/core/Grid";
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
-import { useNavigate } from "react-router-dom";
-import { AppContext } from "../store/AppContext";
-import { TagModel } from "../models/TagModel";
-import StarButton from "./StarButton";
 import LockIcon from '@mui/icons-material/Lock';
+import Link from '@mui/material/Link';
+import Paper from "@mui/material/Paper";
+import { createTheme, styled, ThemeProvider } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
+import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import Timeago from "react-timeago";
+import { PostModel } from "../models/PostModel";
+import { TagModel } from "../models/TagModel";
+import { AppContext } from "../store/AppContext";
+import StarButton from "./StarButton";
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",

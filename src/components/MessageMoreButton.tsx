@@ -1,15 +1,13 @@
-import { useState } from "react";
-import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import { ClickAwayListener, FormControlLabel, Grow, ListItemIcon, ListItemText, MenuItem, MenuList, Paper, Popper, Tooltip } from "@mui/material";
 import { Button } from "@material-ui/core";
-import { MessageModel } from "../models/MessageModel";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { ContentCopy } from "@mui/icons-material";
-import { useContext } from "react";
-import { AppContext } from "../store/AppContext";
-import EditIcon from '@mui/icons-material/Edit';
-import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import VolumeUpIcon from '@mui/icons-material/VolumeUp';
+import { ClickAwayListener, Grow, ListItemIcon, ListItemText, MenuItem, MenuList, Paper, Popper } from "@mui/material";
+import { useContext, useState } from "react";
+import { MessageModel } from "../models/MessageModel";
+import { AppContext } from "../store/AppContext";
 import { deleteMessageByMid } from "../util/db";
 
 const MessageMoreButton: React.FC<{

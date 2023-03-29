@@ -1,8 +1,8 @@
 import { Box } from "@material-ui/core";
-import { useContext } from "react";
-import { AppContext } from "../store/AppContext";
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import ThumbDownOffAltIcon from '@mui/icons-material/ThumbDownOffAlt';
+import { useContext } from "react";
+import { AppContext } from "../store/AppContext";
 
 const DislikeButton: React.FC<{
   disliked: boolean;

@@ -1,7 +1,6 @@
-import { useState } from "react";
+import { Button } from "@material-ui/core";
 import EditIcon from '@mui/icons-material/Edit';
 import { Tooltip } from "@mui/material";
-import { Button } from "@material-ui/core";
 
 const EditButton: React.FC<{
   setIsEditing: (isEditing: boolean) => void;

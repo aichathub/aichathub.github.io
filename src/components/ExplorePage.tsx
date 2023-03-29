@@ -1,20 +1,16 @@
-import { styled } from "@mui/material/styles";
+import { Grid } from "@material-ui/core";
 import Box from "@mui/material/Box";
+import CircularProgress from '@mui/material/CircularProgress';
 import CssBaseline from "@mui/material/CssBaseline";
-import { useState, useEffect, useContext } from "react";
-import TopLeftBar from "./TopLeftBar";
+import { styled } from "@mui/material/styles";
+import { useContext, useEffect, useState } from "react";
+import { PostModel } from "../models/PostModel";
+import { AppContext } from "../store/AppContext";
+import { getRecommendations } from "../util/db";
 import DrawerHeader from "./DrawerHeader";
 import ScrollButton from "./ScrollButton";
-import { AppContext } from "../store/AppContext";
-import { useSearchParams } from 'react-router-dom';
-import { Grid, Typography } from "@material-ui/core";
-import Message from "./Message";
-import { MessageModel } from "../models/MessageModel";
 import SearchItem from "./SearchItem";
-import { PostModel } from "../models/PostModel";
-import { getRecommendations, searchPostsByKeyword } from "../util/db";
-import SearchIcon from "@mui/icons-material/Search";
-import CircularProgress from '@mui/material/CircularProgress';
+import TopLeftBar from "./TopLeftBar";
 
 const drawerWidth = 240;
 

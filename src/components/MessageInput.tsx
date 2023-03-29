@@ -1,17 +1,14 @@
-import React, { useContext, useRef, useState } from "react";
-import { Tooltip, CircularProgress } from "@material-ui/core";
+import { CircularProgress, Tooltip } from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import SendIcon from "@material-ui/icons/Send";
-import { MessageModel } from "../models/MessageModel";
-import { KeyboardEvent } from "react";
-import MessageInputSettings from "./MessageInputSettings";
+import { IconButton, TextField } from "@mui/material";
+import React, { KeyboardEvent, useContext, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import { insertMessage, insertSessionMessage } from "../util/db";
+import { MessageModel } from "../models/MessageModel";
 import { AppContext } from "../store/AppContext";
 import { GUEST_EMAIL } from "../util/constants";
-import { AutoFixHighRounded } from "@mui/icons-material";
+import { insertMessage, insertSessionMessage } from "../util/db";
 import MessageInputUpload from "./MessageInputUpload";
-import { IconButton, TextField } from "@mui/material";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

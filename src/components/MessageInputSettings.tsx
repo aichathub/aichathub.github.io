@@ -1,6 +1,6 @@
 import { Checkbox, ClickAwayListener, FormControlLabel, Grow, IconButton, MenuItem, MenuList, Paper, Popper, Tooltip } from "@material-ui/core";
 import SettingsIcon from '@mui/icons-material/Settings';
-import { useState, useContext } from "react";
+import { useContext, useState } from "react";
 import { AppContext } from "../store/AppContext";
 
 const MessageInputSettings = () => {

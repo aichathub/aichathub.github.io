@@ -1,19 +1,17 @@
-import { styled } from "@mui/material/styles";
+import { Grid, Typography } from "@material-ui/core";
+import SearchIcon from "@mui/icons-material/Search";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
-import { useState, useEffect, useContext } from "react";
-import TopLeftBar from "./TopLeftBar";
+import { styled } from "@mui/material/styles";
+import { useContext, useEffect, useState } from "react";
+import { useSearchParams } from 'react-router-dom';
+import { PostModel } from "../models/PostModel";
+import { AppContext } from "../store/AppContext";
+import { searchPostsByKeyword } from "../util/db";
 import DrawerHeader from "./DrawerHeader";
 import ScrollButton from "./ScrollButton";
-import { AppContext } from "../store/AppContext";
-import { useSearchParams } from 'react-router-dom';
-import { Grid, Typography } from "@material-ui/core";
-import Message from "./Message";
-import { MessageModel } from "../models/MessageModel";
 import SearchItem from "./SearchItem";
-import { PostModel } from "../models/PostModel";
-import { searchPostsByKeyword } from "../util/db";
-import SearchIcon from "@mui/icons-material/Search";
+import TopLeftBar from "./TopLeftBar";
 
 const drawerWidth = 240;
 

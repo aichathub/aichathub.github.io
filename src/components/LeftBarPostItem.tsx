@@ -1,17 +1,17 @@
-import { Grid, ListItemIcon, ListItemText } from "@material-ui/core";
-import ListItem from "@mui/material/ListItem";
-import { ListItemButton } from "@mui/material";
+import { Grid, ListItemText } from "@material-ui/core";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
+import LockIcon from '@mui/icons-material/Lock';
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import { AppContext } from "../store/AppContext";
-import { useContext, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { ListItemButton } from "@mui/material";
+import ListItem from "@mui/material/ListItem";
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import EditPostDialog from "./EditPostDialog";
+import { useContext, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { PostModel } from "../models/PostModel";
+import { AppContext } from "../store/AppContext";
 import { deletePostByUsernameAndPid } from "../util/db";
-import LockIcon from '@mui/icons-material/Lock';
+import EditPostDialog from "./EditPostDialog";
 
 const LeftBarPostItem: React.FC<{ post: PostModel }> = (props) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -57,7 +57,7 @@ const LeftBarPostItem: React.FC<{ post: PostModel }> = (props) => {
       <ListItem key={post.pid} disablePadding>
         <ListItemButton onClick={handleClickPostItem}>
           {post.isprivate ? <LockIcon /> : <ChatBubbleOutlineIcon />}
-          <ListItemText primary={post.title} style={{marginLeft: "10px"}}/>
+          <ListItemText primary={post.title} style={{ marginLeft: "10px" }} />
         </ListItemButton>
         <Grid xs={3}>
           <ListItemButton onClick={handleClickPostItemMore}>

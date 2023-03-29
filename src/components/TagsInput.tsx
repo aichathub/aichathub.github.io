@@ -1,11 +1,11 @@
-import * as React from 'react';
+import { makeStyles } from "@material-ui/core/styles";
+import Autocomplete from '@mui/material/Autocomplete';
 import Chip from '@mui/material/Chip';
 import TextField from '@mui/material/TextField';
-import Autocomplete from '@mui/material/Autocomplete';
-import { makeStyles } from "@material-ui/core/styles";
-import { useEffect, useContext } from 'react';
-import { AppContext } from '../store/AppContext';
+import * as React from 'react';
+import { useContext } from 'react';
 import { TagModel } from '../models/TagModel';
+import { AppContext } from '../store/AppContext';
 
 const useStyles = makeStyles(theme => ({
   textField: {

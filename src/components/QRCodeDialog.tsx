@@ -1,11 +1,8 @@
-import * as React from 'react';
 import Dialog from '@mui/material/Dialog';
 import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
+import * as React from 'react';
 import QRCode from "react-qr-code";
-import CloseIcon from '@mui/icons-material/Close';
-import { AppBar, IconButton, Toolbar } from '@mui/material';
-import { useState } from 'react';
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -21,12 +18,12 @@ const QRCodeDialog: React.FC<{
   open: boolean;
   onClose: () => void;
 }> = (props) => {
-  const {url, open, onClose} = props;
+  const { url, open, onClose } = props;
 
   const handleClose = () => {
     onClose();
   }
-  
+
   return (
     <div>
       <Dialog

@@ -57,7 +57,7 @@ import { Grid } from "@material-ui/core";
 import { useContext, useEffect, useState } from "react";
 import { MessageModel } from "../models/MessageModel";
 import { AppContext } from "../store/AppContext";
-import { getLikeCount, isLiked, getDislikeCount, isDisliked, unlikeMessage, likeMessage, dislikeMessage, undislikeMessage } from "../util/db";
+import { dislikeMessage, getDislikeCount, getLikeCount, isDisliked, isLiked, likeMessage, undislikeMessage, unlikeMessage } from "../util/db";
 import DislikeButton from "./DislikeButton";
 import LikeButton from "./LikeButton";
 

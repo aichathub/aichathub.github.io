@@ -1,6 +1,4 @@
 import { Grid } from "@mui/material";
-import CopyButton from "./CopyButton";
-import EditButton from "./EditButton";
 import { MessageModel } from "../models/MessageModel";
 import MessageMoreButton from "./MessageMoreButton";
 

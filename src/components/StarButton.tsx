@@ -1,10 +1,10 @@
 import { Box, Tooltip } from "@material-ui/core";
+import StarIcon from "@mui/icons-material/Star";
+import StarBorderIcon from "@mui/icons-material/StarBorder";
 import { useContext, useEffect, useState } from "react";
 import { PostModel } from "../models/PostModel";
 import { AppContext } from "../store/AppContext";
 import { getStarCount, getUsernameByEmail, starPost, unstarPost } from "../util/db";
-import StarIcon from "@mui/icons-material/Star";
-import StarBorderIcon from "@mui/icons-material/StarBorder";
 
 const StarButton: React.FC<{
   post: PostModel;

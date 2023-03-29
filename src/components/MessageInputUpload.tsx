@@ -1,9 +1,7 @@
-import { Checkbox, ClickAwayListener, FormControlLabel, Grow, MenuItem, MenuList, Paper, Popper, Tooltip } from "@material-ui/core";
-import { useState, useContext, useRef, useEffect } from "react";
-import { AppContext } from "../store/AppContext";
+import { Tooltip } from "@material-ui/core";
 import AttachFileIcon from '@mui/icons-material/AttachFile';
-import { useParams } from "react-router-dom";
 import { IconButton } from "@mui/material";
+import { useRef } from "react";
 
 const MessageInputUpload: React.FC<{
   setInputText: (msg: string) => void;
@@ -34,8 +32,8 @@ const MessageInputUpload: React.FC<{
         <AttachFileIcon />
       </IconButton>
     </Tooltip>
-    <input 
-      type="file" 
+    <input
+      type="file"
       accept=".txt"
       onChange={(e) => handleFileUpload(e.target.files)}
       style={{ display: "none" }}

@@ -1,8 +1,8 @@
 import { Box } from "@material-ui/core";
-import { useContext } from "react";
-import { AppContext } from "../store/AppContext";
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
+import { useContext } from "react";
+import { AppContext } from "../store/AppContext";
 
 const LikeButton: React.FC<{
   liked: boolean;

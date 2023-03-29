@@ -1,9 +1,8 @@
+import { Fab, Tooltip } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
-import { Fab } from "@material-ui/core";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import { useEffect, useState, useRef, useContext } from "react";
-import { Tooltip } from "@material-ui/core";
+import { useContext, useEffect, useRef, useState } from "react";
 import { AppContext } from "../store/AppContext";
 
 const ScrollButton = () => {

@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { Button } from "@material-ui/core";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { Tooltip } from "@mui/material";
-import { Button } from "@material-ui/core";
+import { useState } from "react";
 
 const CopyButton: React.FC<{
   content: string;

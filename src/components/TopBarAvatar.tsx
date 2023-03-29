@@ -1,13 +1,13 @@
+import { Avatar, Box, Grid, Tooltip } from "@material-ui/core";
+import LoginIcon from "@mui/icons-material/Login";
+import Button from '@mui/material/Button';
 import IconButton from "@mui/material/IconButton";
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { useState, useContext } from "react";
-import { Box, Tooltip, Avatar, Grid } from "@material-ui/core";
-import { AppContext, EMPTY_AUTH } from "../store/AppContext";
-import Button from '@mui/material/Button';
-import { useNavigate } from "react-router-dom";
-import LoginIcon from "@mui/icons-material/Login";
 import Typography from "@mui/material/Typography";
+import { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { AppContext, EMPTY_AUTH } from "../store/AppContext";
 import { generateColor } from "../util/avatarColor";
 
 const TopBarAvatar = () => {
@@ -40,8 +40,8 @@ const TopBarAvatar = () => {
   return <Box sx={{ flexGrow: 0 }}>
     <Tooltip title={context.auth.loggedEmail}>
       <IconButton onClick={handleMenu} >
-        <Avatar 
-          alt={context.auth.loggedEmail} 
+        <Avatar
+          alt={context.auth.loggedEmail}
           src=""
           style={{ background: avatarColor }}
         >
@@ -67,10 +67,10 @@ const TopBarAvatar = () => {
       <MenuItem onClick={handleSignOutClick}>
         <Grid container>
           <Grid item xs={4}>
-          <LoginIcon />
+            <LoginIcon />
           </Grid>
           <Grid item xs={4}>
-          <Typography> Sign Out </Typography>
+            <Typography> Sign Out </Typography>
           </Grid>
         </Grid>
       </MenuItem>
