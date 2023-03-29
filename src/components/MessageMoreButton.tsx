@@ -49,6 +49,7 @@ const MessageMoreButton: React.FC<{
       context.deleteMessage(props.message.mid);
     }
     context.showSnack("DELETE MESSAGE: " + result.message);
+    handleClose();
   }
   return (
     <>
