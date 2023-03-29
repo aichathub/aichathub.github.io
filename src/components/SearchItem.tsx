@@ -65,7 +65,6 @@ const SearchItem: React.FC<{
                   variant="body2"
                   onClick={() => {
                     context.setIsLoadingMessages(true);
-                    context.setMessages([]);
                     navigate(`/${props.post.username}/${props.post.pid}`);
                   }}
                   sx={{ marginBottom: "12px" }}
