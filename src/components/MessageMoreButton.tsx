@@ -26,7 +26,12 @@ const MessageMoreButton: React.FC<{
   const hasVoice = window.speechSynthesis.getVoices().length > 0;
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
+    if (isSpeaking) {
+      window.speechSynthesis.cancel();
+      setIsSpeaking(false);
+    } else {
+      setAnchorEl(event.currentTarget);
+    }
   };
   const handleClose = () => {
     setAnchorEl(null);
@@ -49,6 +54,7 @@ const MessageMoreButton: React.FC<{
       setIsSpeaking(true);
       utterance.onend = () => {
         setIsSpeaking(false);
+        handleClose();
       }
     }
   }
@@ -84,7 +90,7 @@ const MessageMoreButton: React.FC<{
             borderRadius: "0px"
           }}
         >
-          <MoreHorizIcon fontSize="small" />
+          {isSpeaking ? <StopIcon fontSize="small" /> : <MoreHorizIcon fontSize="small" />}
         </Button>
       </div>
       <Popper open={open} anchorEl={anchorEl} transition>
