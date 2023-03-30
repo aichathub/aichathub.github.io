@@ -59,7 +59,7 @@ const NewPostDialog: React.FC<{
 
   const navigate = useNavigate();
 
-  const [selectedTags, setSelectedTags] = useState<TagModel[]>([]);
+  const [selectedTags, setSelectedTags] = useState<TagModel[]>(context.tags.length ? [context.tags[0]] : []);
 
   const handleClose = () => {
     props.handleClose();
