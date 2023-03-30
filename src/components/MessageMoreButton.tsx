@@ -23,11 +23,8 @@ const MessageMoreButton: React.FC<{
   const hasRightToDelete = context.auth && context.curPost && context.curPost.authoremail === context.auth.loggedEmail;
   const utterance = new SpeechSynthesisUtterance(props.message.content.replaceAll("@ai", "").replaceAll("@AI", ""));
   const [isSpeaking, setIsSpeaking] = useState(false);
-  if (props.message.sender === "ai") {
-    utterance.voice = window.speechSynthesis.getVoices()[0];
-  } else if (window.speechSynthesis.getVoices().length > 1) {
-    utterance.voice = window.speechSynthesis.getVoices()[1];
-  }
+  const hasVoice = window.speechSynthesis.getVoices().length > 0;
+
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -54,7 +51,6 @@ const MessageMoreButton: React.FC<{
         setIsSpeaking(false);
       }
     }
-    handleClose();
   }
   const handleDeleteClick = async () => {
     handleClose();
@@ -130,14 +126,16 @@ const MessageMoreButton: React.FC<{
                       <ListItemText>Delete</ListItemText>
                     </MenuItem>
                   )}
-                  <MenuItem onClick={handleSpeakClick}>
-                    <ListItemIcon>
-                      {isSpeaking ? <StopIcon fontSize="small" /> : <PlayArrowIcon fontSize="small" />}
-                    </ListItemIcon>
-                    <ListItemText>
-                      {isSpeaking ? "Stop" : "Speak"}
-                    </ListItemText>
-                  </MenuItem>
+                  {hasVoice &&
+                    (<MenuItem onClick={handleSpeakClick}>
+                      <ListItemIcon>
+                        {isSpeaking ? <StopIcon fontSize="small" /> : <PlayArrowIcon fontSize="small" />}
+                      </ListItemIcon>
+                      <ListItemText>
+                        {isSpeaking ? "Stop" : "Speak"}
+                      </ListItemText>
+                    </MenuItem>)
+                  }
                 </MenuList>
               </ClickAwayListener>
             </Paper>
