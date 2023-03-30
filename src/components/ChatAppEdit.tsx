@@ -76,7 +76,7 @@ const ChatAppEdit = () => {
         });
       }
       const oldMsgLength = context.messages.length === 0 ? Infinity : context.messages.length;
-      if (msgs.length > oldMsgLength) {
+      if (msgs.length > context.messages.length) {
         context.setMessages(msgmodels);
       }
       // if there is new message and the scroll is at the bottom, scroll to the bottom
