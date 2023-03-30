@@ -46,17 +46,13 @@ const MessageMoreButton: React.FC<{
     handleClose();
   }
   const handleSpeakClick = () => {
-    if (isSpeaking) {
-      window.speechSynthesis.cancel();
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(utterance);
+    setIsSpeaking(true);
+    utterance.onend = () => {
       setIsSpeaking(false);
-    } else {
-      window.speechSynthesis.speak(utterance);
-      setIsSpeaking(true);
-      utterance.onend = () => {
-        setIsSpeaking(false);
-        handleClose();
-      }
     }
+    handleClose();
   }
   const handleDeleteClick = async () => {
     handleClose();
