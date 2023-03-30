@@ -73,6 +73,7 @@ const ChatAppEdit = () => {
           sender: msgs[i].authoremail ? msgs[i].authoremail : "ai",
           time: msgs[i].createdate,
           authorusername: msgs[i].authorusername,
+          editdate: msgs[i].editdate,
         });
       }
       const oldMsgLength = context.messages.length === 0 ? Infinity : context.messages.length;

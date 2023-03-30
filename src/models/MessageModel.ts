@@ -4,4 +4,5 @@ export type MessageModel = {
   time: Date;
   mid: number;
   authorusername?: string;
+  editdate?: Date;
 }

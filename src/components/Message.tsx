@@ -98,6 +98,7 @@ const Message: React.FC<{
     />
     <Button variant="text" onClick={() => {
       props.message.content = editedMsg;
+      props.message.editdate = new Date();
       editMessage(props.message.mid, context.auth.loggedEmail, context.auth.token, editedMsg).then(res => {
         context.showSnack(res.message);
       });
@@ -171,21 +172,24 @@ const Message: React.FC<{
           </MessageWrapper>
           {/* </CopyWrapper> */}
           {!isEditing &&
-            <ReactMarkdown
-              remarkPlugins={[remarkGfm]}
-              children={props.message.content}
-              components={{
-                code({ node, inline, className, children, ...props }) {
-                  return !inline ? (
-                    <CodeBlock content={String(children).replace(/\n$/, '')} />
-                  ) : (
-                    <code className={className} {...props}>
-                      {children}
-                    </code>
-                  )
-                }
-              }}
-            />
+            <>
+              <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                children={props.message.content}
+                components={{
+                  code({ node, inline, className, children, ...props }) {
+                    return !inline ? (
+                      <CodeBlock content={String(children).replace(/\n$/, '')} />
+                    ) : (
+                      <code className={className} {...props}>
+                        {children}
+                      </code>
+                    )
+                  }
+                }}
+              />
+              {props.message.editdate && <Typography variant="overline" color="common.grey" sx={{ fontStyle: 'italic' }}>(Edited)</Typography>}
+            </>
           }
           {/* {!isEditing && !tooLong && messagesView}
           {tooLong &&
