@@ -21,8 +21,13 @@ const MessageMoreButton: React.FC<{
   const open = Boolean(anchorEl);
   const hasRightToEdit = props.message.authorusername === context.loggedUser;
   const hasRightToDelete = context.auth && context.curPost && context.curPost.authoremail === context.auth.loggedEmail;
-  const utterance = new SpeechSynthesisUtterance(props.message.content);
+  const utterance = new SpeechSynthesisUtterance(props.message.content.replaceAll("@ai", "").replaceAll("@AI", ""));
   const [isSpeaking, setIsSpeaking] = useState(false);
+  if (props.message.sender === "ai") {
+    utterance.voice = window.speechSynthesis.getVoices()[0];
+  } else if (window.speechSynthesis.getVoices().length > 1) {
+    utterance.voice = window.speechSynthesis.getVoices()[1];
+  }
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
