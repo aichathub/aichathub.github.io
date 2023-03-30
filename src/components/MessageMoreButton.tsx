@@ -25,10 +25,9 @@ const MessageMoreButton: React.FC<{
   const [isSpeaking, setIsSpeaking] = useState(false);
   const hasVoice = window.speechSynthesis.getVoices().length > 0;
   if (props.message.sender === 'ai') {
-    utterance.pitch = 0;
-    utterance.rate = 1.2;
+    utterance.pitch = 0.5;
   } else {
-    utterance.pitch = 10;
+    utterance.pitch = 5;
   }
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     if (isSpeaking) {
