@@ -3,7 +3,8 @@ import { ContentCopy } from "@mui/icons-material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import VolumeUpIcon from '@mui/icons-material/VolumeUp';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import StopIcon from '@mui/icons-material/Stop';
 import { ClickAwayListener, Grow, ListItemIcon, ListItemText, MenuItem, MenuList, Paper, Popper } from "@mui/material";
 import { useContext, useState } from "react";
 import { MessageModel } from "../models/MessageModel";
@@ -20,6 +21,8 @@ const MessageMoreButton: React.FC<{
   const open = Boolean(anchorEl);
   const hasRightToEdit = props.message.authorusername === context.loggedUser;
   const hasRightToDelete = context.auth && context.curPost && context.curPost.authoremail === context.auth.loggedEmail;
+  const utterance = new SpeechSynthesisUtterance(props.message.content);
+  const [isSpeaking, setIsSpeaking] = useState(false);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -36,8 +39,11 @@ const MessageMoreButton: React.FC<{
     handleClose();
   }
   const handleSpeakClick = () => {
-    const utterance = new SpeechSynthesisUtterance(props.message.content);
-    window.speechSynthesis.speak(utterance);
+    if (isSpeaking) {
+      speechSynthesis.cancel();
+    } else {
+      speechSynthesis.speak(utterance);
+    }
     handleClose();
   }
   const handleDeleteClick = async () => {
@@ -116,9 +122,11 @@ const MessageMoreButton: React.FC<{
                   )}
                   <MenuItem onClick={handleSpeakClick}>
                     <ListItemIcon>
-                      <VolumeUpIcon fontSize="small" />
+                      {isSpeaking ? <StopIcon fontSize="small" /> : <PlayArrowIcon fontSize="small" />}
                     </ListItemIcon>
-                    <ListItemText>Speak</ListItemText>
+                    <ListItemText>
+                      {isSpeaking ? "Stop" : "Speak"}
+                    </ListItemText>
                   </MenuItem>
                 </MenuList>
               </ClickAwayListener>
