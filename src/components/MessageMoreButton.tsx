@@ -36,9 +36,8 @@ const MessageMoreButton: React.FC<{
     handleClose();
   }
   const handleSpeakClick = () => {
-    // const utterance = new SpeechSynthesisUtterance(props.message.content);
-    // window.speechSynthesis.speak(utterance);
-    context.showSnack("Coming soon!");
+    const utterance = new SpeechSynthesisUtterance(props.message.content);
+    window.speechSynthesis.speak(utterance);
     handleClose();
   }
   const handleDeleteClick = async () => {
