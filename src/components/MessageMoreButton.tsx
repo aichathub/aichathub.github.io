@@ -25,7 +25,12 @@ const MessageMoreButton: React.FC<{
   const [isSpeaking, setIsSpeaking] = useState(false);
   const hasVoice = window.speechSynthesis.getVoices().length > 0;
   if (props.message.sender === 'ai') {
-    utterance.pitch = 0;
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    if (isSafari) {
+      utterance.pitch = 1;
+    } else {
+      utterance.pitch = 0.5;
+    }
   } else {
     utterance.pitch = 2;
   }
