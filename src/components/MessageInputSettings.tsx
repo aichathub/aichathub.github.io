@@ -1,20 +1,33 @@
-import { Checkbox, ClickAwayListener, FormControlLabel, Grow, IconButton, MenuItem, MenuList, Paper, Popper, Tooltip } from "@material-ui/core";
+import { ClickAwayListener, FormControlLabel, Grow, Tooltip } from "@material-ui/core";
 import SettingsIcon from '@mui/icons-material/Settings';
+import { Checkbox, IconButton, MenuItem, MenuList, Paper, Popper } from "@mui/material";
 import { useContext, useState } from "react";
 import { AppContext } from "../store/AppContext";
 
-const MessageInputSettings = () => {
+const MessageInputSettings: React.FC<{
+  inputText: string;
+  setInputText: (inputText: string) => void;
+}> = (props) => {
+  const triggerAI = props.inputText.indexOf("@ai") !== -1 || props.inputText.indexOf("@AI") !== -1;
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const hasVoice = window.speechSynthesis.getVoices().length > 0;
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const toggleTriggerAI = () => {
+    if (triggerAI) {
+      props.setInputText(props.inputText.replace("@ai", "").replace("@AI", ""));
+    } else {
+      props.setInputText("@AI " + props.inputText.trim());
+    }
+  }
   const context = useContext(AppContext);
   return <>
-    <Tooltip title="Settings" arrow>
+    <Tooltip title="Settings" arrow placement="left-start">
       <IconButton
         component="label"
         style={{ borderRadius: 0, borderLeft: '0.1em solid lightgrey' }}
@@ -38,9 +51,19 @@ const MessageInputSettings = () => {
                 <MenuItem >
                   <FormControlLabel
                     label="AI Response"
-                    control={<Checkbox checked={context.sendTriggerApi} onClick={context.toggleSendTriggerApi} />}
+                    control={<Checkbox checked={triggerAI} onClick={toggleTriggerAI} />}
                   />
                 </MenuItem>
+                {
+                  hasVoice && (
+                    <MenuItem >
+                      <FormControlLabel
+                        label="AI Voice"
+                        control={<Checkbox checked={context.sendTriggerAIVoice} onClick={context.toggleSendTriggerAIVoice} />}
+                      />
+                    </MenuItem>
+                  )
+                }
               </MenuList>
             </ClickAwayListener>
           </Paper>

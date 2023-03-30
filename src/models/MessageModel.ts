@@ -5,4 +5,5 @@ export type MessageModel = {
   mid: number;
   authorusername?: string;
   editdate?: Date;
+  shouldSpeak?: boolean;
 }

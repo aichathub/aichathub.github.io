@@ -8,7 +8,7 @@ import { MessageModel } from "../models/MessageModel";
 import { AppContext } from "../store/AppContext";
 import { GUEST_EMAIL } from "../util/constants";
 import { insertMessage, insertSessionMessage } from "../util/db";
-import MessageInputUpload from "./MessageInputUpload";
+import MessageInputSettings from "./MessageInputSettings";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -93,7 +93,7 @@ export const MessageInput: React.FC<{
           pid: postid!,
           content: content,
           token: context.auth.token,
-          triggerAI: context.sendTriggerApi,
+          triggerAI: context.sendTriggerAIVoice,
           authoremail: context.auth.loggedEmail,
           socketId: optionalSocketId,
         });
@@ -145,8 +145,8 @@ export const MessageInput: React.FC<{
           onKeyDownCapture={handleInputOnKeyDown}
           onKeyUpCapture={handleInputOnKeyUp}
         />
-        <MessageInputUpload setInputText={setInputText} />
-        {/* <MessageInputSettings /> */}
+        {/* <MessageInputUpload setInputText={setInputText} /> */}
+        <MessageInputSettings inputText={inputText} setInputText={setInputText} />
         {sendBtn}
       </div>
     </>

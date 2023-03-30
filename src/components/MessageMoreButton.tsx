@@ -6,7 +6,7 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import StopIcon from '@mui/icons-material/Stop';
 import { ClickAwayListener, Grow, ListItemIcon, ListItemText, MenuItem, MenuList, Paper, Popper } from "@mui/material";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { MessageModel } from "../models/MessageModel";
 import { AppContext } from "../store/AppContext";
 import { deleteMessageByMid } from "../util/db";
@@ -54,15 +54,23 @@ const MessageMoreButton: React.FC<{
     props.setIsEditing(true);
     handleClose();
   }
-  const handleSpeakClick = () => {
+  const handleSpeak = () => {
     window.speechSynthesis.cancel();
     window.speechSynthesis.speak(utterance);
     setIsSpeaking(true);
     utterance.onend = () => {
       setIsSpeaking(false);
     }
+  }
+  const handleSpeakClick = () => {
+    handleSpeak();
     handleClose();
   }
+  useEffect(() => {
+    if (props.message.shouldSpeak && !isSpeaking && hasVoice) {
+      handleSpeak();
+    }
+  }, []);
   const handleDeleteClick = async () => {
     handleClose();
     const result = await deleteMessageByMid(props.message.mid, context.auth.token, context.loggedUser);

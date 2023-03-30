@@ -77,9 +77,6 @@ const ChatAppEdit = () => {
         });
       }
       const oldMsgLength = context.messages.length === 0 ? Infinity : context.messages.length;
-      if (msgs.length > context.messages.length) {
-        context.setMessages(msgmodels);
-      }
       // if there is new message and the scroll is at the bottom, scroll to the bottom
       if (!context.isFirstLoad && msgs.length > oldMsgLength && window.scrollY + window.innerHeight >= document.body.offsetHeight) {
         setTimeout(() => {
@@ -89,7 +86,12 @@ const ChatAppEdit = () => {
           });
         }, 300);
       }
-
+      if (!context.isFirstLoad && msgs.length > oldMsgLength && msgmodels[msgmodels.length - 1].sender === 'ai') {
+        msgmodels[msgmodels.length - 1].shouldSpeak = true;
+      }
+      if (msgs.length > context.messages.length) {
+        context.setMessages(msgmodels);
+      }
       if (context.isSendingMessage) {
         const aiReplied = msgs.length > oldMsgLength && !msgs[msgs.length - 1].authoremail;
         if (aiReplied) {

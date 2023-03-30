@@ -20,7 +20,7 @@ type AppContextObj = {
   auth: AuthObj;
   isLoadingMessages: boolean;
   isSendingMessage: boolean;
-  sendTriggerApi: boolean;
+  sendTriggerAIVoice: boolean;
   loggedUser: string;
   lastPostsRefresh: Date;
   doesPostExist: boolean;
@@ -32,6 +32,7 @@ type AppContextObj = {
   messages: MessageModel[];
   isFirstLoad: boolean;
 
+  findNextMessage: (mid: number) => MessageModel | undefined;
   setIsFirstLoad: (isFirstLoad: boolean) => void;
   deleteMessage: (messageId: number) => void;
   setMessages: (messages: MessageModel[]) => void;
@@ -43,7 +44,7 @@ type AppContextObj = {
   setDoesPostExist: (doesPostExist: boolean) => void;
   setLastPostsRefresh: (lastPostsRefresh: Date) => void;
   setIsSendingMessage: (isSendingMessage: boolean) => void;
-  toggleSendTriggerApi: () => void;
+  toggleSendTriggerAIVoice: () => void;
   setIsLoadingMessages: (isLoading: boolean) => void;
   changePagePostId: (postId: string) => void;
   getPostById: (postId: string) => LocalPostModel | undefined;
@@ -67,7 +68,7 @@ export const AppContext = createContext<AppContextObj>({
   auth: EMPTY_AUTH,
   posts: [],
   isLoadingMessages: false,
-  sendTriggerApi: false,
+  sendTriggerAIVoice: false,
   isSendingMessage: false,
   loggedUser: "",
   lastPostsRefresh: new Date(),
@@ -80,6 +81,7 @@ export const AppContext = createContext<AppContextObj>({
   messages: [],
   isFirstLoad: true,
 
+  findNextMessage: () => undefined,
   setIsFirstLoad: () => { },
   deleteMessage: () => { },
   setMessages: () => { },
@@ -101,7 +103,7 @@ export const AppContext = createContext<AppContextObj>({
   changeAuth: () => { },
   updatePost: () => { },
   showSnack: () => { },
-  toggleSendTriggerApi: () => { },
+  toggleSendTriggerAIVoice: () => { },
   setLoggedUser: () => { },
 });
 
@@ -114,7 +116,11 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
   const [auth, setAuth] = useState<AuthObj>(EMPTY_AUTH);
   const [isLoadingMessages, setIsLoadingMessages] = useState(true);
   const [posts, setPosts] = useState<LocalPostModel[]>([]);
-  const [sendTriggerApi, setSendTriggerApi] = useState(false);
+  let defaultTriggerAIVoice = true;
+  if (localStorage.getItem("sendTriggerAIVoice") === "false") {
+    defaultTriggerAIVoice = false;
+  }
+  const [sendTriggerAIVoice, setSendTriggerAIVoice] = useState(defaultTriggerAIVoice);
   const [isSendingMessage, setIsSendingMessage] = useState(false);
   const [loggedUser, setLoggedUser] = useState("");
   const [starredPosts, setStarredPosts] = useState<PostModel[]>([]);
@@ -146,7 +152,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
     return result[0];
   };
   const toggleSendTriggerApi = () => {
-    setSendTriggerApi(prevState => !prevState);
+    setSendTriggerAIVoice(prevState => !prevState);
   }
   const deletePostById = (postId: string) => {
     setPosts((prevState) => prevState.filter(post => post.id !== postId));
@@ -195,12 +201,18 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
     setIsSnackShown(false);
     setSnackMessage("");
   };
+  const findNextMessage = (mid: number) => {
+    const index = messages.findIndex(x => x.mid === mid);
+    if (index === -1) return undefined;
+    if (index === messages.length - 1) return undefined;
+    return messages[index + 1];
+  };
   const contextValue = {
     pagePostId: pagePostId,
     auth: auth,
     posts: posts,
     isLoadingMessages: isLoadingMessages,
-    sendTriggerApi: sendTriggerApi,
+    sendTriggerAIVoice: sendTriggerAIVoice,
     isSendingMessage: isSendingMessage,
     loggedUser: loggedUser,
     lastPostsRefresh: lastPostsRefresh,
@@ -213,6 +225,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
     messages: messages,
     isFirstLoad: isFirstLoad,
 
+    findNextMessage: findNextMessage,
     setIsFirstLoad: setIsFirstLoad,
     deleteMessage: deleteMessage,
     setMessages: setMessages,
@@ -225,7 +238,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
     setLastPostsRefresh: setLastPostsRefresh,
     setIsSendingMessage: setIsSendingMessage,
     setIsLoadingMessages: setIsLoadingMessages,
-    toggleSendTriggerApi: toggleSendTriggerApi,
+    toggleSendTriggerAIVoice: toggleSendTriggerApi,
     changePagePostId: changePagePostId,
     getPostById: getPostById,
     addMessage: addMessage,
@@ -259,12 +272,12 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
     localStorage.setItem("posts", JSON.stringify(posts));
   }, [posts]);
   useDidMountEffect(() => {
-    if (sendTriggerApi) {
-      localStorage.setItem("sendTriggerApi", "true");
+    if (sendTriggerAIVoice) {
+      localStorage.setItem("sendTriggerAIVoice", "true");
     } else {
-      localStorage.removeItem("sendTriggerApi");
+      localStorage.setItem("sendTriggerAIVoice", "false");
     }
-  }, [sendTriggerApi]);
+  }, [sendTriggerAIVoice]);
   useEffect(() => {
     const authFromLocal = localStorage.getItem("auth");
     if (authFromLocal) {
@@ -291,13 +304,6 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
     if (!postsObj) return;
     const posts = JSON.parse(postsObj)! as LocalPostModel[];
     setPosts(posts);
-  }, []);
-  useEffect(() => {
-    const sendTriggerApi = localStorage.getItem("sendTriggerApi");
-    if (!sendTriggerApi) return;
-    if (sendTriggerApi) {
-      setSendTriggerApi(true);
-    }
   }, []);
   useEffect(() => {
     getTags().then(response => {
