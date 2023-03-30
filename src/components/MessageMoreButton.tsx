@@ -57,12 +57,12 @@ const MessageMoreButton: React.FC<{
     handleClose();
   }
   const handleDeleteClick = async () => {
+    handleClose();
     const result = await deleteMessageByMid(props.message.mid, context.auth.token, context.loggedUser);
     if (result.message === "SUCCESS") {
       context.deleteMessage(props.message.mid);
     }
     context.showSnack("DELETE MESSAGE: " + result.message);
-    handleClose();
   }
   return (
     <>
