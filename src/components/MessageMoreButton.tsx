@@ -40,9 +40,14 @@ const MessageMoreButton: React.FC<{
   }
   const handleSpeakClick = () => {
     if (isSpeaking) {
-      speechSynthesis.cancel();
+      window.speechSynthesis.cancel();
+      setIsSpeaking(false);
     } else {
-      speechSynthesis.speak(utterance);
+      window.speechSynthesis.speak(utterance);
+      setIsSpeaking(true);
+      utterance.onend = () => {
+        setIsSpeaking(false);
+      }
     }
     handleClose();
   }
