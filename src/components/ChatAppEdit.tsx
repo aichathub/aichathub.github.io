@@ -97,6 +97,8 @@ const ChatAppEdit = () => {
       if (msgs && msgs[msgs.length - 1].content.toLowerCase().includes("@ai")) {
         context.setIsSendingMessage(true);
       }
+
+      context.setIsFirstLoad(false);
     });
   };
 
