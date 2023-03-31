@@ -118,11 +118,18 @@ const Message: React.FC<{
   const anchorElement = <span id={"m" + props.message.mid} style={{ position: "absolute", transform: "translateY(-30vh)" }} />;
   const anchor = window.location.hash.slice(1);
   const shouldHighlight = anchor === "m" + props.message.mid;
+  const isSpeaking = props.message.mid === context.speakingMid;
   if (shouldHighlight) {
     sx = {
       ...sx,
       backgroundColor: context.darkMode ? "rgba(39,30,20,0.7)" : "rgba(254,251,195,0.7)",
       borderLeft: "6px solid red"
+    }
+  } else if (isSpeaking) {
+    sx = {
+      ...sx,
+      backgroundColor: context.darkMode ? "rgba(39,30,20,0.7)" : "rgba(254,251,195,0.7)",
+      borderLeft: "6px solid green"
     }
   }
   return (

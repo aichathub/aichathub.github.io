@@ -57,10 +57,12 @@ const MessageMoreButton: React.FC<{
     handleClose();
   }
   const handleSpeak = () => {
+    context.setSpeakingMid(props.message.mid);
     window.speechSynthesis.cancel();
     window.speechSynthesis.speak(utterance);
     setIsSpeaking(true);
     utterance.onend = () => {
+      context.setSpeakingMid(-1);
       setIsSpeaking(false);
     }
   }

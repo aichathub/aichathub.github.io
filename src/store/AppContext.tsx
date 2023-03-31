@@ -31,7 +31,9 @@ type AppContextObj = {
   curPost?: PostModel;
   messages: MessageModel[];
   isFirstLoad: boolean;
+  speakingMid: number;
 
+  setSpeakingMid: (mid: number) => void;
   findNextMessage: (mid: number) => MessageModel | undefined;
   setIsFirstLoad: (isFirstLoad: boolean) => void;
   deleteMessage: (messageId: number) => void;
@@ -80,7 +82,9 @@ export const AppContext = createContext<AppContextObj>({
   curPost: undefined,
   messages: [],
   isFirstLoad: true,
+  speakingMid: -1,
 
+  setSpeakingMid: () => { },
   findNextMessage: () => undefined,
   setIsFirstLoad: () => { },
   deleteMessage: () => { },
@@ -133,6 +137,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
   const [messages, setMessages] = useState<MessageModel[]>([]);
   const [isFirstLoad, setIsFirstLoad] = useState(true);
   const [movedAnchor, setMovedAnchor] = useState(false);
+  const [speakingMid, setSpeakingMid] = useState(-1);
 
   const isPostStarred = (authoremail: string, postId: string) => {
     return starredPosts.filter(x => x.authoremail === authoremail && x.pid === postId).length > 0;
@@ -225,7 +230,9 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
     curPost: curPost,
     messages: messages,
     isFirstLoad: isFirstLoad,
+    speakingMid: speakingMid,
 
+    setSpeakingMid: setSpeakingMid,
     findNextMessage: findNextMessage,
     setIsFirstLoad: setIsFirstLoad,
     deleteMessage: deleteMessage,
