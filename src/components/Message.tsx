@@ -129,7 +129,7 @@ const Message: React.FC<{
     sx = {
       ...sx,
       backgroundColor: context.darkMode ? "rgba(39,30,20,0.7)" : "rgba(254,251,195,0.7)",
-      borderLeft: "2px solid green"
+      borderLeft: "1px solid green"
     }
   }
   return (

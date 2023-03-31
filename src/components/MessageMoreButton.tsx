@@ -39,6 +39,7 @@ const MessageMoreButton: React.FC<{
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     if (isSpeaking) {
       window.speechSynthesis.cancel();
+      context.setSpeakingMid(-1);
       setIsSpeaking(false);
     } else {
       setAnchorEl(event.currentTarget);
