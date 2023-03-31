@@ -99,7 +99,7 @@ const ChatAppEdit = () => {
         }
       }
 
-      if (msgs && msgs.length && msgs[msgs.length - 1].sender !== "ai" && msgs[msgs.length - 1].content.toLowerCase().includes("@ai")) {
+      if (msgs && msgs.length && msgs[i].authoremail && msgs[msgs.length - 1].content.toLowerCase().includes("@ai")) {
         context.setIsSendingMessage(true);
       }
 
