@@ -136,7 +136,6 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
   const [curPost, setCurPost] = useState<PostModel>();
   const [messages, setMessages] = useState<MessageModel[]>([]);
   const [isFirstLoad, setIsFirstLoad] = useState(true);
-  const [movedAnchor, setMovedAnchor] = useState(false);
   const [speakingMid, setSpeakingMid] = useState(-1);
 
   const isPostStarred = (authoremail: string, postId: string) => {
@@ -340,17 +339,16 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
   }, []);
 
   useEffect(() => {
-    if (isLoadingMessages || movedAnchor)
+    if (isLoadingMessages)
       return;
     const anchor = window.location.hash.slice(1);
     if (anchor) {
       const anchorEl = document.getElementById(anchor);
       if (anchorEl) {
         anchorEl.scrollIntoView();
-        setMovedAnchor(true);
       }
     }
-  }, [isLoadingMessages, movedAnchor]);
+  }, [isLoadingMessages]);
 
   const getSeverity = (message: string) => {
     if (message.toLowerCase().indexOf("error") !== -1) return "error";
