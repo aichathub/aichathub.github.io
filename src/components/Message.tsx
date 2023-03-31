@@ -123,13 +123,13 @@ const Message: React.FC<{
     sx = {
       ...sx,
       backgroundColor: context.darkMode ? "rgba(39,30,20,0.7)" : "rgba(254,251,195,0.7)",
-      borderLeft: "6px solid red"
+      borderLeft: "3px solid red"
     }
   } else if (isSpeaking) {
     sx = {
       ...sx,
       backgroundColor: context.darkMode ? "rgba(39,30,20,0.7)" : "rgba(254,251,195,0.7)",
-      borderLeft: "6px solid green"
+      borderLeft: "2px solid green"
     }
   }
   return (
