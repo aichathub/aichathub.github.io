@@ -146,7 +146,7 @@ export const MessageInput: React.FC<{
           onKeyUpCapture={handleInputOnKeyUp}
         />
         {/* <MessageInputUpload setInputText={setInputText} /> */}
-        <MessageInputSettings inputText={inputText} setInputText={setInputText} />
+        <MessageInputSettings inputText={inputText} setInputText={setInputText} inputRef={inputRef} />
         {sendBtn}
       </div>
     </>
