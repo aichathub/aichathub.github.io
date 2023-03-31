@@ -1,6 +1,5 @@
 import { Box, Tooltip } from "@material-ui/core";
-import Grid from "@material-ui/core/Grid";
-import { Button, SxProps, TextField, Theme } from "@mui/material";
+import { Button, Grid, SxProps, TextField, Theme } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import { deepOrange } from "@mui/material/colors";
 import Paper from "@mui/material/Paper";
@@ -16,6 +15,7 @@ import { generateColor } from "../util/avatarColor";
 import { editMessage } from "../util/db";
 import CodeBlock from "./CodeBlock";
 import LikeDislikePanel from "./LikeDislikePanel";
+import classes from "./Message.module.css";
 import MessageWrapper from "./MessageWrapper";
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
@@ -207,7 +207,16 @@ const Message: React.FC<{
                         {children}
                       </code>
                     )
-                  }
+                  },
+                  a({ node, className, children, ...props }) {
+                    return (
+                      <span className={classes.mdlink}>
+                        <a className={className} {...props}>
+                          {children}
+                        </a>
+                      </span>
+                    )
+                  },
                 }}
               />
               {props.message.editdate && <Typography variant="overline" color="common.grey" sx={{ fontStyle: 'italic' }}>(Edited)</Typography>}
