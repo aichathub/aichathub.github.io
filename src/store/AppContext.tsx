@@ -132,6 +132,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
   const [curPost, setCurPost] = useState<PostModel>();
   const [messages, setMessages] = useState<MessageModel[]>([]);
   const [isFirstLoad, setIsFirstLoad] = useState(true);
+  const [movedAnchor, setMovedAnchor] = useState(false);
 
   const isPostStarred = (authoremail: string, postId: string) => {
     return starredPosts.filter(x => x.authoremail === authoremail && x.pid === postId).length > 0;
@@ -329,7 +330,20 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
     return () => {
       window.removeEventListener('storage', checkDarkMode)
     }
-  }, [])
+  }, []);
+
+  useEffect(() => {
+    if (isLoadingMessages || movedAnchor)
+      return;
+    const anchor = window.location.hash.slice(1);
+    if (anchor) {
+      const anchorEl = document.getElementById(anchor);
+      if (anchorEl) {
+        anchorEl.scrollIntoView();
+        setMovedAnchor(true);
+      }
+    }
+  }, [isLoadingMessages, movedAnchor]);
 
   const getSeverity = (message: string) => {
     if (message.toLowerCase().indexOf("error") !== -1) return "error";

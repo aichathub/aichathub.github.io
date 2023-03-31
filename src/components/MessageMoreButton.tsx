@@ -4,12 +4,14 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import QRCode2Icon from "@mui/icons-material/QrCode2";
 import StopIcon from '@mui/icons-material/Stop';
 import { ClickAwayListener, Grow, ListItemIcon, ListItemText, MenuItem, MenuList, Paper, Popper } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { MessageModel } from "../models/MessageModel";
 import { AppContext } from "../store/AppContext";
 import { deleteMessageByMid } from "../util/db";
+import QRCodeDialog from "./QRCodeDialog";
 
 const MessageMoreButton: React.FC<{
   message: MessageModel;
@@ -79,6 +81,14 @@ const MessageMoreButton: React.FC<{
     }
     context.showSnack("DELETE MESSAGE: " + result.message);
   }
+  const handleShareClick = () => {
+    setShowQRCodeDialog(true);
+    handleClose();
+  }
+  const [showQRCodeDialog, setShowQRCodeDialog] = useState(false);
+  const handleQRClose = () => {
+    setShowQRCodeDialog(false);
+  }
   return (
     <>
       <div
@@ -124,6 +134,12 @@ const MessageMoreButton: React.FC<{
                     </ListItemIcon>
                     <ListItemText>Copy</ListItemText>
                   </MenuItem>
+                  <MenuItem onClick={handleShareClick}>
+                    <ListItemIcon>
+                      <QRCode2Icon fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText>Share</ListItemText>
+                  </MenuItem>
                   {hasRightToEdit && (
                     <MenuItem
                       onClick={handleEditClick}
@@ -135,16 +151,6 @@ const MessageMoreButton: React.FC<{
                     </MenuItem>
                   )
                   }
-                  {hasRightToDelete && (
-                    <MenuItem
-                      onClick={handleDeleteClick}
-                    >
-                      <ListItemIcon>
-                        <DeleteIcon fontSize="small" />
-                      </ListItemIcon>
-                      <ListItemText>Delete</ListItemText>
-                    </MenuItem>
-                  )}
                   {hasVoice &&
                     (<MenuItem onClick={handleSpeakClick}>
                       <ListItemIcon>
@@ -155,12 +161,23 @@ const MessageMoreButton: React.FC<{
                       </ListItemText>
                     </MenuItem>)
                   }
+                  {hasRightToDelete && (
+                    <MenuItem
+                      onClick={handleDeleteClick}
+                    >
+                      <ListItemIcon>
+                        <DeleteIcon fontSize="small" />
+                      </ListItemIcon>
+                      <ListItemText>Delete</ListItemText>
+                    </MenuItem>
+                  )}
                 </MenuList>
               </ClickAwayListener>
             </Paper>
           </Grow>
         )}
       </Popper>
+      <QRCodeDialog url={window.location.href.split('#')[0] + "#m" + props.message.mid} onClose={handleQRClose} open={showQRCodeDialog} />
     </>
   );
 };

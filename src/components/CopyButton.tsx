@@ -5,6 +5,7 @@ import { useState } from "react";
 
 const CopyButton: React.FC<{
   content: string;
+  placement?: "top" | "bottom" | "left" | "right";
 }> = (props) => {
   const [copied, setCopied] = useState(false);
   const handleCopyBtnClick = async () => {
@@ -14,7 +15,7 @@ const CopyButton: React.FC<{
     setTimeout(() => setCopied(false), 2000);
   };
   return (
-    <Tooltip title={copied ? "Copied" : "Copy"} arrow>
+    <Tooltip title={copied ? "Copied" : "Copy"} arrow placement={props.placement}>
       <div
         style={{
           padding: ".1rem",

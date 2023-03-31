@@ -1,6 +1,6 @@
 import { Box, Tooltip } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
-import { Button, TextField } from "@mui/material";
+import { Button, SxProps, TextField, Theme } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import { deepOrange } from "@mui/material/colors";
 import Paper from "@mui/material/Paper";
@@ -108,16 +108,29 @@ const Message: React.FC<{
       setIsEditing(false);
     }}>Cancel</Button>
   </>;
+  let sx: SxProps<Theme> = {
+    my: 1,
+    mx: "0%",
+    p: 2,
+    minWidth: "100%",
+    paddingLeft: 5,
+  };
+  const anchorElement = <span id={"m" + props.message.mid} style={{ position: "absolute", transform: "translateY(-30vh)" }} />;
+  const anchor = window.location.hash.slice(1);
+  const shouldHighlight = anchor === "m" + props.message.mid;
+  if (shouldHighlight) {
+    sx = {
+      ...sx,
+      backgroundColor: context.darkMode ? "rgba(39,30,20,0.7)" : "rgba(254,251,195,0.7)",
+      borderLeft: "6px solid red"
+    }
+  }
   return (
     <StyledPaper
-      sx={{
-        my: 1,
-        mx: "0%",
-        p: 2,
-        minWidth: "100%",
-        paddingLeft: 5,
-      }}
+      sx={sx}
+    // className={props.message.shouldHighlight ? classes['high-light'] : ""}
     >
+      {anchorElement}
       <Grid container wrap="nowrap" spacing={2} style={{ marginBottom: "2px" }}>
         <Grid item xs={10}>
           <MessageWrapper message={props.message} isEditing={isEditing} setIsEditing={setIsEditing}>

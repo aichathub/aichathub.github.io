@@ -224,7 +224,7 @@ const ChatAppEdit = () => {
               }
               {context.curPost &&
                 <Box style={{ marginTop: "-4px", marginLeft: "25px" }}>
-                  <QRButton post={context.curPost!} />
+                  <QRButton url={window.location.href.split('#')[0]} />
                 </Box>
               }
             </Box>

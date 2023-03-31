@@ -1,11 +1,10 @@
 import { Box, Tooltip } from "@material-ui/core";
 import QrCode2Icon from '@mui/icons-material/QrCode2';
 import { useState } from "react";
-import { PostModel } from "../models/PostModel";
 import QRCodeDialog from "./QRCodeDialog";
 
 const QRButton: React.FC<{
-  post: PostModel;
+  url: string;
 }> = (props) => {
   const [showQRCodeDialog, setShowQRCodeDialog] = useState(false);
   const handleQRClick = () => {
@@ -24,7 +23,7 @@ const QRButton: React.FC<{
       <QrCode2Icon />
     </Box>
   </Tooltip>
-    <QRCodeDialog url={window.location.href} onClose={handleQRClose} open={showQRCodeDialog} />
+    <QRCodeDialog url={props.url} onClose={handleQRClose} open={showQRCodeDialog} />
   </>;
 }
 export default QRButton;

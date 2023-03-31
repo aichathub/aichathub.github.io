@@ -1,8 +1,10 @@
+import { Tooltip } from '@mui/material';
 import Dialog from '@mui/material/Dialog';
 import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
 import * as React from 'react';
 import QRCode from "react-qr-code";
+import CopyButton from './CopyButton';
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -31,6 +33,11 @@ const QRCodeDialog: React.FC<{
         onClose={handleClose}
         TransitionComponent={Transition}
       >
+        <Tooltip title={props.url} arrow>
+          <>
+            {props.url.substring(0, 25) + "..."}
+          </>
+        </Tooltip>
         {/* <AppBar sx={{ position: 'relative', bgcolor: "white", color: "black" }}>
           <Toolbar>
             <IconButton
@@ -44,6 +51,13 @@ const QRCodeDialog: React.FC<{
           </Toolbar>
         </AppBar> */}
         <QRCode value={url} />
+        {/* <CopyWrapper content={url}>
+          <>
+
+          </>
+        </CopyWrapper> */}
+        {/* <ContentCopyIcon fontSize="small" /> */}
+        <CopyButton content={url} placement={"top"} />
       </Dialog>
     </div>
   );
