@@ -119,17 +119,18 @@ const Message: React.FC<{
   const anchor = window.location.hash.slice(1);
   const shouldHighlight = anchor === "m" + props.message.mid;
   const isSpeaking = props.message.mid === context.speakingMid && context.speakingMid !== -1;
-  if (shouldHighlight) {
+  const isMobile = window.innerWidth <= 600;
+  if (isSpeaking) {
     sx = {
       ...sx,
       backgroundColor: context.darkMode ? "rgba(39,30,20,0.7)" : "rgba(254,251,195,0.7)",
-      borderLeft: "2px solid red"
+      borderLeft: isMobile ? "2px solid green" : "4px solid green"
     }
-  } else if (isSpeaking) {
+  } else if (shouldHighlight) {
     sx = {
       ...sx,
       backgroundColor: context.darkMode ? "rgba(39,30,20,0.7)" : "rgba(254,251,195,0.7)",
-      borderLeft: "2px solid green"
+      borderLeft: isMobile ? "2px solid red" : "4px solid red"
     }
   }
   return (

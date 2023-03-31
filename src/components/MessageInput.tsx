@@ -54,7 +54,8 @@ export const MessageInput: React.FC<{
         setInputText("");
       }
       // Focus back to the input field if the user is from desktop
-      if (window.innerWidth > 600) {
+      const isMobile = window.innerWidth <= 600;
+      if (!isMobile) {
         ref.focus();
       } else {
         // If the user is from mobile, hide the keyboard
