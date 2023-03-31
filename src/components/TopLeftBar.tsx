@@ -273,14 +273,21 @@ const TopLeftBar: React.FC<{
         </Typography>
         <Divider />
         {posts.length > 0 && (
-          <List>
+          <List sx={{
+            maxHeight: window.innerHeight - 200,
+            overflow: 'auto'
+          }}>
             {posts.map((post) => (
               <LeftBarPostItem post={post} />
             ))}
           </List>
         )}
         {!posts || posts.length === 0 && (
-          <List>
+          <List
+            sx={{
+              maxHeight: 300
+            }}
+          >
             <Tooltip title="You haven't created any post yet. Click `New Post` to create a new one!">
               <EmojiPeopleIcon sx={{ marginLeft: '45%' }} fontSize="small" />
             </Tooltip>
