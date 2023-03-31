@@ -118,7 +118,7 @@ const Message: React.FC<{
   const anchorElement = <span id={"m" + props.message.mid} style={{ position: "absolute", transform: "translateY(-30vh)" }} />;
   const anchor = window.location.hash.slice(1);
   const shouldHighlight = anchor === "m" + props.message.mid;
-  const isSpeaking = props.message.mid === context.speakingMid;
+  const isSpeaking = props.message.mid === context.speakingMid && context.speakingMid !== -1;
   if (shouldHighlight) {
     sx = {
       ...sx,

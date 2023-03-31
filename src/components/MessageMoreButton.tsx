@@ -82,7 +82,7 @@ const MessageMoreButton: React.FC<{
     }
   }, []);
   useEffect(() => {
-    if (!isSpeaking && context.speakingMid === props.message.mid) {
+    if (!isSpeaking && context.speakingMid !== -1 && context.speakingMid === props.message.mid) {
       // Smooth scroll to the message
       const msgEl = document.getElementById("m" + props.message.mid);
       if (msgEl) {
