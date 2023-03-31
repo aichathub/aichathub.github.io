@@ -62,7 +62,12 @@ const MessageMoreButton: React.FC<{
     window.speechSynthesis.speak(utterance);
     setIsSpeaking(true);
     utterance.onend = () => {
-      context.setSpeakingMid(-1);
+      const nxtMsg = context.findNextMessage(props.message.mid);
+      if (nxtMsg) {
+        context.setSpeakingMid(nxtMsg.mid);
+      } else {
+        context.setSpeakingMid(-1);
+      }
       setIsSpeaking(false);
     }
   }
@@ -75,6 +80,20 @@ const MessageMoreButton: React.FC<{
       handleSpeak();
     }
   }, []);
+  useEffect(() => {
+    if (!isSpeaking && context.speakingMid === props.message.mid) {
+      // Smooth scroll to the message
+      const msgEl = document.getElementById("m" + props.message.mid);
+      if (msgEl) {
+        msgEl.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+          inline: "center"
+        });
+      }
+      handleSpeak();
+    }
+  }, [context.speakingMid]);
   const handleDeleteClick = async () => {
     handleClose();
     const result = await deleteMessageByMid(props.message.mid, context.auth.token, context.loggedUser);
