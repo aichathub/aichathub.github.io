@@ -196,6 +196,7 @@ const Message: React.FC<{
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
                 children={props.message.content}
+                linkTarget="_blank"
                 components={{
                   code({ node, inline, className, children, ...props }) {
                     return !inline ? (
