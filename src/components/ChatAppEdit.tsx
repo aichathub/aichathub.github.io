@@ -86,7 +86,7 @@ const ChatAppEdit = () => {
           });
         }, 300);
       }
-      if (!context.isFirstLoad && msgs.length > oldMsgLength && msgmodels[msgmodels.length - 1].sender === 'ai') {
+      if (!context.isFirstLoad && msgs.length > oldMsgLength && msgmodels[msgmodels.length - 1].sender === 'ai' && context.sendTriggerAIVoice) {
         msgmodels[msgmodels.length - 1].shouldSpeak = true;
       }
       if (msgs.length > context.messages.length) {
