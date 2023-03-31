@@ -77,6 +77,7 @@ const NewPostDialog: React.FC<{
     );
     if (response.message === "SUCCESS") {
       context.setLastPostsRefresh(new Date());
+      context.setMessages([]);
       navigate(`/${context.loggedUser}/${response.result.pid}`);
     }
     context.showSnack("ADD POST: " + response.message);
