@@ -88,8 +88,6 @@ const MessageMoreButton: React.FC<{
       if (msgEl) {
         msgEl.scrollIntoView({
           behavior: "smooth",
-          block: "center",
-          inline: "center"
         });
       }
       handleSpeak();
