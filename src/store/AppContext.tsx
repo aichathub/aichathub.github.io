@@ -175,6 +175,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
   const [isLeftBarPostLoading, setIsLeftBarPostLoading] = useState(false);
 
   const isOnPostPage = useMatch("/:username/:postid");
+  console.log("isOnPostPage", isOnPostPage);
 
   const isPostStarred = (authoremail: string, postId: string) => {
     return starredPosts.filter(x => x.authoremail === authoremail && x.pid === postId).length > 0;
@@ -411,7 +412,6 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
     },
   });
 
-
   return (
     <AppContext.Provider value={contextValue}>
       <ThemeProvider theme={theme}>
@@ -442,7 +442,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
             }}
           >
             <ScrollButton />
-            {isOnPostPage && <MessageInput addMessage={addMessage} reloadMessage={() => {
+            {isOnPostPage && <MessageInput username={isOnPostPage.params.username!} postid={isOnPostPage.params.postid!} addMessage={addMessage} reloadMessage={() => {
               setLastMessagesRefresh(new Date());
             }} />}
           </footer>

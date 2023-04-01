@@ -1,13 +1,11 @@
 import { CircularProgress, Tooltip } from "@material-ui/core";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import { Theme, createStyles, makeStyles } from "@material-ui/core/styles";
 import SendIcon from "@material-ui/icons/Send";
 import { IconButton, TextField } from "@mui/material";
 import React, { KeyboardEvent, useContext, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
 import { MessageModel } from "../models/MessageModel";
 import { AppContext } from "../store/AppContext";
-import { GUEST_EMAIL } from "../util/constants";
-import { insertMessage, insertSessionMessage } from "../util/db";
+import { insertMessage } from "../util/db";
 import MessageInputSettings from "./MessageInputSettings";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -34,13 +32,14 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export const MessageInput: React.FC<{
+  username: string;
+  postid: string;
   addMessage: (newMsg: MessageModel) => void;
   reloadMessage: () => void;
 }> = (props) => {
   const classes = useStyles();
   const inputRef = useRef<HTMLInputElement>(null);
   const context = useContext(AppContext);
-  const { username, postid, sessionid } = useParams();
   const [inputText, setInputText] = useState("@AI ");
 
   const handleSend = async () => {
@@ -67,39 +66,24 @@ export const MessageInput: React.FC<{
         optionalSocketId = localStorage.getItem("socketId")!;
       }
       let response = "";
-      if (sessionid) {
-        props.addMessage({
-          mid: -1,
-          sender: GUEST_EMAIL,
-          content: content,
-          time: new Date()
-        });
-        const result = await insertSessionMessage({
-          username: username!,
-          pid: postid!,
-          content: content,
-          sessionid: sessionid
-        });
-        response = result.message;
-      } else {
-        props.addMessage({
-          mid: -1,
-          sender: context.auth.loggedEmail,
-          content: content,
-          time: new Date(),
-          authorusername: context.loggedUser
-        });
-        const result = await insertMessage({
-          username: username!,
-          pid: postid!,
-          content: content,
-          token: context.auth.token,
-          triggerAI: context.sendTriggerAIVoice,
-          authoremail: context.auth.loggedEmail,
-          socketId: optionalSocketId,
-        });
-        response = result.message;
-      }
+
+      props.addMessage({
+        mid: -1,
+        sender: context.auth.loggedEmail,
+        content: content,
+        time: new Date(),
+        authorusername: context.loggedUser
+      });
+      const result = await insertMessage({
+        username: props.username,
+        pid: props.postid,
+        content: content,
+        token: context.auth.token,
+        triggerAI: context.sendTriggerAIVoice,
+        authoremail: context.auth.loggedEmail,
+        socketId: optionalSocketId,
+      });
+      response = result.message;
       context.setIsSendingMessage(false);
       if (response.indexOf("ERROR") === -1) {
         props.reloadMessage();
