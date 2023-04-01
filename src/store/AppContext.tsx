@@ -1,7 +1,9 @@
 import { Box, createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 import Snackbar from '@mui/material/Snackbar';
+import { styled } from "@mui/material/styles";
 import { createContext, ReactNode, useCallback, useEffect, useState } from "react";
 import Alert from "../components/Alert";
+import DrawerHeader from "../components/DrawerHeader";
 import ScrollButton from "../components/ScrollButton";
 import TopLeftBar from "../components/TopLeftBar";
 import { LocalPostModel } from "../models/LocalPostModel";
@@ -112,6 +114,26 @@ export const AppContext = createContext<AppContextObj>({
   toggleSendTriggerAIVoice: () => { },
   setLoggedUser: () => { },
 });
+const drawerWidth = 300;
+
+const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
+  open?: boolean;
+}>(({ theme, open }) => ({
+  flexGrow: 1,
+  // padding: theme.spacing(3),
+  transition: theme.transitions.create("margin", {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.leavingScreen,
+  }),
+  marginLeft: `-${drawerWidth}px`,
+  ...(open && {
+    transition: theme.transitions.create("margin", {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+    marginLeft: 0,
+  }),
+}));
 
 export const AppContextProvider: React.FC<{ children: ReactNode }> = (
   props
@@ -371,7 +393,6 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
     },
   });
 
-  const drawerWidth = 240;
 
   return (
     <AppContext.Provider value={contextValue}>
@@ -388,7 +409,10 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
             handleDrawerClose={handleDrawerClose}
             handleDrawerOpen={handleDrawerOpen}
           />
-          {props.children}
+          <Main open={topLeftBarOpen}>
+            <DrawerHeader />
+            {props.children}
+          </Main>
         </Box>
         <footer
           style={{

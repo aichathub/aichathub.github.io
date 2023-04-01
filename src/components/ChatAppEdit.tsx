@@ -5,38 +5,16 @@ import ErrorIcon from '@mui/icons-material/Error';
 import LockIcon from '@mui/icons-material/Lock';
 import Box from "@mui/material/Box";
 import CircularProgress from '@mui/material/CircularProgress';
-import { styled } from "@mui/material/styles";
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { MessageModel } from "../models/MessageModel";
 import { AppContext } from "../store/AppContext";
 import { getMessagesByUsernameAndPid, getPostByUsernameAndPid } from "../util/db";
-import DrawerHeader from "./DrawerHeader";
 import EmptyCard from "./EmptyCard";
 import Message from "./Message";
 import QRButton from "./QRButton";
 import StarButton from "./StarButton";
 
-const drawerWidth = 240;
-
-const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
-  open?: boolean;
-}>(({ theme, open }) => ({
-  flexGrow: 1,
-  // padding: theme.spacing(3),
-  transition: theme.transitions.create("margin", {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  marginLeft: `-${drawerWidth}px`,
-  ...(open && {
-    transition: theme.transitions.create("margin", {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-    marginLeft: 0,
-  }),
-}));
 
 const ChatAppEdit = () => {
   const context = useContext(AppContext);
@@ -196,38 +174,35 @@ const ChatAppEdit = () => {
   }
   return (
     <>
-      <Main open={open}>
-        <DrawerHeader />
-        {context.doesPostExist &&
-          <Box sx={{ display: "flex", marginLeft: "40px", marginTop: "15px" }}>
-            {icon}
-            <Box sx={{ marginTop: "-7px", marginLeft: "5px" }}>
-              <Typography variant="h6" component="h6" gutterBottom>
-                {context.curPost ? context.curPost.title : ""}
-              </Typography>
-            </Box>
-            {context.curPost &&
-              <Box style={{ marginTop: "-5px", marginLeft: "25px" }}>
-                <StarButton post={context.curPost!} />
-              </Box>
-            }
-            {context.curPost &&
-              <Box style={{ marginTop: "-4px", marginLeft: "25px" }}>
-                <QRButton url={window.location.href.split('#')[0]} />
-              </Box>
-            }
+      {context.doesPostExist &&
+        <Box sx={{ display: "flex", marginLeft: "40px", marginTop: "15px" }}>
+          {icon}
+          <Box sx={{ marginTop: "-7px", marginLeft: "5px" }}>
+            <Typography variant="h6" component="h6" gutterBottom>
+              {context.curPost ? context.curPost.title : ""}
+            </Typography>
           </Box>
-        }
-        {bodyContent}
-        <Box
-          sx={{
-            flexGrow: 1,
-            justifyContent: "center",
-            display: "flex",
-            mb: 2,
-          }}
-        ></Box>
-      </Main>
+          {context.curPost &&
+            <Box style={{ marginTop: "-5px", marginLeft: "25px" }}>
+              <StarButton post={context.curPost!} />
+            </Box>
+          }
+          {context.curPost &&
+            <Box style={{ marginTop: "-4px", marginLeft: "25px" }}>
+              <QRButton url={window.location.href.split('#')[0]} />
+            </Box>
+          }
+        </Box>
+      }
+      {bodyContent}
+      <Box
+        sx={{
+          flexGrow: 1,
+          justifyContent: "center",
+          display: "flex",
+          mb: 2,
+        }}
+      ></Box>
     </>
   );
 };
