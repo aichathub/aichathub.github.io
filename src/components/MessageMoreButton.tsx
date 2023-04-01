@@ -174,12 +174,6 @@ const MessageMoreButton: React.FC<{
                     </ListItemIcon>
                     <ListItemText>Copy</ListItemText>
                   </MenuItem>
-                  <MenuItem onClick={handleShareClick}>
-                    <ListItemIcon>
-                      <QRCode2Icon fontSize="small" />
-                    </ListItemIcon>
-                    <ListItemText>Share</ListItemText>
-                  </MenuItem>
                   {hasRightToEdit && (
                     <MenuItem
                       onClick={handleEditClick}
@@ -191,6 +185,12 @@ const MessageMoreButton: React.FC<{
                     </MenuItem>
                   )
                   }
+                  <MenuItem onClick={handleShareClick}>
+                    <ListItemIcon>
+                      <QRCode2Icon fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText>Share</ListItemText>
+                  </MenuItem>
                   {hasVoice &&
                     (<MenuItem onClick={handleSpeakClick}>
                       <ListItemIcon>
