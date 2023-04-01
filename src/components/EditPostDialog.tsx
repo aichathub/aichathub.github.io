@@ -10,8 +10,8 @@ import IconButton from '@mui/material/IconButton';
 import List from '@mui/material/List';
 import Slide from '@mui/material/Slide';
 import Toolbar from '@mui/material/Toolbar';
-import { TransitionProps } from '@mui/material/transitions';
 import Typography from '@mui/material/Typography';
+import { TransitionProps } from '@mui/material/transitions';
 import * as React from 'react';
 import { useContext, useRef, useState } from 'react';
 import { PostModel } from '../models/PostModel';
@@ -109,26 +109,28 @@ const EditPostDialog: React.FC<{
           />
         </List>
         <TagsInput value={selectedTags} setValue={setSelectedTags} />
-        <Tooltip title="After checking your post cannot be searched or viewed except yourself.">
-          <FormGroup className={classes.textField}>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={isprivate}
-                  onChange={(event, checked) => {
-                    setIsprivate(checked);
-                  }}
-                />
-              }
-              label={
-                <>
-                  <label style={{ verticalAlign: "text-bottom" }}>Is Private</label>
-                  <LockIcon fontSize="small" style={{ marginLeft: "5px", marginTop: "2px" }} />
-                </>
-              }
-            />
-          </FormGroup>
-        </Tooltip>
+        {props.post.forkedfromauthoremail === undefined &&
+          <Tooltip title="After checking your post cannot be searched or viewed except yourself.">
+            <FormGroup className={classes.textField}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={isprivate}
+                    onChange={(event, checked) => {
+                      setIsprivate(checked);
+                    }}
+                  />
+                }
+                label={
+                  <>
+                    <label style={{ verticalAlign: "text-bottom" }}>Is Private</label>
+                    <LockIcon fontSize="small" style={{ marginLeft: "5px", marginTop: "2px" }} />
+                  </>
+                }
+              />
+            </FormGroup>
+          </Tooltip>
+        }
       </Dialog>
     </div>
   );
