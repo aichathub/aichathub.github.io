@@ -62,7 +62,9 @@ const MessageInputSettings: React.FC<{
                 <MenuItem >
                   <FormControlLabel
                     label="AI Response"
-                    control={<Checkbox checked={triggerAI} onClick={toggleTriggerAI} />}
+                    control={<Checkbox style={{
+                      color: "#d30",
+                    }} checked={triggerAI} onClick={toggleTriggerAI} />}
                   />
                 </MenuItem>
                 {
@@ -70,7 +72,10 @@ const MessageInputSettings: React.FC<{
                     <MenuItem >
                       <FormControlLabel
                         label="AI Voice"
-                        control={<Checkbox checked={context.sendTriggerAIVoice} onClick={context.toggleSendTriggerAIVoice} />}
+                        control={<Checkbox style={{
+                          color: "#d30",
+                        }}
+                          checked={context.sendTriggerAIVoice} onClick={context.toggleSendTriggerAIVoice} />}
                       />
                     </MenuItem>
                   )

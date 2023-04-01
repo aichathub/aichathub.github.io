@@ -8,4 +8,8 @@ export type PostModel = {
   tags: TagModel[];
   isprivate?: boolean;
   username?: string;
+  forkedfromauthoremail?: string;
+  forkedfromauthorusername?: string;
+  forkedfrompid?: string;
+  forkedcount?: number;
 }

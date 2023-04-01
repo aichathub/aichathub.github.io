@@ -428,3 +428,22 @@ export const editMessage = async (messageid: number, useremail: string, token: s
   const responseJson = await response.json();
   return responseJson;
 }
+
+export const forkPost = async (authorusername: string, pid: string, useremail: string, token: string, endMsgId?: number) => {
+  const response = await fetch(`${backendServer}/api/fork`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    mode: "cors",
+    body: JSON.stringify({
+      authorusername: authorusername,
+      useremail: useremail,
+      pid: pid,
+      token: token,
+      endMsgId: endMsgId
+    })
+  });
+  const responseJson = await response.json();
+  return responseJson;
+}

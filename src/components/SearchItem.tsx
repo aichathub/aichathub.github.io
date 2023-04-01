@@ -3,15 +3,15 @@ import Grid from "@material-ui/core/Grid";
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import LockIcon from '@mui/icons-material/Lock';
 import Paper from "@mui/material/Paper";
-import { createTheme, styled, ThemeProvider } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { ThemeProvider, createTheme, styled } from "@mui/material/styles";
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import Timeago from "react-timeago";
 import { PostModel } from "../models/PostModel";
 import { TagModel } from "../models/TagModel";
 import { AppContext } from "../store/AppContext";
-import classes from "./SearchItem.module.css";
+import PostLink from "./PostLink";
 import StarButton from "./StarButton";
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
@@ -53,25 +53,12 @@ const SearchItem: React.FC<{
                 position: "relative",
               }}
             >
-              <Grid className={classes.searchItem}>
+              <Grid>
                 {props.post.isprivate ?
                   <LockIcon fontSize="small" sx={{ marginRight: "10px", transform: "translateY(5px)" }} /> :
                   <ChatBubbleOutlineIcon fontSize="small" sx={{ marginRight: "10px", transform: "translateY(5px)" }} />
                 }
-                <a
-                  onClick={(e) => {
-                    const isMiddleMouseClick = e.button === 1;
-                    if (isMiddleMouseClick) return;
-                    e.preventDefault();
-                    context.setIsLoadingMessages(true);
-                    context.setIsFirstLoad(true);
-                    context.setMessages([]);
-                    navigate(`/${props.post.username}/${props.post.pid}`);
-                  }}
-                  href={`/${props.post.username}/${props.post.pid}`}
-                >
-                  {props.post.username}/{props.post.pid}
-                </a>
+                <PostLink username={props.post.username!} pid={props.post.pid!} />
                 {/* <Link
                   component="button"
                   variant="body2"

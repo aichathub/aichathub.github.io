@@ -2,6 +2,7 @@ import { Tooltip, Typography } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import ErrorIcon from '@mui/icons-material/Error';
+import ForkLeftIcon from '@mui/icons-material/ForkLeft';
 import LockIcon from '@mui/icons-material/Lock';
 import Box from "@mui/material/Box";
 import CircularProgress from '@mui/material/CircularProgress';
@@ -11,11 +12,11 @@ import { MessageModel } from "../models/MessageModel";
 import { AppContext } from "../store/AppContext";
 import { getMessagesByUsernameAndPid, getPostByUsernameAndPid } from "../util/db";
 import EmptyCard from "./EmptyCard";
+import ForkButton from "./ForkButton";
 import Message from "./Message";
-import { MessageInput } from "./MessageInput";
+import PostLink from "./PostLink";
 import QRButton from "./QRButton";
 import StarButton from "./StarButton";
-
 
 const ChatAppEdit = () => {
   const context = useContext(AppContext);
@@ -101,6 +102,8 @@ const ChatAppEdit = () => {
     context.setTopLeftBarOpen(false);
   };
 
+  const canFork = context.auth && context.auth.loggedEmail && context.auth.loggedEmail !== context.curPost?.authoremail;
+
   useEffect(() => {
     if (context.isSendingMessage) {
       const interval = setInterval(() => {
@@ -112,6 +115,8 @@ const ChatAppEdit = () => {
       setReloadInterval(undefined);
     }
   }, [context.isSendingMessage]);
+
+  const drawerWidth = 300;
 
   useEffect(() => {
     console.log(username, postid);
@@ -140,6 +145,11 @@ const ChatAppEdit = () => {
   useEffect(() => {
     reloadMessage();
   }, []);
+
+  useEffect(() => {
+    reloadMessage();
+  }, [context.lastMessagesRefresh]);
+
   let bodyContent = <></>;
 
   if (context.isLoadingMessages) {
@@ -160,7 +170,7 @@ const ChatAppEdit = () => {
     </Box>);
   } else {
     bodyContent = (
-      <Grid container>
+      <Grid container style={{ marginBottom: "20px" }} >
         {context.messages.map((x, index) => (
           <Message key={index} message={x} typeEffect={index === context.messages.length - 1 && x.sender === 'ai'} />
         ))}
@@ -176,45 +186,78 @@ const ChatAppEdit = () => {
   return (
     <>
       {context.doesPostExist &&
-        <Box sx={{ display: "flex", marginLeft: "40px", marginTop: "15px" }}>
-          {icon}
-          <Box sx={{ marginTop: "-7px", marginLeft: "5px" }}>
-            <Typography variant="h6" component="h6" gutterBottom>
-              {context.curPost ? context.curPost.title : ""}
+        <>
+          <Box sx={{ display: "flex", marginLeft: "40px", marginTop: "15px" }}>
+            {icon}
+            <Tooltip title="Refresh" placement="top" arrow>
+              <Box sx={{ marginTop: "-7px", marginLeft: "5px" }}>
+                <PostLink username={context.curPost?.username!} pid={context.curPost?.pid!} />
+                {/* <Typography variant="h6" component="h6" gutterBottom>
+                {context.curPost?.username}/{context.curPost?.pid}
+              </Typography> */}
+              </Box>
+            </Tooltip>
+            {context.curPost &&
+              <Box style={{ marginTop: "-4px", marginLeft: "20px" }}>
+                <QRButton url={window.location.href.split('#')[0]} />
+              </Box>
+            }
+            {context.curPost && canFork &&
+              <Box style={{ marginTop: "-4px", marginLeft: "20px" }}>
+                <ForkButton post={context.curPost} />
+              </Box>
+            }
+          </Box>
+          <Box sx={{ display: "flex", marginLeft: "40px", marginTop: "-8px" }}>
+            <Typography variant="h6" style={{ fontWeight: "bold" }}>
+              {context.curPost?.title}
             </Typography>
+
           </Box>
           {context.curPost &&
-            <Box style={{ marginTop: "-5px", marginLeft: "25px" }}>
-              <StarButton post={context.curPost!} />
+            <Box sx={{ display: "flex", marginLeft: "38px", marginTop: "-8px" }}>
+              <Box>
+                <StarButton post={context.curPost!} />
+              </Box>
+              {context.curPost.forkedfromauthorusername && context.curPost.forkedfrompid &&
+                <Box style={{
+                  display: "flex",
+                  alignItems: "center",
+                  flexWrap: "wrap",
+                }} >
+                  {
+                    <ForkLeftIcon fontSize="small" style={{ transform: "translateY(-2px)" }} />
+                  }
+                  <span style={{ fontSize: "17px", marginRight: "3px" }}>
+                    Forked from
+                  </span>
+                  <PostLink username={context.curPost.forkedfromauthorusername} pid={context.curPost.forkedfrompid} />
+                </Box>}
             </Box>
           }
-          {context.curPost &&
-            <Box style={{ marginTop: "-4px", marginLeft: "25px" }}>
-              <QRButton url={window.location.href.split('#')[0]} />
-            </Box>
-          }
-        </Box>
+        </>
       }
       {bodyContent}
-      <Box
+      {/* <Box
         sx={{
           flexGrow: 1,
           justifyContent: "center",
           display: "flex",
           mb: 2,
         }}
-      ></Box>
-      <div
+      ></Box> */}
+      {/* <footer
         style={{
           color: "gray",
           position: "fixed",
           bottom: 0,
           width: "100%",
           minHeight: "30px",
+          marginLeft: ((context.topLeftBarOpened && !context.topLeftBarOpen) ? -drawerWidth : 0) + "px",
         }}
       >
         {context.loggedUser !== "" && context.curPost?.authoremail === context.auth.loggedEmail && context.doesPostExist && <MessageInput addMessage={addMessage} reloadMessage={reloadMessage} />}
-      </div>
+      </footer> */}
     </>
   );
 };

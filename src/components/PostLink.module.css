@@ -1,0 +1,14 @@
+.postlink a {
+  text-decoration: none;
+  font-size: larger;
+}
+
+.postlink a:hover,
+.postlink a:visited,
+.postlink a:link {
+  color: #d30;
+}
+
+.postlink a:hover {
+  text-decoration: underline;
+}

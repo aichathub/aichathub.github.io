@@ -2,15 +2,18 @@ import { Button } from "@material-ui/core";
 import { ContentCopy } from "@mui/icons-material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import ForkLeftIcon from '@mui/icons-material/ForkLeft';
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import QRCode2Icon from "@mui/icons-material/QrCode2";
 import StopIcon from '@mui/icons-material/Stop';
-import { ClickAwayListener, Grow, ListItemIcon, ListItemText, MenuItem, MenuList, Paper, Popper } from "@mui/material";
+import { CircularProgress, ClickAwayListener, Grow, ListItemIcon, ListItemText, MenuItem, MenuList, Paper, Popper, Tooltip } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { MessageModel } from "../models/MessageModel";
+import { PostModel } from "../models/PostModel";
 import { AppContext } from "../store/AppContext";
-import { deleteMessageByMid } from "../util/db";
+import { deleteMessageByMid, forkPost } from "../util/db";
 import QRCodeDialog from "./QRCodeDialog";
 
 const MessageMoreButton: React.FC<{
@@ -26,6 +29,9 @@ const MessageMoreButton: React.FC<{
   const utterance = new SpeechSynthesisUtterance(props.message.content.replaceAll("@ai", "").replaceAll("@AI", ""));
   const [isSpeaking, setIsSpeaking] = useState(false);
   const hasVoice = window.speechSynthesis.getVoices().length > 0;
+  const [isForking, setIsForking] = useState(false);
+  const { username, postid } = useParams();
+  const navigate = useNavigate();
   if (props.message.sender === 'ai') {
     const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
     if (isSafari) {
@@ -109,6 +115,19 @@ const MessageMoreButton: React.FC<{
   const handleQRClose = () => {
     setShowQRCodeDialog(false);
   }
+  const hasRightToFork = context.auth && context.auth.token && context.loggedUser && context.curPost;
+  const handleForkClick = () => {
+    setIsForking(true);
+    forkPost(username!, postid!, context.auth.loggedEmail, context.auth.token, props.message.mid).then((response) => {
+      context.showSnack("FORKED: " + response.message);
+      if (response.message === "SUCCESS") {
+        const result = response.result as PostModel;
+        context.setMessages([]);
+        navigate(`/${context.loggedUser}/${result.pid}`);
+      }
+      setIsForking(false);
+    });
+  }
   return (
     <>
       <div
@@ -180,6 +199,20 @@ const MessageMoreButton: React.FC<{
                         {isSpeaking ? "Stop" : "Speak"}
                       </ListItemText>
                     </MenuItem>)
+                  }
+                  {hasRightToFork && (
+                    <Tooltip placement="left" arrow title="Continue the conversation from this point">
+                      <MenuItem
+                        onClick={handleForkClick}
+                      >
+                        <ListItemIcon>
+                          {
+                            isForking ? <CircularProgress size={20} color="inherit" /> : <ForkLeftIcon fontSize="small" />
+                          }
+                        </ListItemIcon>
+                        <ListItemText>Fork</ListItemText>
+                      </MenuItem>
+                    </Tooltip>)
                   }
                   {hasRightToDelete && (
                     <MenuItem

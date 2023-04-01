@@ -4,7 +4,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import LockIcon from '@mui/icons-material/Lock';
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import { ListItemButton, ListItemIcon } from "@mui/material";
+import { ListItemButton, ListItemIcon, Tooltip } from "@mui/material";
 import ListItem from "@mui/material/ListItem";
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -61,7 +61,9 @@ const LeftBarPostItem: React.FC<{ post: PostModel }> = (props) => {
       <ListItem key={post.pid} disablePadding>
         <ListItemButton onClick={handleClickPostItem}>
           {post.isprivate ? <LockIcon /> : <ChatBubbleOutlineIcon />}
-          <ListItemText primary={post.title} style={{ marginLeft: "10px" }} />
+          <Tooltip title={post.title} placement="right">
+            <ListItemText primary={post.pid} style={{ marginLeft: "10px" }} />
+          </Tooltip>
         </ListItemButton>
         <Grid xs={3}>
           <ListItemButton onClick={handleClickPostItemMore}>

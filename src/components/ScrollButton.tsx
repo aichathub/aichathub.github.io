@@ -59,7 +59,7 @@ const ScrollButton = () => {
 
   return (
     <Grid
-      style={{ float: "right", marginBottom: "100px", marginRight: "13px" }}
+      style={{ float: "right", marginBottom: "20px", marginRight: "13px" }}
       onMouseEnter={handleOnMouseEnter}
       onMouseLeave={handleOnMouseLeave}
     >

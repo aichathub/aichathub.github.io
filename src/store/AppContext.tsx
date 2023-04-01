@@ -2,8 +2,10 @@ import { Box, createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 import Snackbar from '@mui/material/Snackbar';
 import { styled } from "@mui/material/styles";
 import { createContext, ReactNode, useCallback, useEffect, useState } from "react";
+import { useMatch } from "react-router-dom";
 import Alert from "../components/Alert";
 import DrawerHeader from "../components/DrawerHeader";
+import { MessageInput } from "../components/MessageInput";
 import ScrollButton from "../components/ScrollButton";
 import TopLeftBar from "../components/TopLeftBar";
 import { LocalPostModel } from "../models/LocalPostModel";
@@ -36,7 +38,9 @@ type AppContextObj = {
   messages: MessageModel[];
   isFirstLoad: boolean;
   speakingMid: number;
+  lastMessagesRefresh: Date;
 
+  setLastMessagesRefresh: (lastMessagesRefresh: Date) => void;
   setSpeakingMid: (mid: number) => void;
   findNextMessage: (mid: number) => MessageModel | undefined;
   setIsFirstLoad: (isFirstLoad: boolean) => void;
@@ -87,7 +91,9 @@ export const AppContext = createContext<AppContextObj>({
   messages: [],
   isFirstLoad: true,
   speakingMid: -1,
+  lastMessagesRefresh: new Date(),
 
+  setLastMessagesRefresh: () => { },
   setSpeakingMid: () => { },
   findNextMessage: () => undefined,
   setIsFirstLoad: () => { },
@@ -161,6 +167,9 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
   const [messages, setMessages] = useState<MessageModel[]>([]);
   const [isFirstLoad, setIsFirstLoad] = useState(true);
   const [speakingMid, setSpeakingMid] = useState(-1);
+  const [lastMessagesRefresh, setLastMessagesRefresh] = useState(new Date());
+
+  const isOnPostPage = useMatch("/:username/:postid");
 
   const isPostStarred = (authoremail: string, postId: string) => {
     return starredPosts.filter(x => x.authoremail === authoremail && x.pid === postId).length > 0;
@@ -261,7 +270,9 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
     messages: messages,
     isFirstLoad: isFirstLoad,
     speakingMid: speakingMid,
+    lastMessagesRefresh: lastMessagesRefresh,
 
+    setLastMessagesRefresh: setLastMessagesRefresh,
     setSpeakingMid: setSpeakingMid,
     findNextMessage: findNextMessage,
     setIsFirstLoad: setIsFirstLoad,
@@ -413,19 +424,22 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
             <DrawerHeader />
             {props.children}
           </Main>
+          <footer
+            style={{
+              color: "gray",
+              position: "fixed",
+              bottom: 0,
+              width: "100%",
+              minHeight: "30px",
+              paddingLeft: (topLeftBarOpen ? drawerWidth : 0) + "px",
+            }}
+          >
+            <ScrollButton />
+            {isOnPostPage && <MessageInput addMessage={addMessage} reloadMessage={() => {
+              setLastMessagesRefresh(new Date());
+            }} />}
+          </footer>
         </Box>
-        <footer
-          style={{
-            color: "gray",
-            position: "fixed",
-            bottom: 0,
-            width: "100%",
-            minHeight: "30px",
-            paddingLeft: (topLeftBarOpen ? drawerWidth : 0) + "px",
-          }}
-        >
-          <ScrollButton />
-        </footer>
       </ThemeProvider>
     </AppContext.Provider>
   );
