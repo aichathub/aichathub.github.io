@@ -12,6 +12,7 @@ import { AppContext } from "../store/AppContext";
 import { getMessagesByUsernameAndPid, getPostByUsernameAndPid } from "../util/db";
 import EmptyCard from "./EmptyCard";
 import Message from "./Message";
+import { MessageInput } from "./MessageInput";
 import QRButton from "./QRButton";
 import StarButton from "./StarButton";
 
@@ -203,6 +204,17 @@ const ChatAppEdit = () => {
           mb: 2,
         }}
       ></Box>
+      <div
+        style={{
+          color: "gray",
+          position: "fixed",
+          bottom: 0,
+          width: "100%",
+          minHeight: "30px",
+        }}
+      >
+        {context.loggedUser !== "" && context.curPost?.authoremail === context.auth.loggedEmail && context.doesPostExist && <MessageInput addMessage={addMessage} reloadMessage={reloadMessage} />}
+      </div>
     </>
   );
 };
