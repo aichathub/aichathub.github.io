@@ -1,7 +1,9 @@
-import { createTheme, ThemeProvider } from "@mui/material";
+import { Box, createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 import Snackbar from '@mui/material/Snackbar';
 import { createContext, ReactNode, useCallback, useEffect, useState } from "react";
 import Alert from "../components/Alert";
+import ScrollButton from "../components/ScrollButton";
+import TopLeftBar from "../components/TopLeftBar";
 import { LocalPostModel } from "../models/LocalPostModel";
 import { MessageModel } from "../models/MessageModel";
 import { PostModel } from "../models/PostModel";
@@ -212,6 +214,13 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
     if (index === messages.length - 1) return undefined;
     return messages[index + 1];
   };
+  const handleDrawerOpen = () => {
+    setTopLeftBarOpen(true);
+  };
+
+  const handleDrawerClose = () => {
+    setTopLeftBarOpen(false);
+  };
   const contextValue = {
     pagePostId: pagePostId,
     auth: auth,
@@ -362,6 +371,8 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
     },
   });
 
+  const drawerWidth = 240;
+
   return (
     <AppContext.Provider value={contextValue}>
       <ThemeProvider theme={theme}>
@@ -370,7 +381,27 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
             {snackMessage}
           </Alert>
         </Snackbar>
-        {props.children}
+        <Box sx={{ display: "flex", marginBottom: "30px" }}>
+          <CssBaseline />
+          <TopLeftBar
+            open={topLeftBarOpen}
+            handleDrawerClose={handleDrawerClose}
+            handleDrawerOpen={handleDrawerOpen}
+          />
+          {props.children}
+        </Box>
+        <footer
+          style={{
+            color: "gray",
+            position: "fixed",
+            bottom: 0,
+            width: "100%",
+            minHeight: "30px",
+            paddingLeft: (topLeftBarOpen ? drawerWidth : 0) + "px",
+          }}
+        >
+          <ScrollButton />
+        </footer>
       </ThemeProvider>
     </AppContext.Provider>
   );

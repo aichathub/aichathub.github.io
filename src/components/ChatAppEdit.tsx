@@ -5,7 +5,6 @@ import ErrorIcon from '@mui/icons-material/Error';
 import LockIcon from '@mui/icons-material/Lock';
 import Box from "@mui/material/Box";
 import CircularProgress from '@mui/material/CircularProgress';
-import CssBaseline from "@mui/material/CssBaseline";
 import { styled } from "@mui/material/styles";
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -15,11 +14,8 @@ import { getMessagesByUsernameAndPid, getPostByUsernameAndPid } from "../util/db
 import DrawerHeader from "./DrawerHeader";
 import EmptyCard from "./EmptyCard";
 import Message from "./Message";
-import { MessageInput } from "./MessageInput";
 import QRButton from "./QRButton";
-import ScrollButton from "./ScrollButton";
 import StarButton from "./StarButton";
-import TopLeftBar from "./TopLeftBar";
 
 const drawerWidth = 240;
 
@@ -200,59 +196,38 @@ const ChatAppEdit = () => {
   }
   return (
     <>
-      <Box sx={{ display: "flex", marginBottom: "30px" }}>
-        <CssBaseline />
-        <TopLeftBar
-          open={context.topLeftBarOpen}
-          handleDrawerClose={handleDrawerClose}
-          handleDrawerOpen={handleDrawerOpen}
-        />
-        <Main open={open}>
-          <DrawerHeader />
-          {context.doesPostExist &&
-            <Box sx={{ display: "flex", marginLeft: "40px", marginTop: "15px" }}>
-              {icon}
-              <Box sx={{ marginTop: "-7px", marginLeft: "5px" }}>
-                <Typography variant="h6" component="h6" gutterBottom>
-                  {context.curPost ? context.curPost.title : ""}
-                </Typography>
-              </Box>
-              {context.curPost &&
-                <Box style={{ marginTop: "-5px", marginLeft: "25px" }}>
-                  <StarButton post={context.curPost!} />
-                </Box>
-              }
-              {context.curPost &&
-                <Box style={{ marginTop: "-4px", marginLeft: "25px" }}>
-                  <QRButton url={window.location.href.split('#')[0]} />
-                </Box>
-              }
+      <Main open={open}>
+        <DrawerHeader />
+        {context.doesPostExist &&
+          <Box sx={{ display: "flex", marginLeft: "40px", marginTop: "15px" }}>
+            {icon}
+            <Box sx={{ marginTop: "-7px", marginLeft: "5px" }}>
+              <Typography variant="h6" component="h6" gutterBottom>
+                {context.curPost ? context.curPost.title : ""}
+              </Typography>
             </Box>
-          }
-          {bodyContent}
-          <Box
-            sx={{
-              flexGrow: 1,
-              justifyContent: "center",
-              display: "flex",
-              mb: 2,
-            }}
-          ></Box>
-        </Main>
-      </Box>
-      <footer
-        style={{
-          color: "gray",
-          position: "fixed",
-          bottom: 0,
-          width: "100%",
-          minHeight: "30px",
-          paddingLeft: (open ? drawerWidth : 0) + "px",
-        }}
-      >
-        <ScrollButton />
-        {context.loggedUser !== "" && context.curPost?.authoremail === context.auth.loggedEmail && context.doesPostExist && <MessageInput addMessage={addMessage} reloadMessage={reloadMessage} />}
-      </footer>
+            {context.curPost &&
+              <Box style={{ marginTop: "-5px", marginLeft: "25px" }}>
+                <StarButton post={context.curPost!} />
+              </Box>
+            }
+            {context.curPost &&
+              <Box style={{ marginTop: "-4px", marginLeft: "25px" }}>
+                <QRButton url={window.location.href.split('#')[0]} />
+              </Box>
+            }
+          </Box>
+        }
+        {bodyContent}
+        <Box
+          sx={{
+            flexGrow: 1,
+            justifyContent: "center",
+            display: "flex",
+            mb: 2,
+          }}
+        ></Box>
+      </Main>
     </>
   );
 };
