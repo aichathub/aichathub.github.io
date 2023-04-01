@@ -1,0 +1,14 @@
+.searchItem a {
+  text-decoration: none;
+  font-size: larger;
+}
+
+.searchItem a:hover,
+.searchItem a:visited,
+.searchItem a:link {
+  color: #d30;
+}
+
+.searchItem a:hover {
+  text-decoration: underline;
+}

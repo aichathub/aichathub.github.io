@@ -2,7 +2,6 @@ import { Box, Chip, Tooltip } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import LockIcon from '@mui/icons-material/Lock';
-import Link from '@mui/material/Link';
 import Paper from "@mui/material/Paper";
 import { createTheme, styled, ThemeProvider } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
@@ -12,6 +11,7 @@ import Timeago from "react-timeago";
 import { PostModel } from "../models/PostModel";
 import { TagModel } from "../models/TagModel";
 import { AppContext } from "../store/AppContext";
+import classes from "./SearchItem.module.css";
 import StarButton from "./StarButton";
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
@@ -53,12 +53,26 @@ const SearchItem: React.FC<{
                 position: "relative",
               }}
             >
-              <Grid>
+              <Grid className={classes.searchItem}>
                 {props.post.isprivate ?
-                  <LockIcon fontSize="small" sx={{ marginRight: "10px" }} /> :
-                  <ChatBubbleOutlineIcon fontSize="small" sx={{ marginRight: "10px" }} />
+                  <LockIcon fontSize="small" sx={{ marginRight: "10px", transform: "translateY(5px)" }} /> :
+                  <ChatBubbleOutlineIcon fontSize="small" sx={{ marginRight: "10px", transform: "translateY(5px)" }} />
                 }
-                <Link
+                <a
+                  onClick={(e) => {
+                    const isMiddleMouseClick = e.button === 1;
+                    if (isMiddleMouseClick) return;
+                    e.preventDefault();
+                    context.setIsLoadingMessages(true);
+                    context.setIsFirstLoad(true);
+                    context.setMessages([]);
+                    navigate(`/${props.post.username}/${props.post.pid}`);
+                  }}
+                  href={`/${props.post.username}/${props.post.pid}`}
+                >
+                  {props.post.username}/{props.post.pid}
+                </a>
+                {/* <Link
                   component="button"
                   variant="body2"
                   onClick={() => {
@@ -70,7 +84,7 @@ const SearchItem: React.FC<{
                   sx={{ marginBottom: "12px" }}
                 >
                   {props.post.username}/{props.post.pid}
-                </Link>
+                </Link> */}
               </Grid>
               <Grid>
                 <Typography variant="h6" style={{ fontWeight: "bold" }}>

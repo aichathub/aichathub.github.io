@@ -1,0 +1,13 @@
+.mdlink a {
+  text-decoration: none;
+}
+
+.mdlink a:link,
+.mdlink a:visited,
+.mdlink a:hover {
+  color: #d30;
+}
+
+.mdlink a:hover {
+  text-decoration: underline;
+}
