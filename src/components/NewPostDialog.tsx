@@ -16,11 +16,12 @@ import IconButton from "@mui/material/IconButton";
 import List from "@mui/material/List";
 import Slide from "@mui/material/Slide";
 import Toolbar from "@mui/material/Toolbar";
-import { TransitionProps } from "@mui/material/transitions";
 import Typography from "@mui/material/Typography";
+import { TransitionProps } from "@mui/material/transitions";
 import * as React from "react";
 import { useContext, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { adjectives, animals, colors, uniqueNamesGenerator } from 'unique-names-generator';
 import { TagModel } from "../models/TagModel";
 import { AppContext } from "../store/AppContext";
 import { insertPostByUsernameAndTitle } from "../util/db";
@@ -60,6 +61,12 @@ const NewPostDialog: React.FC<{
   const navigate = useNavigate();
 
   const [selectedTags, setSelectedTags] = useState<TagModel[]>(context.tags.length ? [context.tags[0]] : []);
+
+  const randomTitle = uniqueNamesGenerator({
+    dictionaries: [adjectives, Math.random() > .5 ? animals : colors],
+    separator: ' ',
+    style: 'lowerCase'
+  });
 
   const handleClose = () => {
     props.handleClose();
@@ -117,6 +124,7 @@ const NewPostDialog: React.FC<{
             helperText="Enter your title"
             inputRef={titleRef}
             autoFocus
+            defaultValue={randomTitle}
           />
         </List>
         <TagsInput value={selectedTags} setValue={setSelectedTags} />
