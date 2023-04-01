@@ -71,6 +71,8 @@ const EditPostDialog: React.FC<{
     }
   };
 
+  const isForkedPost = props.post.forkedfromauthoremail !== undefined;
+
   return (
     <div>
       <Dialog
@@ -109,28 +111,27 @@ const EditPostDialog: React.FC<{
           />
         </List>
         <TagsInput value={selectedTags} setValue={setSelectedTags} />
-        {props.post.forkedfromauthoremail === undefined &&
-          <Tooltip title="After checking your post cannot be searched or viewed except yourself.">
-            <FormGroup className={classes.textField}>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={isprivate}
-                    onChange={(event, checked) => {
-                      setIsprivate(checked);
-                    }}
-                  />
-                }
-                label={
-                  <>
-                    <label style={{ verticalAlign: "text-bottom" }}>Is Private</label>
-                    <LockIcon fontSize="small" style={{ marginLeft: "5px", marginTop: "2px" }} />
-                  </>
-                }
-              />
-            </FormGroup>
-          </Tooltip>
-        }
+        <Tooltip title={isForkedPost ? "Forked post must be private at the moment" : "After checking your post cannot be searched or viewed except yourself."}>
+          <FormGroup className={classes.textField}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={(isForkedPost ? true : isprivate)}
+                  disabled={isForkedPost}
+                  onChange={(event, checked) => {
+                    setIsprivate(checked);
+                  }}
+                />
+              }
+              label={
+                <>
+                  <label style={{ verticalAlign: "text-bottom" }}>Is Private</label>
+                  <LockIcon fontSize="small" style={{ marginLeft: "5px", marginTop: "2px" }} />
+                </>
+              }
+            />
+          </FormGroup>
+        </Tooltip>
       </Dialog>
     </div>
   );

@@ -42,7 +42,6 @@ const StarButton: React.FC<{
   }, [context.starredPosts]);
   return <Tooltip
     title={`${!isLogged ? "" : (starred ? "UnStar" : "Star")}`}
-    placement="bottom"
     arrow
   >
     <Box style={{
