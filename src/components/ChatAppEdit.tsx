@@ -12,7 +12,6 @@ import { MessageModel } from "../models/MessageModel";
 import { AppContext } from "../store/AppContext";
 import { getMessagesByUsernameAndPid, getPostByUsernameAndPid } from "../util/db";
 import EmptyCard from "./EmptyCard";
-import ForkButton from "./ForkButton";
 import Message from "./Message";
 import PostLink from "./PostLink";
 import QRButton from "./QRButton";
@@ -116,8 +115,6 @@ const ChatAppEdit = () => {
     }
   }, [context.isSendingMessage]);
 
-  const drawerWidth = 300;
-
   useEffect(() => {
     console.log(username, postid);
     document.title = `${username}/${postid}`;
@@ -187,53 +184,45 @@ const ChatAppEdit = () => {
     <>
       {context.doesPostExist &&
         <>
-          <Box sx={{ display: "flex", marginLeft: "40px", marginTop: "15px" }}>
+          <Box sx={{ display: "flex", marginLeft: "40px" }}>
+            <Box sx={{ marginTop: "-7px" }}>
+              <PostLink username={context.curPost?.username!} pid={context.curPost?.pid!} />
+            </Box>
+          </Box>
+          <Box sx={{ display: "flex", marginLeft: "40px", marginTop: "2px" }}>
             {icon}
-            <Tooltip title="Refresh" placement="top" arrow>
-              <Box sx={{ marginTop: "-7px", marginLeft: "5px" }}>
-                <PostLink username={context.curPost?.username!} pid={context.curPost?.pid!} />
-                {/* <Typography variant="h6" component="h6" gutterBottom>
-                {context.curPost?.username}/{context.curPost?.pid}
-              </Typography> */}
-              </Box>
-            </Tooltip>
+            <Box sx={{ marginTop: "-7px", marginLeft: "5px" }}>
+              <Typography variant="h6" component="h6" gutterBottom>
+                {context.curPost ? context.curPost.title : ""}
+              </Typography>
+            </Box>
             {context.curPost &&
-              <Box style={{ marginTop: "-4px", marginLeft: "20px" }}>
+              <Box style={{ marginTop: "-5px", marginLeft: "25px" }}>
+                <StarButton post={context.curPost!} />
+              </Box>
+            }
+            {context.curPost &&
+              <Box style={{ marginTop: "-4px", marginLeft: "25px" }}>
                 <QRButton url={window.location.href.split('#')[0]} />
               </Box>
             }
-            {context.curPost && canFork &&
-              <Box style={{ marginTop: "-4px", marginLeft: "20px" }}>
-                <ForkButton post={context.curPost} />
-              </Box>
-            }
           </Box>
-          <Box sx={{ display: "flex", marginLeft: "40px", marginTop: "-8px" }}>
-            <Typography variant="h6" style={{ fontWeight: "bold" }}>
-              {context.curPost?.title}
-            </Typography>
 
-          </Box>
-          {context.curPost &&
-            <Box sx={{ display: "flex", marginLeft: "38px", marginTop: "-8px" }}>
-              <Box>
-                <StarButton post={context.curPost!} />
-              </Box>
-              {context.curPost.forkedfromauthorusername && context.curPost.forkedfrompid &&
-                <Box style={{
-                  display: "flex",
-                  alignItems: "center",
-                  flexWrap: "wrap",
-                }} >
-                  {
-                    <ForkLeftIcon fontSize="small" style={{ transform: "translateY(-2px)" }} />
-                  }
-                  <span style={{ fontSize: "17px", marginRight: "3px" }}>
-                    Forked from
-                  </span>
-                  <PostLink username={context.curPost.forkedfromauthorusername} pid={context.curPost.forkedfrompid} />
-                </Box>}
-            </Box>
+          {context.curPost && context.curPost.forkedfromauthorusername && context.curPost.forkedfrompid &&
+            <Box sx={{ display: "flex", marginLeft: "40px", marginTop: "-15px" }}>
+              <Box style={{
+                display: "flex",
+                alignItems: "center",
+                flexWrap: "wrap",
+              }} >
+                {
+                  <ForkLeftIcon fontSize="small" style={{ transform: "translateY(-2px)" }} />
+                }
+                <span style={{ fontSize: "17px", marginRight: "3px" }}>
+                  Forked from
+                </span>
+                <PostLink username={context.curPost.forkedfromauthorusername} pid={context.curPost.forkedfrompid} />
+              </Box></Box>
           }
         </>
       }
