@@ -7,7 +7,9 @@ import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 import HomeIcon from '@mui/icons-material/Home';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import MenuIcon from "@mui/icons-material/Menu";
+import RefreshIcon from '@mui/icons-material/Refresh';
 import SearchIcon from "@mui/icons-material/Search";
+import { CircularProgress } from "@mui/material";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
@@ -270,9 +272,22 @@ const TopLeftBar: React.FC<{
         </DrawerHeader>
         <Typography variant="h6" noWrap sx={{ marginLeft: '5px' }}>
           Your Posts
+          <RefreshIcon
+            onClick={() => { context.setLastPostsRefresh(new Date()); }}
+            style={{ marginLeft: "10px", cursor: "pointer", transform: "translateY(5px)" }}
+          />
         </Typography>
         <Divider />
-        {posts.length > 0 && (
+        {context.isLeftBarPostLoading && (
+          <List
+            sx={{
+              maxHeight: 300
+            }}
+          >
+            <CircularProgress size={30} color="inherit" sx={{ marginLeft: '45%' }} />
+          </List>
+        )}
+        {!context.isLeftBarPostLoading && posts.length > 0 && (
           <List sx={{
             maxHeight: window.innerHeight - 200,
             overflow: 'auto'

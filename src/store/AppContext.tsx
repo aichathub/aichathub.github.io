@@ -39,7 +39,9 @@ type AppContextObj = {
   isFirstLoad: boolean;
   speakingMid: number;
   lastMessagesRefresh: Date;
+  isLeftBarPostLoading: boolean;
 
+  setIsLeftBarPostLoading: (isLeftBarPostLoading: boolean) => void;
   setLastMessagesRefresh: (lastMessagesRefresh: Date) => void;
   setSpeakingMid: (mid: number) => void;
   findNextMessage: (mid: number) => MessageModel | undefined;
@@ -92,7 +94,9 @@ export const AppContext = createContext<AppContextObj>({
   isFirstLoad: true,
   speakingMid: -1,
   lastMessagesRefresh: new Date(),
+  isLeftBarPostLoading: false,
 
+  setIsLeftBarPostLoading: () => { },
   setLastMessagesRefresh: () => { },
   setSpeakingMid: () => { },
   findNextMessage: () => undefined,
@@ -168,6 +172,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
   const [isFirstLoad, setIsFirstLoad] = useState(true);
   const [speakingMid, setSpeakingMid] = useState(-1);
   const [lastMessagesRefresh, setLastMessagesRefresh] = useState(new Date());
+  const [isLeftBarPostLoading, setIsLeftBarPostLoading] = useState(false);
 
   const isOnPostPage = useMatch("/:username/:postid");
 
@@ -271,7 +276,9 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
     isFirstLoad: isFirstLoad,
     speakingMid: speakingMid,
     lastMessagesRefresh: lastMessagesRefresh,
+    isLeftBarPostLoading: isLeftBarPostLoading,
 
+    setIsLeftBarPostLoading: setIsLeftBarPostLoading,
     setLastMessagesRefresh: setLastMessagesRefresh,
     setSpeakingMid: setSpeakingMid,
     findNextMessage: findNextMessage,

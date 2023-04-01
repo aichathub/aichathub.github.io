@@ -119,6 +119,7 @@ const MessageMoreButton: React.FC<{
   const handleForkClick = () => {
     setIsForking(true);
     forkPost(username!, postid!, context.auth.loggedEmail, context.auth.token, props.message.mid).then((response) => {
+      context.setLastPostsRefresh(new Date());
       context.showSnack("FORKED: " + response.message);
       if (response.message === "SUCCESS") {
         const result = response.result as PostModel;

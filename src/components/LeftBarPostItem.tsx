@@ -45,6 +45,7 @@ const LeftBarPostItem: React.FC<{ post: PostModel }> = (props) => {
       if (username === context.loggedUser && postid === post.pid) {
         context.setDoesPostExist(false);
       }
+      context.setLastMessagesRefresh(new Date());
     }
     context.showSnack("DELETE POST: " + result.message);
   };
