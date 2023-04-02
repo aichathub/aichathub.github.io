@@ -166,8 +166,14 @@ const TopLeftBar: React.FC<{
   // }, [lastScrollY]);
 
   useEffect(() => {
-    console.log("[client]: start loading posts");
+    if (!context.auth.loggedEmail) return;
+    context.setIsLeftBarPostLoading(true);
     findPostsByAuthoremail(context.auth.loggedEmail).then((response) => {
+      context.setIsLeftBarPostLoading(false);
+      if (response.message !== "SUCCESS") {
+        context.showSnack(response.message);
+        return;
+      }
       const posts = response.result;
       if (posts) {
         console.log("[client]: posts loaded, ", posts);
@@ -297,7 +303,7 @@ const TopLeftBar: React.FC<{
             ))}
           </List>
         )}
-        {!posts || posts.length === 0 && (
+        {!context.isLeftBarPostLoading && (!posts || posts.length === 0) && (
           <List
             sx={{
               maxHeight: 300

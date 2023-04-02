@@ -75,7 +75,6 @@ export const insertMessage = async (insertMsgObj: { username: string, pid: strin
 }
 
 export const findPostsByAuthoremail = async (authoremail: string) => {
-  console.log(authoremail, "authoremail");
   const response = await fetch(`${backendServer}/api/retrieve/posts`, {
     method: "POST",
     mode: "cors",
