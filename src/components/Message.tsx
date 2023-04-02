@@ -131,7 +131,7 @@ const Message: React.FC<{
     sx = {
       ...sx,
       backgroundColor: context.darkMode ? "rgba(39,30,20,0.7)" : "rgba(254,251,195,0.7)",
-      borderLeft: isMobile ? "2px solid red" : "4px solid red"
+      borderLeft: isMobile ? "2px solid #d30" : "4px solid red"
     }
   }
   return (

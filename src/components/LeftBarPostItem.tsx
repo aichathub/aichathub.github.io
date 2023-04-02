@@ -23,6 +23,7 @@ const LeftBarPostItem: React.FC<{ post: PostModel }> = (props) => {
   const post = props.post;
   const { username, postid } = useParams();
   const navigate = useNavigate();
+  const isMobile = window.innerWidth <= 600;
 
   const handleClickPostItem = () => {
     context.setIsFirstLoad(true);
@@ -56,10 +57,17 @@ const LeftBarPostItem: React.FC<{ post: PostModel }> = (props) => {
     setShowEditPostDialog(true);
     handleCloseMenu();
   }
+  let style = {};
+  if (context.curPost && context.curPost.authoremail === context.auth.loggedEmail && context.curPost.pid === post.pid) {
+    style = {
+      backgroundColor: context.darkMode ? "rgba(39,30,20,0.7)" : "rgba(254,251,195,0.7)",
+      borderLeft: isMobile ? "2px solid #d30" : "4px solid red"
+    }
+  }
   return (
     <>
       {showEditPostDialog && <EditPostDialog handleClose={handleCloseEditPostDialog} post={post} />}
-      <ListItem key={post.pid} disablePadding>
+      <ListItem key={post.pid} disablePadding style={style}>
         <ListItemButton onClick={handleClickPostItem}>
           {post.isprivate ? <LockIcon /> : <ChatBubbleOutlineIcon />}
           <Tooltip title={`${post.username}/${post.pid}`} placement="right">
