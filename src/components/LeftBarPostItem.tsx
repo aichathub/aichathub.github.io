@@ -62,8 +62,8 @@ const LeftBarPostItem: React.FC<{ post: PostModel }> = (props) => {
       <ListItem key={post.pid} disablePadding>
         <ListItemButton onClick={handleClickPostItem}>
           {post.isprivate ? <LockIcon /> : <ChatBubbleOutlineIcon />}
-          <Tooltip title={post.title} placement="right">
-            <ListItemText primary={post.pid} style={{ marginLeft: "10px" }} />
+          <Tooltip title={`${post.username}/${post.pid}`} placement="right">
+            <ListItemText primary={post.title} style={{ marginLeft: "10px" }} />
           </Tooltip>
         </ListItemButton>
         <Grid xs={3}>
