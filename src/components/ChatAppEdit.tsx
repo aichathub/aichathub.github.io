@@ -122,7 +122,7 @@ const ChatAppEdit = () => {
         return;
       }
       context.setCurPost(response.result);
-      document.title = `${context.curPost!.title} · ${username}/${postid}`;
+      document.title = `${response.result.title} · ${username}/${postid}`;
     });
   }, [username, postid, context.auth.token]);
 
