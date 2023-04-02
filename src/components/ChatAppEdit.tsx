@@ -114,7 +114,6 @@ const ChatAppEdit = () => {
 
   useEffect(() => {
     console.log(username, postid);
-    document.title = `${username}/${postid}`;
     context.setIsLoadingMessages(true);
     reloadMessage();
     if (!username || !postid) return;
@@ -123,6 +122,7 @@ const ChatAppEdit = () => {
         return;
       }
       context.setCurPost(response.result);
+      document.title = `${context.curPost!.title} · ${username}/${postid}`;
     });
   }, [username, postid, context.auth.token]);
 
