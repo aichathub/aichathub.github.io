@@ -202,6 +202,12 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
     setPosts((prevState) => prevState.filter(post => post.id !== postId));
   }
   const addMessage = (newMsg: MessageModel) => {
+    setTimeout(() => {
+      window.scroll({
+        top: document.body.offsetHeight,
+        behavior: "smooth",
+      });
+    }, 300);
     setMessages((prevState) => [...prevState, newMsg]);
   };
   const deleteMessage = (msgId: number) => {
