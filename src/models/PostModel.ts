@@ -12,4 +12,5 @@ export type PostModel = {
   forkedfromauthorusername?: string;
   forkedfrompid?: string;
   forkedcount?: number;
+  starcount?: number;
 }

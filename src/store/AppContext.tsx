@@ -2,7 +2,7 @@ import { Box, createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 import Snackbar from '@mui/material/Snackbar';
 import { styled } from "@mui/material/styles";
 import { createContext, ReactNode, useCallback, useEffect, useState } from "react";
-import { useMatch } from "react-router-dom";
+import { useMatch, useSearchParams } from "react-router-dom";
 import Alert from "../components/Alert";
 import DrawerHeader from "../components/DrawerHeader";
 import { MessageInput } from "../components/MessageInput";
@@ -12,7 +12,7 @@ import { LocalPostModel } from "../models/LocalPostModel";
 import { MessageModel } from "../models/MessageModel";
 import { PostModel } from "../models/PostModel";
 import { TagModel } from "../models/TagModel";
-import { getStarredPosts, getTags, verify } from "../util/db";
+import { getTags, verify } from "../util/db";
 import useDidMountEffect from "../util/useDidMountEffect";
 
 type AuthObj = {
@@ -40,7 +40,9 @@ type AppContextObj = {
   speakingMid: number;
   lastMessagesRefresh: Date;
   isLeftBarPostLoading: boolean;
+  searchBoxText: string;
 
+  setSearchBoxText: (searchBoxText: string) => void;
   setIsLeftBarPostLoading: (isLeftBarPostLoading: boolean) => void;
   setLastMessagesRefresh: (lastMessagesRefresh: Date) => void;
   setSpeakingMid: (mid: number) => void;
@@ -95,7 +97,9 @@ export const AppContext = createContext<AppContextObj>({
   speakingMid: -1,
   lastMessagesRefresh: new Date(),
   isLeftBarPostLoading: false,
+  searchBoxText: "",
 
+  setSearchBoxText: () => { },
   setIsLeftBarPostLoading: () => { },
   setLastMessagesRefresh: () => { },
   setSpeakingMid: () => { },
@@ -175,7 +179,10 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
   const [isLeftBarPostLoading, setIsLeftBarPostLoading] = useState(false);
 
   const isOnPostPage = useMatch("/:username/:postid");
-  console.log("isOnPostPage", isOnPostPage);
+  const isOnSearchPage = useMatch("/search");
+  const [searchParams,] = useSearchParams();
+
+  const [searchBoxText, setSearchBoxText] = useState((isOnSearchPage && searchParams.get("q")) ? searchParams.get("q") : "");
 
   const isPostStarred = (authoremail: string, postId: string) => {
     return starredPosts.filter(x => x.authoremail === authoremail && x.pid === postId).length > 0;
@@ -284,7 +291,9 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
     speakingMid: speakingMid,
     lastMessagesRefresh: lastMessagesRefresh,
     isLeftBarPostLoading: isLeftBarPostLoading,
+    searchBoxText: searchBoxText,
 
+    setSearchBoxText: setSearchBoxText,
     setIsLeftBarPostLoading: setIsLeftBarPostLoading,
     setLastMessagesRefresh: setLastMessagesRefresh,
     setSpeakingMid: setSpeakingMid,
@@ -349,11 +358,11 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
         if (response.message === "SUCCESS") {
           changeAuth(JSON.parse(authFromLocal));
           setLoggedUser(response.loggedUser.username);
-          getStarredPosts(response.loggedUser.username).then(r => {
-            if (r.message === "SUCCESS") {
-              setStarredPosts(r.result);
-            }
-          });
+          // getStarredPosts(response.loggedUser.username).then(r => {
+          //   if (r.message === "SUCCESS") {
+          //     setStarredPosts(r.result);
+          //   }
+          // });
           // showSnack("Welcome Back, " + response.loggedUser.username);
         } else {
           showSnack("Session Expired. Please Signin Again");

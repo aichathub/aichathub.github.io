@@ -202,7 +202,7 @@ const ChatAppEdit = () => {
             </Box>
             {context.curPost &&
               <Box style={{ marginTop: "-5px", marginLeft: "25px" }}>
-                <StarButton post={context.curPost!} />
+                <StarButton post={context.curPost!} canClick={true} />
               </Box>
             }
             {context.curPost &&

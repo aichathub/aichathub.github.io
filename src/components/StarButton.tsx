@@ -1,57 +1,80 @@
 import { Box, Tooltip } from "@material-ui/core";
 import StarIcon from "@mui/icons-material/Star";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
+import { CircularProgress } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { PostModel } from "../models/PostModel";
 import { AppContext } from "../store/AppContext";
-import { getStarCount, getUsernameByEmail, starPost, unstarPost } from "../util/db";
+import { getStarCount, isStarred, starPost, unstarPost } from "../util/db";
 
 const StarButton: React.FC<{
   post: PostModel;
+  canClick?: boolean;
 }> = (props) => {
   const context = useContext(AppContext);
   const isLogged = context.loggedUser && context.loggedUser.length > 0;
   const [starred, setStarred] = useState(false);
   const [starCount, setStarCount] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isReady, setIsReady] = useState(false);
   const handleStarClick = async () => {
-    if (!isLogged) return;
+    if (!isLogged || !props.canClick) return;
     if (starred) {
-      unstarPost(props.post.authoremail, props.post.pid, context.auth.loggedEmail, context.auth.token);
-      setStarred(false);
-      setStarCount(prevState => +prevState - 1);
+      setIsLoading(true);
+      unstarPost(props.post.authoremail, props.post.pid, context.auth.loggedEmail, context.auth.token).then((response) => {
+        setIsLoading(false);
+        if (response.message === "SUCCESS") {
+          setStarred(false);
+          setStarCount(prevState => +prevState - 1);
+        } else {
+          context.showSnack(response.message);
+        }
+      });
     } else {
-      starPost(props.post.authoremail, props.post.pid, context.auth.loggedEmail, context.auth.token);
-      setStarred(true);
-      setStarCount(prevState => +prevState + 1);
+      setIsLoading(true);
+      starPost(props.post.authoremail, props.post.pid, context.auth.loggedEmail, context.auth.token).then((response) => {
+        setIsLoading(false);
+        if (response.message === "SUCCESS") {
+          setStarred(true);
+          setStarCount(prevState => +prevState + 1);
+        } else {
+          context.showSnack(response.message);
+        }
+      });
     }
   };
   useEffect(() => {
-    getUsernameByEmail(props.post.authoremail).then((res) => {
-      if (res.message === "SUCCESS") {
-        const author = res.result;
-        getStarCount(author, props.post.pid).then((res) => {
-          if (res.message === "SUCCESS") {
-            setStarCount(res.result);
-          }
-        });
+    setIsReady(false);
+    isStarred(context.loggedUser, props.post.username!, props.post.pid).then((response1) => {
+      if (response1.message !== "SUCCESS") {
+        context.showSnack(response1.message);
+        return;
       }
+      setStarred(response1.result);
+      getStarCount(props.post.username!, props.post.pid).then((response2) => {
+        if (response2.message !== "SUCCESS") {
+          context.showSnack(response2.message);
+          return;
+        }
+        setIsReady(true);
+        setStarCount(response2.result);
+      });
     });
   }, []);
-  useEffect(() => {
-    setStarred(context.isPostStarred(props.post.authoremail, props.post.pid));
-  }, [context.starredPosts]);
   return <Tooltip
-    title={`${!isLogged ? "" : (starred ? "UnStar" : "Star")}`}
+    title={`${(!isLogged || !props.canClick) ? "" : (starred ? "UnStar" : "Star")}`}
     arrow
   >
     <Box style={{
       display: "flex",
       alignItems: "center",
       flexWrap: "wrap",
-      cursor: isLogged ? "pointer" : "default",
+      cursor: isLogged && props.canClick ? "pointer" : "default",
+      opacity: isReady ? 1 : 0,
     }} onClick={handleStarClick}>
-      {starred && <StarIcon />}
-      {!starred && <StarBorderIcon style={{ fill: "grey" }} />}
+      {isLoading && <CircularProgress color="inherit" size={20} style={{ marginRight: "5px" }} />}
+      {!isLoading && starred && <StarIcon />}
+      {!isLoading && !starred && <StarBorderIcon style={{ fill: "grey" }} />}
       <span style={{ color: starred ? (context.darkMode ? '#fff' : '#000') : '#777', fontSize: "17px" }}>{starCount}</span>
     </Box>
   </Tooltip>;

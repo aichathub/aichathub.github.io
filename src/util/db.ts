@@ -210,7 +210,23 @@ export const getStarCount = async (username: string, pid: string) => {
 }
 
 export const getStarredPosts = async (username: string) => {
-  const response = await fetch(`${backendServer}/api/retrieve/starredpost`, {
+  // const response = await fetch(`${backendServer}/api/retrieve/starredpost`, {
+  //   method: "POST",
+  //   headers: {
+  //     "Content-Type": "application/json"
+  //   },
+  //   mode: "cors",
+  //   body: JSON.stringify({
+  //     username: username,
+  //   })
+  // });
+  // const responseJson = await response.json();
+  // console.log(responseJson, "starred post responseJson");
+  // return responseJson;
+}
+
+export const isStarred = async (username: string, authorusername: string, pid: string) => {
+  const response = await fetch(`${backendServer}/api/isstarred`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -218,10 +234,11 @@ export const getStarredPosts = async (username: string) => {
     mode: "cors",
     body: JSON.stringify({
       username: username,
+      authorusername: authorusername,
+      pid: pid
     })
   });
   const responseJson = await response.json();
-  console.log(responseJson, "starred post responseJson");
   return responseJson;
 }
 

@@ -112,7 +112,7 @@ const TopLeftBar: React.FC<{
   const { username, postid } = useParams();
   const [post, setPost] = useState<PostModel | undefined>(undefined);
   const inputRef = useRef<HTMLInputElement>(null);
-  const [searchText, setSearchText] = useState("");
+  // const [searchText, setSearchText] = useState("");
 
   useEffect(() => {
     if (!username || !postid) return;
@@ -234,11 +234,11 @@ const TopLeftBar: React.FC<{
             <StyledInputBase
               placeholder="Search…"
               inputProps={{ "aria-label": "search" }}
-              onChange={(e) => { setSearchText(e.target.value); }}
-              value={searchText}
+              onChange={(e) => { context.setSearchBoxText(e.target.value); }}
+              value={context.searchBoxText}
               onKeyPress={(e) => {
                 if (e.key === 'Enter') {
-                  navigate(`/search?q=${searchText}`);
+                  navigate(`/search?q=${context.searchBoxText}`);
                   // write your functionality here
                 }
               }}

@@ -13,6 +13,7 @@ const UserLink = (props: {
       const isMiddleMouseClick = e.button === 1;
       if (isMiddleMouseClick) return;
       e.preventDefault();
+      context.setSearchBoxText(`@${props.username} `);
       navigate(`/search?q=@${props.username}`);
     }}
     href={`/search?q=@${props.username}`}
