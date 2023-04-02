@@ -187,9 +187,11 @@ const ChatAppEdit = () => {
       {context.doesPostExist &&
         <>
           <Box sx={{ display: "flex", marginLeft: "40px" }}>
-            <Box sx={{ marginTop: "-7px" }}>
-              <PostLink username={context.curPost?.username!} pid={context.curPost?.pid!} />
-            </Box>
+            <Tooltip title="Refresh" arrow>
+              <Box sx={{ marginTop: "-7px" }}>
+                <PostLink username={context.curPost?.username!} pid={context.curPost?.pid!} />
+              </Box>
+            </Tooltip>
           </Box>
           <Box sx={{ display: "flex", marginLeft: "40px", marginTop: "2px" }}>
             {icon}
