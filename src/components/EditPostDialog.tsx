@@ -71,7 +71,7 @@ const EditPostDialog: React.FC<{
     }
   };
 
-  const isForkedPost = props.post.forkedfromauthoremail !== undefined;
+  const isForkedPost = props.post.forkedfromauthoremail !== undefined && props.post.forkedfromauthoremail !== null && props.post.forkedfromauthoremail.length > 0;
 
   return (
     <div>
