@@ -30,7 +30,8 @@ const ChatAppEdit = () => {
       context.setIsLoadingMessages(true);
     }
     console.log(username, postid);
-    if (!username || !postid || !context.auth.token) return;
+    const noAuth = !(localStorage.getItem("auth"));
+    if (!username || !postid || (!noAuth && !context.auth)) return;
     getMessagesByUsernameAndPid(username, postid, context.auth.token).then(response => {
       console.log(response);
       context.setIsLoadingMessages(false);

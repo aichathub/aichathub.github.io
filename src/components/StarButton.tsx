@@ -27,7 +27,7 @@ const StarButton: React.FC<{
           setStarred(false);
           setStarCount(prevState => +prevState - 1);
         } else {
-          context.showSnack(response.message);
+          context.showSnack("UNSTAR: " + response.message);
         }
       });
     } else {
@@ -38,26 +38,30 @@ const StarButton: React.FC<{
           setStarred(true);
           setStarCount(prevState => +prevState + 1);
         } else {
-          context.showSnack(response.message);
+          context.showSnack("STAR: " + response.message);
         }
       });
     }
   };
   useEffect(() => {
-    setIsReady(false);
-    isStarred(context.loggedUser, props.post.username!, props.post.pid).then((response1) => {
-      if (response1.message !== "SUCCESS") {
-        context.showSnack(response1.message);
+    setIsReady(true);
+    getStarCount(props.post.username!, props.post.pid).then((response2) => {
+      if (!context.auth) {
+        setIsReady(true);
+      }
+      if (response2.message !== "SUCCESS") {
+        context.showSnack("GET START COUNT: " + response2.message);
         return;
       }
-      setStarred(response1.result);
-      getStarCount(props.post.username!, props.post.pid).then((response2) => {
-        if (response2.message !== "SUCCESS") {
-          context.showSnack(response2.message);
+      setStarCount(response2.result);
+      if (!context.loggedUser) return;
+      isStarred(context.loggedUser, props.post.username!, props.post.pid).then((response1) => {
+        setIsReady(true);
+        if (response1.message !== "SUCCESS") {
+          context.showSnack("IS STARRED: " + response1.message);
           return;
         }
-        setIsReady(true);
-        setStarCount(response2.result);
+        setStarred(response1.result);
       });
     });
   }, []);

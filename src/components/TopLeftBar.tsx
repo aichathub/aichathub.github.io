@@ -276,7 +276,7 @@ const TopLeftBar: React.FC<{
             )}
           </IconButton>
         </DrawerHeader>
-        <Typography variant="h6" noWrap sx={{ marginLeft: '5px' }}>
+        <Typography variant="h6" noWrap sx={{ marginLeft: "10px", marginBottom: "15px" }}>
           Your Posts
           <RefreshIcon
             onClick={() => { context.setLastPostsRefresh(new Date()); }}
