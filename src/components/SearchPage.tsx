@@ -1,5 +1,6 @@
 import { Grid, Typography } from "@material-ui/core";
 import SearchIcon from "@mui/icons-material/Search";
+import { CircularProgress } from "@mui/material";
 import Box from "@mui/material/Box";
 import { useContext, useEffect, useState } from "react";
 import { useSearchParams } from 'react-router-dom';
@@ -23,7 +24,9 @@ const SearchPage = () => {
 
   useEffect(() => {
     document.title = `Search · ${searchQuery}`;
+    context.setIsLoadingMessages(true);
     searchPostsByKeyword(searchQuery!, { username: context.loggedUser, token: context.auth.token }).then((result) => {
+      context.setIsLoadingMessages(false);
       if (result.message !== "SUCCESS") {
         console.log(result.message);
         return;
@@ -55,6 +58,10 @@ const SearchPage = () => {
           </Typography>
         </Box>
       </Box>;
+  }
+
+  if (context.isLoadingMessages) {
+    bodyContent = <Box sx={{ textAlign: "center", marginTop: "20%" }}><CircularProgress color="inherit" /></Box>;
   }
 
   return (
