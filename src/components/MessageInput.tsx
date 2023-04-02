@@ -84,7 +84,6 @@ export const MessageInput: React.FC<{
         socketId: optionalSocketId,
       });
       response = result.message;
-      context.setIsSendingMessage(false);
       if (response.indexOf("ERROR") === -1) {
         props.reloadMessage();
       } else {
