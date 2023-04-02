@@ -1,0 +1,14 @@
+.userlink a {
+  text-decoration: none;
+  font-size: smaller;
+}
+
+.userlink a:hover,
+.userlink a:visited,
+.userlink a:link {
+  color: #d30;
+}
+
+.userlink a:hover {
+  text-decoration: underline;
+}

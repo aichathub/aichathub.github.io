@@ -17,6 +17,7 @@ import CodeBlock from "./CodeBlock";
 import LikeDislikePanel from "./LikeDislikePanel";
 import classes from "./Message.module.css";
 import MessageWrapper from "./MessageWrapper";
+import UserLink from "./UserLink";
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -183,8 +184,9 @@ const Message: React.FC<{
                   }}
                 >
                   <ThemeProvider theme={theme}>
-                    <Typography variant="overline" color={props.message.sender === 'ai' ? "darkred" : "common.grey"}>
-                      @{props.message.sender === 'ai' ? "AI" : props.message.authorusername}
+                    <Typography variant="overline" color={"common.grey"}>
+                      {props.message.authorusername && <UserLink username={props.message.authorusername} />}
+                      {props.message.authorusername === undefined && "@AI"}
                     </Typography>
                   </ThemeProvider>
                 </Box>
