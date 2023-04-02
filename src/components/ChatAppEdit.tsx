@@ -30,12 +30,13 @@ const ChatAppEdit = () => {
       context.setIsLoadingMessages(true);
     }
     console.log(username, postid);
-    if (!username || !postid) return;
+    if (!username || !postid || !context.auth.token) return;
     getMessagesByUsernameAndPid(username, postid, context.auth.token).then(response => {
       console.log(response);
       context.setIsLoadingMessages(false);
       if (response.message !== "SUCCESS") {
         context.setDoesPostExist(false);
+        context.showSnack("GET MESSAGES: " + response.message);
         return;
       }
       context.setDoesPostExist(true);
