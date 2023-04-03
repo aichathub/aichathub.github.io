@@ -158,9 +158,9 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
   const [auth, setAuth] = useState<AuthObj>(EMPTY_AUTH);
   const [isLoadingMessages, setIsLoadingMessages] = useState(true);
   const [posts, setPosts] = useState<LocalPostModel[]>([]);
-  let defaultTriggerAIVoice = true;
-  if (localStorage.getItem("sendTriggerAIVoice") === "false") {
-    defaultTriggerAIVoice = false;
+  let defaultTriggerAIVoice = false;
+  if (localStorage.getItem("sendTriggerAIVoice") === "true") {
+    defaultTriggerAIVoice = true;
   }
   const [sendTriggerAIVoice, setSendTriggerAIVoice] = useState(defaultTriggerAIVoice);
   const [isSendingMessage, setIsSendingMessage] = useState(false);
