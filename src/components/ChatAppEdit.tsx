@@ -31,9 +31,9 @@ const ChatAppEdit = () => {
     }
     console.log(username, postid);
     const noAuth = !(localStorage.getItem("auth"));
-    if (!username || !postid || (!noAuth && !context.auth)) return;
+    const contextHasAuth = context.auth && context.auth.token && context.auth.token.trim() !== "";
+    if (!username || !postid || (!noAuth && !contextHasAuth)) return;
     getMessagesByUsernameAndPid(username, postid, context.auth.token).then(response => {
-      console.log(response);
       context.setIsLoadingMessages(false);
       if (response.message !== "SUCCESS") {
         context.setDoesPostExist(false);
@@ -117,7 +117,8 @@ const ChatAppEdit = () => {
     console.log(username, postid);
     context.setIsLoadingMessages(true);
     reloadMessage();
-    if (!username || !postid) return;
+    const noAuth = !localStorage.getItem("auth");
+    if (!username || !postid || (!noAuth && !context.auth)) return;
     getPostByUsernameAndPid(username, postid, context.auth.token).then(response => {
       if (response.message !== "SUCCESS") {
         return;
