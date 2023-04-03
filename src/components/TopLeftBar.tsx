@@ -138,6 +138,9 @@ const TopLeftBar: React.FC<{
   };
   const [show, setShow] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const removePost = (post: PostModel) => {
+    setPosts(posts.filter(p => p.authoremail !== post.authoremail || p.pid !== post.pid));
+  }
 
   // const controlNavbar = () => {
   //   if (typeof window !== "undefined") {
@@ -299,7 +302,7 @@ const TopLeftBar: React.FC<{
             overflow: 'auto'
           }}>
             {posts.map((post) => (
-              <LeftBarPostItem post={post} />
+              <LeftBarPostItem post={post} removePost={removePost} />
             ))}
           </List>
         )}

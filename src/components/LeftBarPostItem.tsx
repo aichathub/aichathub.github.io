@@ -15,7 +15,7 @@ import { AppContext } from "../store/AppContext";
 import { deletePostByUsernameAndPid } from "../util/db";
 import EditPostDialog from "./EditPostDialog";
 
-const LeftBarPostItem: React.FC<{ post: PostModel }> = (props) => {
+const LeftBarPostItem: React.FC<{ post: PostModel; removePost: (post: PostModel) => void; }> = (props) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [showEditPostDialog, setShowEditPostDialog] = useState(false);
   const open = Boolean(anchorEl);
@@ -43,11 +43,11 @@ const LeftBarPostItem: React.FC<{ post: PostModel }> = (props) => {
     handleCloseMenu();
     const result = await deletePostByUsernameAndPid(context.loggedUser, post.pid, context.auth.token);
     if (result.message === "SUCCESS") {
-      context.setLastPostsRefresh(new Date());
-      if (username === context.loggedUser && postid === post.pid) {
+      props.removePost(post);
+      if (context.curPost && context.curPost.authoremail === context.auth.loggedEmail && context.curPost.pid === post.pid) {
         context.setDoesPostExist(false);
+        navigate("/");
       }
-      context.setLastMessagesRefresh(new Date());
     }
     context.showSnack("DELETE POST: " + result.message);
   };
