@@ -60,7 +60,9 @@ export const MessageInput: React.FC<{
         // If the user is from mobile, hide the keyboard
         ref.blur();
       }
-      context.setIsSendingMessage(true);
+      if (content.toLowerCase().indexOf("@ai") !== -1) {
+        context.setIsSendingMessage(true);
+      }
       let optionalSocketId: string | undefined;
       if (localStorage.getItem("socketId")) {
         optionalSocketId = localStorage.getItem("socketId")!;
