@@ -25,6 +25,7 @@ import Typography from "@mui/material/Typography";
 import { alpha, styled, useTheme } from "@mui/material/styles";
 import { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { DummyPostModel } from "../models/DummyPostModel";
 import { PostModel } from "../models/PostModel";
 import { AppContext } from "../store/AppContext";
 import { findPostsByAuthoremail, getPostByUsernameAndPid } from "../util/db";
@@ -33,7 +34,6 @@ import LeftBarPostItem from "./LeftBarPostItem";
 import NewPostDialog from "./NewPostDialog";
 import TopBarAvatar from "./TopBarAvatar";
 import classes from "./TopLeftBar.module.css";
-
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
 }
@@ -226,7 +226,7 @@ const TopLeftBar: React.FC<{
             <IconButton
               color="inherit"
               // onClick={() => { window.location.href = "/"; }}
-              onClick={() => { navigate("/"); }}
+              onClick={() => { context.setCurPost(DummyPostModel); navigate("/"); }}
               edge="start"
               sx={{ mr: 2, ...(props.open && { display: "none" }) }}
             >

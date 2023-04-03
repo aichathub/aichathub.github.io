@@ -44,13 +44,14 @@ const StarButton: React.FC<{
     }
   };
   useEffect(() => {
-    setIsReady(true);
+    if (!props.post.username || !props.post.pid || props.post.pid.trim() === "") return;
+    setIsReady(false);
     getStarCount(props.post.username!, props.post.pid).then((response2) => {
       if (!context.auth) {
         setIsReady(true);
       }
       if (response2.message !== "SUCCESS") {
-        context.showSnack("GET START COUNT: " + response2.message);
+        context.showSnack("GET STAR COUNT: " + response2.message);
         return;
       }
       setStarCount(response2.result);
