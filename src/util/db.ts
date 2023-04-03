@@ -127,7 +127,6 @@ export const insertPostByUsernameAndTitle = async (username: string, title: stri
 }
 
 export const updatePost = async (post: PostModel, token: string) => {
-  console.log("[client]: going to update post: ", post);
   const response = await fetch(`${backendServer}/api/update/post/`, {
     method: "POST",
     headers: {

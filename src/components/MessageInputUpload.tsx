@@ -17,7 +17,6 @@ const MessageInputUpload: React.FC<{
         const content = e.target?.result as string;
         const msg = `@ai Give me the summary of this file (${files[0].name}): \n` + content;
         props.setInputText(msg);
-        console.log("Loaded file content: ", content);
       };
       fileReader.readAsText(files[0]);
     }

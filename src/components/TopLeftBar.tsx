@@ -119,7 +119,6 @@ const TopLeftBar: React.FC<{
     getPostByUsernameAndPid(username, postid).then(response => {
       if (response.message !== "SUCCESS") return;
       const p = response.result;
-      console.log("[client]: post loaded, ", p);
       setPost(p);
     });
   }, [username, postid]);
@@ -179,7 +178,6 @@ const TopLeftBar: React.FC<{
       }
       const posts = response.result;
       if (posts) {
-        console.log("[client]: posts loaded, ", posts);
         setPosts(posts);
       }
     });

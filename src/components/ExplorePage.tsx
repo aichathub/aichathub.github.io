@@ -22,7 +22,6 @@ const ExplorePage = () => {
     getRecommendations(context.loggedUser).then((result) => {
       context.setIsLoadingMessages(false);
       if (result.message !== "SUCCESS") {
-        console.log(result.message);
         return;
       }
       setPosts(result.result);

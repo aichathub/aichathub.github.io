@@ -29,7 +29,6 @@ const ChatAppEdit = () => {
     if (context.messages.length === 0) {
       context.setIsLoadingMessages(true);
     }
-    console.log(username, postid);
     const noAuth = !(localStorage.getItem("auth"));
     const contextHasAuth = context.auth && context.auth.token && context.auth.token.trim() !== "";
     if (!username || !postid || (!noAuth && !contextHasAuth)) return;
@@ -114,7 +113,6 @@ const ChatAppEdit = () => {
   }, [context.isSendingMessage]);
 
   useEffect(() => {
-    console.log(username, postid);
     context.setIsLoadingMessages(true);
     reloadMessage();
     const noAuth = !localStorage.getItem("auth");

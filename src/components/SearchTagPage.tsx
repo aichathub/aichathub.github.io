@@ -28,7 +28,6 @@ const SearchTagPage = () => {
     searchPostsByTag(searchQuery!).then((result) => {
       context.setIsLoadingMessages(false);
       if (result.message !== "SUCCESS") {
-        console.log(result.message);
         return;
       }
       setResultNotFound(result.result.length === 0);
