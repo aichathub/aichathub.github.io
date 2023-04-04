@@ -75,7 +75,7 @@ const LeftBarPostItem: React.FC<{ post: PostModel; removePost: (post: PostModel)
             <ListItemText primary={post.title} style={{ marginLeft: "10px" }} />
           </Tooltip>
         </ListItemButton>
-        <Grid xs={3}>
+        <Grid>
           <ListItemButton onClick={handleClickPostItemMore}>
             <MoreHorizIcon />
           </ListItemButton>

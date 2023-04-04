@@ -21,7 +21,6 @@ const ChatAppEdit = () => {
   const context = useContext(AppContext);
   const pagePostId = context.pagePostId;
   const post = context.getPostById(pagePostId);
-  // const messages = post ? post.messages : [];
   const { username, postid } = useParams();
   const [reloadInterval, setReloadInterval] = useState<NodeJS.Timeout | undefined>(undefined);
 
@@ -199,7 +198,7 @@ const ChatAppEdit = () => {
             </Box>
             {context.curPost &&
               <Box style={{ marginTop: "-5px", marginLeft: "25px" }}>
-                <StarButton post={context.curPost!} canClick={true} />
+                <StarButton post={context.curPost} canClick={true} />
               </Box>
             }
             {context.curPost &&
@@ -228,26 +227,6 @@ const ChatAppEdit = () => {
         </>
       }
       {bodyContent}
-      {/* <Box
-        sx={{
-          flexGrow: 1,
-          justifyContent: "center",
-          display: "flex",
-          mb: 2,
-        }}
-      ></Box> */}
-      {/* <footer
-        style={{
-          color: "gray",
-          position: "fixed",
-          bottom: 0,
-          width: "100%",
-          minHeight: "30px",
-          marginLeft: ((context.topLeftBarOpened && !context.topLeftBarOpen) ? -drawerWidth : 0) + "px",
-        }}
-      >
-        {context.loggedUser !== "" && context.curPost?.authoremail === context.auth.loggedEmail && context.doesPostExist && <MessageInput addMessage={addMessage} reloadMessage={reloadMessage} />}
-      </footer> */}
     </>
   );
 };

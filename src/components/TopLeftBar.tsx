@@ -24,7 +24,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { alpha, styled, useTheme } from "@mui/material/styles";
 import { useContext, useEffect, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useMatch, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { DummyPostModel } from "../models/DummyPostModel";
 import { PostModel } from "../models/PostModel";
 import { AppContext } from "../store/AppContext";
@@ -112,6 +112,12 @@ const TopLeftBar: React.FC<{
   const { username, postid } = useParams();
   const [post, setPost] = useState<PostModel | undefined>(undefined);
   const inputRef = useRef<HTMLInputElement>(null);
+  const isOnSearchPage = useMatch("/search");
+  const [searchParams,] = useSearchParams();
+
+  const [searchBoxText, setSearchBoxText] = useState((isOnSearchPage && searchParams.get("q")) ? searchParams.get("q") : "");
+
+
   // const [searchText, setSearchText] = useState("");
 
   useEffect(() => {
@@ -241,11 +247,11 @@ const TopLeftBar: React.FC<{
             <StyledInputBase
               placeholder="Search…"
               inputProps={{ "aria-label": "search" }}
-              onChange={(e) => { context.setSearchBoxText(e.target.value); }}
-              value={context.searchBoxText}
+              onChange={(e) => { setSearchBoxText(e.target.value); }}
+              value={searchBoxText}
               onKeyPress={(e) => {
                 if (e.key === 'Enter') {
-                  navigate(`/search?q=${context.searchBoxText}`);
+                  navigate(`/search?q=${searchBoxText}`);
                   // write your functionality here
                 }
               }}
@@ -300,7 +306,7 @@ const TopLeftBar: React.FC<{
             overflow: 'auto'
           }}>
             {posts.map((post) => (
-              <LeftBarPostItem post={post} removePost={removePost} />
+              <LeftBarPostItem key={post.pid + "/" + post.username} post={post} removePost={removePost} />
             ))}
           </List>
         )}

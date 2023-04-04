@@ -11,6 +11,7 @@ const StarButton: React.FC<{
   post: PostModel;
   canClick?: boolean;
 }> = (props) => {
+  // alert('StarButton.tsx');
   const context = useContext(AppContext);
   const isLogged = context.loggedUser && context.loggedUser.length > 0;
   const [starred, setStarred] = useState(false);
@@ -44,6 +45,7 @@ const StarButton: React.FC<{
     }
   };
   useEffect(() => {
+    // alert(props.post.username + " " + props.post.pid);
     if (!props.post.username || !props.post.pid || props.post.pid.trim() === "") return;
     setIsReady(false);
     getStarCount(props.post.username!, props.post.pid).then((response2) => {
@@ -65,7 +67,7 @@ const StarButton: React.FC<{
         setStarred(response1.result);
       });
     });
-  }, []);
+  }, [context.curPost]);
   return <Tooltip
     title={`${(!isLogged || !props.canClick) ? "" : (starred ? "UnStar" : "Star")}`}
     arrow

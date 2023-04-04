@@ -2,7 +2,7 @@ import { Box, createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 import Snackbar from '@mui/material/Snackbar';
 import { styled } from "@mui/material/styles";
 import { createContext, ReactNode, useCallback, useEffect, useState } from "react";
-import { useMatch, useSearchParams } from "react-router-dom";
+import { useMatch } from "react-router-dom";
 import Alert from "../components/Alert";
 import DrawerHeader from "../components/DrawerHeader";
 import { MessageInput } from "../components/MessageInput";
@@ -179,11 +179,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
   const [isLeftBarPostLoading, setIsLeftBarPostLoading] = useState(false);
 
   const isOnPostPage = useMatch("/:username/:postid");
-  const isOnSearchPage = useMatch("/search");
-  const [searchParams,] = useSearchParams();
-
-  const [searchBoxText, setSearchBoxText] = useState((isOnSearchPage && searchParams.get("q")) ? searchParams.get("q") : "");
-
+  const hasRightToSendMsg = isOnPostPage && curPost && curPost.username === loggedUser;
   const isPostStarred = (authoremail: string, postId: string) => {
     return starredPosts.filter(x => x.authoremail === authoremail && x.pid === postId).length > 0;
   }
@@ -291,9 +287,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
     speakingMid: speakingMid,
     lastMessagesRefresh: lastMessagesRefresh,
     isLeftBarPostLoading: isLeftBarPostLoading,
-    searchBoxText: searchBoxText,
 
-    setSearchBoxText: setSearchBoxText,
     setIsLeftBarPostLoading: setIsLeftBarPostLoading,
     setLastMessagesRefresh: setLastMessagesRefresh,
     setSpeakingMid: setSpeakingMid,
@@ -457,7 +451,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
             }}
           >
             <ScrollButton />
-            {isOnPostPage && !isLoadingMessages && <MessageInput username={isOnPostPage.params.username!} postid={isOnPostPage.params.postid!} addMessage={addMessage} reloadMessage={() => {
+            {hasRightToSendMsg && !isLoadingMessages && <MessageInput username={isOnPostPage.params.username!} postid={isOnPostPage.params.postid!} addMessage={addMessage} reloadMessage={() => {
               setLastMessagesRefresh(new Date());
             }} />}
           </footer>
