@@ -116,7 +116,8 @@ export const MessageInput: React.FC<{
   </Tooltip>;
   useEffect(() => {
     const onScroll = () => {
-      setIsAtBottom(window.innerHeight + window.scrollY >= document.documentElement.scrollHeight);
+      const tolerance = 5;
+      setIsAtBottom(window.innerHeight + window.scrollY + tolerance >= document.documentElement.scrollHeight);
     }
     window.removeEventListener("scroll", onScroll);
     window.addEventListener("scroll", onScroll);
