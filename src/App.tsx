@@ -14,17 +14,12 @@ const App = () => {
     <BrowserRouter>
       <AppContextProvider>
         <Routes>
-          {/* <Route path="/:username/:postid/edit" element={<ChatAppEdit />} /> */}
-          {/* <Route path="/:username/:postid/:sessionid" element={<ChatAppSession />} /> */}
           <Route path="/:username/:postid/" element={<ChatAppEdit />} />
-          {/* <Route path="/:username/:postid" element={<ChatAppNewSession />} /> */}
           <Route path="/tag" element={<SearchTagPage />} />
           <Route path="/search" element={<SearchPage />} />
-          {/* <Route path="/post/:id" element={<ChatApp />} /> */}
           <Route path="/signup" element={<SignUp />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/forgetpassword" element={<ForgetPassword />} />
-          {/* <Route path="/" element={<Navigate to="/search?q=r" />} /> */}
           <Route path="/" element={<ExplorePage />} />
           <Route path="/signin/t/:token" element={<SignInByToken />} />
           <Route path="*" element={<Navigate to="/" />} />
