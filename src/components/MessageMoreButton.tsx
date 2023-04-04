@@ -1,4 +1,3 @@
-import { Button } from "@material-ui/core";
 import { ContentCopy } from "@mui/icons-material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -7,7 +6,7 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import QRCode2Icon from "@mui/icons-material/QrCode2";
 import StopIcon from '@mui/icons-material/Stop';
-import { CircularProgress, ClickAwayListener, Grow, ListItemIcon, ListItemText, MenuItem, MenuList, Paper, Popper, Tooltip } from "@mui/material";
+import { Button, CircularProgress, ClickAwayListener, Grow, ListItemIcon, ListItemText, MenuItem, MenuList, Paper, Popper, Tooltip } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { MessageModel } from "../models/MessageModel";
@@ -140,18 +139,13 @@ const MessageMoreButton: React.FC<{
           cursor: "pointer",
           position: "absolute",
           right: "0px",
-          background: "white",
         }}
         onClick={handleClick}
       >
         <Button
-          variant="contained"
+          variant="text"
           size="small"
-          style={{
-            background: "white",
-            color: "black",
-            borderRadius: "0px"
-          }}
+          color="inherit"
         >
           {isSpeaking ? <StopIcon fontSize="small" /> : <MoreHorizIcon fontSize="small" />}
         </Button>

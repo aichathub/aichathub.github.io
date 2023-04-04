@@ -457,7 +457,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
             }}
           >
             <ScrollButton />
-            {isOnPostPage && <MessageInput username={isOnPostPage.params.username!} postid={isOnPostPage.params.postid!} addMessage={addMessage} reloadMessage={() => {
+            {isOnPostPage && !isLoadingMessages && <MessageInput username={isOnPostPage.params.username!} postid={isOnPostPage.params.postid!} addMessage={addMessage} reloadMessage={() => {
               setLastMessagesRefresh(new Date());
             }} />}
           </footer>

@@ -2,7 +2,7 @@ import { CircularProgress, Tooltip } from "@material-ui/core";
 import { Theme, createStyles, makeStyles } from "@material-ui/core/styles";
 import SendIcon from "@material-ui/icons/Send";
 import { IconButton, TextField } from "@mui/material";
-import React, { KeyboardEvent, useContext, useRef, useState } from "react";
+import React, { KeyboardEvent, useContext, useEffect, useRef, useState } from "react";
 import { MessageModel } from "../models/MessageModel";
 import { AppContext } from "../store/AppContext";
 import { insertMessage } from "../util/db";
@@ -41,6 +41,7 @@ export const MessageInput: React.FC<{
   const inputRef = useRef<HTMLInputElement>(null);
   const context = useContext(AppContext);
   const [inputText, setInputText] = useState("@AI ");
+  const [isAtBottom, setIsAtBottom] = useState(false);
 
   const handleSend = async () => {
     if (!inputRef.current) return;
@@ -113,10 +114,27 @@ export const MessageInput: React.FC<{
       {context.isSendingMessage ? <CircularProgress color="inherit" size="24px" /> : <SendIcon />}
     </IconButton>
   </Tooltip>;
+  useEffect(() => {
+    const onScroll = () => {
+      setIsAtBottom(window.innerHeight + window.scrollY >= document.documentElement.scrollHeight);
+    }
+    window.removeEventListener("scroll", onScroll);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    if (!context.isLoadingMessages) {
+      setIsAtBottom(window.innerHeight + window.scrollY >= document.documentElement.scrollHeight);
+    }
+  }, [context.isLoadingMessages]);
   return (
     <>
       <div className={classes.wrapForm}
-        style={{ background: context.darkMode ? "rgb(39,39,39)" : "white" }}
+        style={{
+          background: context.darkMode ? "rgb(39,39,39)" : "white",
+          display: (document.activeElement !== inputRef.current && !isAtBottom) ? "none" : "flex",
+        }}
       >
         <TextField
           id="standard-text"
