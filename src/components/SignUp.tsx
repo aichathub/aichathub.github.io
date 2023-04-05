@@ -10,7 +10,8 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { adjectives, animals, colors, NumberDictionary, uniqueNamesGenerator } from 'unique-names-generator';
 import { AppContext } from "../store/AppContext";
 import { backendServer } from "../util/constants";
@@ -37,6 +38,7 @@ const theme = createTheme();
 
 export default function SignUp() {
   const context = useContext(AppContext);
+  const navigate = useNavigate();
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -72,6 +74,10 @@ export default function SignUp() {
     separator: '-',
     style: 'lowerCase'
   });
+  useEffect(() => {
+    context.setShouldDisplayTopLeftBar(false);
+    context.setIsInitializing(false);
+  }, []);
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">

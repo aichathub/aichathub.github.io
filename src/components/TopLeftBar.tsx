@@ -117,8 +117,7 @@ const TopLeftBar: React.FC<{
   const [isAtTop, setIsAtTop] = useState(true);
 
   const [searchBoxText, setSearchBoxText] = useState((isOnSearchPage && searchParams.get("q")) ? searchParams.get("q") : "");
-
-  const shouldHide = !isAtTop && !props.open && document.activeElement !== inputRef.current;
+  const shouldHide = !context.shouldDisplayTopLeftBar || (!isAtTop && !props.open && document.activeElement !== inputRef.current);
 
   // const [searchText, setSearchText] = useState("");
 

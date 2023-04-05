@@ -43,7 +43,9 @@ type AppContextObj = {
   isLeftBarPostLoading: boolean;
   searchBoxText: string;
   isInitializing: boolean;
+  shouldDisplayTopLeftBar: boolean;
 
+  setShouldDisplayTopLeftBar: (showDisplayTopLeftBar: boolean) => void;
   setIsInitializing: (isInitializing: boolean) => void;
   setSearchBoxText: (searchBoxText: string) => void;
   setIsLeftBarPostLoading: (isLeftBarPostLoading: boolean) => void;
@@ -102,7 +104,9 @@ export const AppContext = createContext<AppContextObj>({
   isLeftBarPostLoading: false,
   searchBoxText: "",
   isInitializing: true,
+  shouldDisplayTopLeftBar: true,
 
+  setShouldDisplayTopLeftBar: () => { },
   setIsInitializing: () => { },
   setSearchBoxText: () => { },
   setIsLeftBarPostLoading: () => { },
@@ -183,6 +187,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
   const [lastMessagesRefresh, setLastMessagesRefresh] = useState(new Date());
   const [isLeftBarPostLoading, setIsLeftBarPostLoading] = useState(false);
   const [isInitializing, setIsInitializing] = useState(true);
+  const [shouldDisplayTopLeftBar, setShouldDisplayTopLeftBar] = useState(true);
 
   const isOnPostPage = useMatch("/:username/:postid");
   const hasRightToSendMsg = isOnPostPage && curPost && curPost.username === loggedUser;
@@ -294,7 +299,9 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
     lastMessagesRefresh: lastMessagesRefresh,
     isLeftBarPostLoading: isLeftBarPostLoading,
     isInitializing: isInitializing,
+    shouldDisplayTopLeftBar: shouldDisplayTopLeftBar,
 
+    setShouldDisplayTopLeftBar: setShouldDisplayTopLeftBar,
     setIsInitializing: setIsInitializing,
     setIsLeftBarPostLoading: setIsLeftBarPostLoading,
     setLastMessagesRefresh: setLastMessagesRefresh,
