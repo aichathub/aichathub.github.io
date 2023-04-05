@@ -154,7 +154,7 @@ const ChatAppEdit = () => {
     bodyContent = (<Box sx={{ textAlign: "center" }}>
       <ErrorIcon sx={{ fontSize: 100 }} />
       <Typography variant="h5" component="h5" gutterBottom>
-        Opps!
+        Oops!
       </Typography>
       <Typography variant="h6" component="h6" gutterBottom>
         {username}/{postid} does not exist

@@ -1,4 +1,6 @@
 import { Avatar, Box, Grid, Tooltip } from "@material-ui/core";
+import DataSaverOffIcon from '@mui/icons-material/DataSaverOff';
+import ErrorIcon from '@mui/icons-material/Error';
 import LoginIcon from "@mui/icons-material/Login";
 import Button from '@mui/material/Button';
 import IconButton from "@mui/material/IconButton";
@@ -64,12 +66,22 @@ const TopBarAvatar = () => {
       open={Boolean(anchorEl)}
       onClose={handleClose}
     >
+      <MenuItem>
+        <Grid container>
+          <Grid item xs={4}>
+            {context.dailyAILimit === context.dailyAIUsuage ? <ErrorIcon /> : <DataSaverOffIcon />}
+          </Grid>
+          <Grid item xs={12}>
+            <Typography> @AI Daily Limit: {context.dailyAIUsuage} / {context.dailyAILimit} </Typography>
+          </Grid>
+        </Grid>
+      </MenuItem>
       <MenuItem onClick={handleSignOutClick}>
         <Grid container>
           <Grid item xs={4}>
             <LoginIcon />
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={12}>
             <Typography> Sign Out </Typography>
           </Grid>
         </Grid>

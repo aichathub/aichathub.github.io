@@ -48,7 +48,12 @@ export const MessageInput: React.FC<{
     const ref = inputRef.current!;
     if (ref.value.trim().length !== 0) {
       const content = ref.value;
-      if (content.toLowerCase().indexOf("@ai") !== -1) {
+      const triggerAI = content.toLowerCase().indexOf("@ai") !== -1;
+      if (triggerAI && context.dailyAILimit === context.dailyAIUsuage) {
+        context.showSnack("Opps, Seems you have reached your daily @AI limit! Let's continue tomorrow!");
+        return;
+      }
+      if (triggerAI) {
         setInputText("@AI ");
       } else {
         setInputText("");
@@ -89,6 +94,9 @@ export const MessageInput: React.FC<{
       response = result.message;
       if (response.indexOf("ERROR") === -1) {
         props.reloadMessage();
+        if (triggerAI) {
+          context.addDailyAIUsuage();
+        }
       } else {
         context.showSnack(response);
       }

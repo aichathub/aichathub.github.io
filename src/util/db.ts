@@ -462,3 +462,31 @@ export const forkPost = async (authorusername: string, pid: string, useremail: s
   const responseJson = await response.json();
   return responseJson;
 }
+
+export const getTodayAIUsage = async (username: string, token: string) => {
+  const response = await fetch(`${backendServer}/api/todayaiusage`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    mode: "cors",
+    body: JSON.stringify({
+      username: username,
+      token: token
+    })
+  });
+  const responseJson = await response.json();
+  return responseJson;
+}
+
+export const getDailyAILimit = async () => {
+  const response = await fetch(`${backendServer}/api/getdailyailimit`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    mode: "cors",
+  });
+  const responseJson = await response.json();
+  return responseJson;
+}

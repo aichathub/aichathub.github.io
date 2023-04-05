@@ -13,7 +13,7 @@ import { LocalPostModel } from "../models/LocalPostModel";
 import { MessageModel } from "../models/MessageModel";
 import { PostModel } from "../models/PostModel";
 import { TagModel } from "../models/TagModel";
-import { getTags, verify } from "../util/db";
+import { getDailyAILimit, getTags, getTodayAIUsage, verify } from "../util/db";
 import useDidMountEffect from "../util/useDidMountEffect";
 
 type AuthObj = {
@@ -44,7 +44,12 @@ type AppContextObj = {
   searchBoxText: string;
   isInitializing: boolean;
   shouldDisplayTopLeftBar: boolean;
+  dailyAIUsuage: number;
+  dailyAILimit: number;
 
+  setDailyAILimit: (dailyAILimit: number) => void;
+  setDailyAIUsuage: (dailyAIUsuage: number) => void;
+  addDailyAIUsuage: () => void;
   setShouldDisplayTopLeftBar: (showDisplayTopLeftBar: boolean) => void;
   setIsInitializing: (isInitializing: boolean) => void;
   setSearchBoxText: (searchBoxText: string) => void;
@@ -105,7 +110,12 @@ export const AppContext = createContext<AppContextObj>({
   searchBoxText: "",
   isInitializing: true,
   shouldDisplayTopLeftBar: true,
+  dailyAILimit: 0,
+  dailyAIUsuage: 0,
 
+  setDailyAILimit: () => { },
+  setDailyAIUsuage: () => { },
+  addDailyAIUsuage: () => { },
   setShouldDisplayTopLeftBar: () => { },
   setIsInitializing: () => { },
   setSearchBoxText: () => { },
@@ -188,6 +198,8 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
   const [isLeftBarPostLoading, setIsLeftBarPostLoading] = useState(false);
   const [isInitializing, setIsInitializing] = useState(true);
   const [shouldDisplayTopLeftBar, setShouldDisplayTopLeftBar] = useState(true);
+  const [dailyAIUsuage, setDailyAIUsuage] = useState(0);
+  const [dailyAILimit, setDailyAILimit] = useState(0);
 
   const isOnPostPage = useMatch("/:username/:postid");
   const hasRightToSendMsg = isOnPostPage && curPost && curPost.username === loggedUser;
@@ -278,6 +290,9 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
   const handleDrawerClose = () => {
     setTopLeftBarOpen(false);
   };
+  const addDailyAIUsuage = () => {
+    setDailyAIUsuage(prev => +prev + 1);
+  }
   const contextValue = {
     pagePostId: pagePostId,
     auth: auth,
@@ -300,7 +315,12 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
     isLeftBarPostLoading: isLeftBarPostLoading,
     isInitializing: isInitializing,
     shouldDisplayTopLeftBar: shouldDisplayTopLeftBar,
+    dailyAIUsuage: dailyAIUsuage,
+    dailyAILimit: dailyAILimit,
 
+    addDailyAIUsuage: addDailyAIUsuage,
+    setDailyAILimit: setDailyAILimit,
+    setDailyAIUsuage: setDailyAIUsuage,
     setShouldDisplayTopLeftBar: setShouldDisplayTopLeftBar,
     setIsInitializing: setIsInitializing,
     setIsLeftBarPostLoading: setIsLeftBarPostLoading,
@@ -397,7 +417,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
   useEffect(() => {
     function checkDarkMode() {
       const darkMode = localStorage.getItem("darkMode");
-      
+
       if (darkMode == null) {
         if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
           setDarkMode(true);
@@ -417,7 +437,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
       window.removeEventListener('storage', checkDarkMode)
     }
   }, []);
-  
+
   useEffect(() => {
     if (isLoadingMessages)
       return;
@@ -429,6 +449,24 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
       }
     }
   }, [isLoadingMessages]);
+
+  useEffect(() => {
+    if (!loggedUser) return;
+    getTodayAIUsage(loggedUser, auth.token).then(response => {
+      if (response.message !== "SUCCESS") {
+        showSnack(response.message);
+        return;
+      }
+      setDailyAIUsuage(response.result);
+    });
+    getDailyAILimit().then(response => {
+      if (response.message !== "SUCCESS") {
+        showSnack(response.message);
+        return;
+      }
+      setDailyAILimit(response.result);
+    });
+  }, [loggedUser]);
 
   const getSeverity = (message: string) => {
     if (message.toLowerCase().indexOf("error") !== -1) return "error";
