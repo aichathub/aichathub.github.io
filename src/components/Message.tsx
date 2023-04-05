@@ -142,7 +142,7 @@ const Message: React.FC<{
     >
       {anchorElement}
       <Grid container wrap="nowrap" spacing={2} style={{ marginBottom: "2px" }}>
-        <Grid item xs={isExtraSmall ? 10 : isMobile ? 12 : 13}>
+        <Grid item xs={!isExtraSmall && isMobile ? 12 : 10}>
           <MessageWrapper message={props.message} isEditing={isEditing} setIsEditing={setIsEditing}>
             {/* <CopyWrapper content={props.message.content} isEditing={isEditing} setIsEditing={setIsEditing} hasRightToEdit={hasRightToEdit}> */}
             <Grid container spacing={2}>
