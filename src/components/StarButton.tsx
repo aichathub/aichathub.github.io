@@ -49,7 +49,8 @@ const StarButton: React.FC<{
     if (!props.post.username || !props.post.pid || props.post.pid.trim() === "") return;
     setIsReady(false);
     getStarCount(props.post.username!, props.post.pid).then((response2) => {
-      if (!context.auth) {
+      const isLoggedIn = context.loggedUser && context.loggedUser.trim() !== "";
+      if (!isLoggedIn) {
         setIsReady(true);
       }
       if (response2.message !== "SUCCESS") {
@@ -57,7 +58,7 @@ const StarButton: React.FC<{
         return;
       }
       setStarCount(response2.result);
-      if (!context.loggedUser) return;
+      if (!isLoggedIn) return;
       isStarred(context.loggedUser, props.post.username!, props.post.pid).then((response1) => {
         setIsReady(true);
         if (response1.message !== "SUCCESS") {
