@@ -32,6 +32,7 @@ const SearchTagPage = () => {
       }
       setResultNotFound(result.result.length === 0);
       setPosts(result.result);
+      context.setIsInitializing(false);
     });
   }, [searchParams]);
 

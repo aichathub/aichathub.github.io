@@ -75,6 +75,7 @@ const ChatAppEdit = () => {
       }
 
       context.setIsFirstLoad(false);
+      context.setIsInitializing(false);
     });
   };
 

@@ -5,6 +5,7 @@ import { createContext, ReactNode, useCallback, useEffect, useState } from "reac
 import { useMatch } from "react-router-dom";
 import Alert from "../components/Alert";
 import DrawerHeader from "../components/DrawerHeader";
+import MainLoading from "../components/MainLoading";
 import { MessageInput } from "../components/MessageInput";
 import ScrollButton from "../components/ScrollButton";
 import TopLeftBar from "../components/TopLeftBar";
@@ -41,7 +42,9 @@ type AppContextObj = {
   lastMessagesRefresh: Date;
   isLeftBarPostLoading: boolean;
   searchBoxText: string;
+  isInitializing: boolean;
 
+  setIsInitializing: (isInitializing: boolean) => void;
   setSearchBoxText: (searchBoxText: string) => void;
   setIsLeftBarPostLoading: (isLeftBarPostLoading: boolean) => void;
   setLastMessagesRefresh: (lastMessagesRefresh: Date) => void;
@@ -98,7 +101,9 @@ export const AppContext = createContext<AppContextObj>({
   lastMessagesRefresh: new Date(),
   isLeftBarPostLoading: false,
   searchBoxText: "",
+  isInitializing: true,
 
+  setIsInitializing: () => { },
   setSearchBoxText: () => { },
   setIsLeftBarPostLoading: () => { },
   setLastMessagesRefresh: () => { },
@@ -177,6 +182,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
   const [speakingMid, setSpeakingMid] = useState(-1);
   const [lastMessagesRefresh, setLastMessagesRefresh] = useState(new Date());
   const [isLeftBarPostLoading, setIsLeftBarPostLoading] = useState(false);
+  const [isInitializing, setIsInitializing] = useState(true);
 
   const isOnPostPage = useMatch("/:username/:postid");
   const hasRightToSendMsg = isOnPostPage && curPost && curPost.username === loggedUser;
@@ -287,7 +293,9 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
     speakingMid: speakingMid,
     lastMessagesRefresh: lastMessagesRefresh,
     isLeftBarPostLoading: isLeftBarPostLoading,
+    isInitializing: isInitializing,
 
+    setIsInitializing: setIsInitializing,
     setIsLeftBarPostLoading: setIsLeftBarPostLoading,
     setLastMessagesRefresh: setLastMessagesRefresh,
     setSpeakingMid: setSpeakingMid,
@@ -421,6 +429,34 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
     },
   });
 
+  const mainBody = <Box sx={{ display: isInitializing ? "none" : "flex", marginBottom: "30px" }}>
+    <CssBaseline />
+    <TopLeftBar
+      open={topLeftBarOpen}
+      handleDrawerClose={handleDrawerClose}
+      handleDrawerOpen={handleDrawerOpen}
+    />
+    <Main open={topLeftBarOpen}>
+      <DrawerHeader />
+      {props.children}
+    </Main>
+    <footer
+      style={{
+        color: "gray",
+        position: "fixed",
+        bottom: 0,
+        width: "100%",
+        minHeight: "30px",
+        paddingLeft: (topLeftBarOpen ? drawerWidth : 0) + "px",
+      }}
+    >
+      <ScrollButton />
+      {hasRightToSendMsg && !isLoadingMessages && <MessageInput username={isOnPostPage.params.username!} postid={isOnPostPage.params.postid!} addMessage={addMessage} reloadMessage={() => {
+        setLastMessagesRefresh(new Date());
+      }} />}
+    </footer>
+  </Box>;
+
   return (
     <AppContext.Provider value={contextValue}>
       <ThemeProvider theme={theme}>
@@ -429,33 +465,8 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
             {snackMessage}
           </Alert>
         </Snackbar>
-        <Box sx={{ display: "flex", marginBottom: "30px" }}>
-          <CssBaseline />
-          <TopLeftBar
-            open={topLeftBarOpen}
-            handleDrawerClose={handleDrawerClose}
-            handleDrawerOpen={handleDrawerOpen}
-          />
-          <Main open={topLeftBarOpen}>
-            <DrawerHeader />
-            {props.children}
-          </Main>
-          <footer
-            style={{
-              color: "gray",
-              position: "fixed",
-              bottom: 0,
-              width: "100%",
-              minHeight: "30px",
-              paddingLeft: (topLeftBarOpen ? drawerWidth : 0) + "px",
-            }}
-          >
-            <ScrollButton />
-            {hasRightToSendMsg && !isLoadingMessages && <MessageInput username={isOnPostPage.params.username!} postid={isOnPostPage.params.postid!} addMessage={addMessage} reloadMessage={() => {
-              setLastMessagesRefresh(new Date());
-            }} />}
-          </footer>
-        </Box>
+        {isInitializing && <MainLoading darkMode={darkMode} />}
+        {mainBody}
       </ThemeProvider>
     </AppContext.Provider>
   );

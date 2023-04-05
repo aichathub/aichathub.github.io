@@ -25,6 +25,7 @@ const ExplorePage = () => {
         return;
       }
       setPosts(result.result);
+      context.setIsInitializing(false);
     });
   }, [context.loggedUser, context.lastPostsRefresh]);
 
