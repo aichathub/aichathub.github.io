@@ -109,18 +109,19 @@ const Message: React.FC<{
       setIsEditing(false);
     }}>Cancel</Button>
   </>;
-  let sx: SxProps<Theme> = {
-    my: 1,
-    mx: "0%",
-    p: 2,
-    minWidth: "100%",
-    paddingLeft: 5,
-  };
   const anchorElement = <span id={"m" + props.message.mid} style={{ position: "absolute", transform: "translateY(-30vh)" }} />;
   const anchor = window.location.hash.slice(1);
   const shouldHighlight = anchor === "m" + props.message.mid;
   const isSpeaking = props.message.mid === context.speakingMid && context.speakingMid !== -1;
   const isMobile = window.innerWidth <= 600;
+  const isExtraSmall = window.innerWidth < 375;
+  let sx: SxProps<Theme> = {
+    my: 1,
+    mx: "0%",
+    p: 2,
+    minWidth: "100%",
+    paddingLeft: isMobile ? 2 : 10,
+  };
   if (isSpeaking) {
     sx = {
       ...sx,
@@ -141,7 +142,7 @@ const Message: React.FC<{
     >
       {anchorElement}
       <Grid container wrap="nowrap" spacing={2} style={{ marginBottom: "2px" }}>
-        <Grid item xs={10}>
+        <Grid item xs={isExtraSmall ? 10 : isMobile ? 12 : 13}>
           <MessageWrapper message={props.message} isEditing={isEditing} setIsEditing={setIsEditing}>
             {/* <CopyWrapper content={props.message.content} isEditing={isEditing} setIsEditing={setIsEditing} hasRightToEdit={hasRightToEdit}> */}
             <Grid container spacing={2}>
