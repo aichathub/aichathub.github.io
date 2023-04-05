@@ -397,8 +397,14 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
   useEffect(() => {
     function checkDarkMode() {
       const darkMode = localStorage.getItem("darkMode");
-
-      if (darkMode === "true") {
+      
+      if (darkMode == null) {
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          setDarkMode(true);
+        } else {
+          setDarkMode(false);
+        }
+      } else if (darkMode === "true") {
         setDarkMode(true);
       } else {
         setDarkMode(false);
@@ -411,7 +417,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
       window.removeEventListener('storage', checkDarkMode)
     }
   }, []);
-
+  
   useEffect(() => {
     if (isLoadingMessages)
       return;
