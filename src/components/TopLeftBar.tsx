@@ -114,9 +114,11 @@ const TopLeftBar: React.FC<{
   const inputRef = useRef<HTMLInputElement>(null);
   const isOnSearchPage = useMatch("/search");
   const [searchParams,] = useSearchParams();
+  const [isAtTop, setIsAtTop] = useState(true);
 
   const [searchBoxText, setSearchBoxText] = useState((isOnSearchPage && searchParams.get("q")) ? searchParams.get("q") : "");
 
+  const shouldHide = !isAtTop && !props.open && document.activeElement !== inputRef.current;
 
   // const [searchText, setSearchText] = useState("");
 
@@ -146,33 +148,6 @@ const TopLeftBar: React.FC<{
   const removePost = (post: PostModel) => {
     setPosts(posts.filter(p => p.authoremail !== post.authoremail || p.pid !== post.pid));
   }
-
-  // const controlNavbar = () => {
-  //   if (typeof window !== "undefined") {
-  //     if (document.body.scrollTop > 100 && window.scrollY > lastScrollY && !props.open) {
-  //       // if scroll down hide the navbar
-  //       setShow(false);
-  //     } else {
-  //       // if scroll up show the navbar
-  //       setShow(true);
-  //     }
-
-  //     // remember current page location to use in the next move
-  //     setLastScrollY(window.scrollY);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   if (typeof window !== "undefined") {
-  //     window.addEventListener("scroll", controlNavbar);
-
-  //     // cleanup function
-  //     return () => {
-  //       window.removeEventListener("scroll", controlNavbar);
-  //     };
-  //   }
-  // }, [lastScrollY]);
-
   useEffect(() => {
     if (!context.auth.loggedEmail) return;
     context.setIsLeftBarPostLoading(true);
@@ -207,8 +182,17 @@ const TopLeftBar: React.FC<{
   if (platform.indexOf("mac") > -1) {
     menuBtnHint += " (CMD+B)";
   }
+  useEffect(() => {
+    const onScroll = () => {
+      const tolerance = 5;
+      setIsAtTop(window.scrollY <= tolerance);
+    }
+    window.removeEventListener("scroll", onScroll);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
   return (
-    <Grid className={`${show ? classes.show : classes.hide}`}>
+    <Grid className={`${shouldHide ? classes.hide : classes.show}`}>
       <AppBar
         position="fixed"
         open={props.open}
@@ -245,6 +229,7 @@ const TopLeftBar: React.FC<{
               <SearchIcon />
             </SearchIconWrapper>
             <StyledInputBase
+              inputRef={inputRef}
               placeholder="Search…"
               inputProps={{ "aria-label": "search" }}
               onChange={(e) => { setSearchBoxText(e.target.value); }}
@@ -252,7 +237,6 @@ const TopLeftBar: React.FC<{
               onKeyPress={(e) => {
                 if (e.key === 'Enter') {
                   navigate(`/search?q=${searchBoxText}`);
-                  // write your functionality here
                 }
               }}
             />
