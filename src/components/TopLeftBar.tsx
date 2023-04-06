@@ -213,7 +213,11 @@ const TopLeftBar: React.FC<{
             <IconButton
               color="inherit"
               // onClick={() => { window.location.href = "/"; }}
-              onClick={() => { context.setCurPost(DummyPostModel); navigate("/"); }}
+              onClick={() => { 
+                context.setCurPost(DummyPostModel);
+                navigate("/");
+                document.title = "AIChatHub";
+              }}
               edge="start"
               sx={{ mr: 2, ...(props.open && { display: "none" }) }}
             >

@@ -47,6 +47,7 @@ const LeftBarPostItem: React.FC<{ post: PostModel; removePost: (post: PostModel)
       if (context.curPost && context.curPost.authoremail === context.auth.loggedEmail && context.curPost.pid === post.pid) {
         context.setDoesPostExist(false);
         navigate("/");
+        document.title = "AIChatHub";
       }
     }
     context.showSnack("DELETE POST: " + result.message);
