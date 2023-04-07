@@ -204,7 +204,8 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
   const isOnPostPage = useMatch("/:username/:postid");
   const hasRightToSendMsg = isOnPostPage && curPost && curPost.username === loggedUser;
   const isPostStarred = (authoremail: string, postId: string) => {
-    return starredPosts.filter(x => x.authoremail === authoremail && x.pid === postId).length > 0;
+    // return starredPosts.filter(x => x.authoremail === authoremail && x.pid === postId).length > 0;
+    return false;
   }
   const changeAuth = (authObj: AuthObj) => {
     localStorage.setItem("auth", JSON.stringify(authObj));

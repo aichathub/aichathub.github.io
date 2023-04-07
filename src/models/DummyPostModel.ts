@@ -2,7 +2,7 @@ import { PostModel } from "./PostModel";
 
 export const DummyPostModel = {
   pid: "",
-  authoremail: "",
   title: "",
   createdate: "",
+  username: "",
 } as PostModel;

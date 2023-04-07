@@ -22,7 +22,7 @@ const StarButton: React.FC<{
     if (!isLogged || !props.canClick) return;
     if (starred) {
       setIsLoading(true);
-      unstarPost(props.post.authoremail, props.post.pid, context.auth.loggedEmail, context.auth.token).then((response) => {
+      unstarPost(props.post.username, props.post.pid, context.auth.loggedEmail, context.auth.token).then((response) => {
         setIsLoading(false);
         if (response.message === "SUCCESS") {
           setStarred(false);
@@ -33,7 +33,7 @@ const StarButton: React.FC<{
       });
     } else {
       setIsLoading(true);
-      starPost(props.post.authoremail, props.post.pid, context.auth.loggedEmail, context.auth.token).then((response) => {
+      starPost(props.post.username, props.post.pid, context.auth.loggedEmail, context.auth.token).then((response) => {
         setIsLoading(false);
         if (response.message === "SUCCESS") {
           setStarred(true);

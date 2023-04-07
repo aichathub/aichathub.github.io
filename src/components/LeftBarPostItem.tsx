@@ -44,7 +44,7 @@ const LeftBarPostItem: React.FC<{ post: PostModel; removePost: (post: PostModel)
     const result = await deletePostByUsernameAndPid(context.loggedUser, post.pid, context.auth.token);
     if (result.message === "SUCCESS") {
       props.removePost(post);
-      if (context.curPost && context.curPost.authoremail === context.auth.loggedEmail && context.curPost.pid === post.pid) {
+      if (context.curPost && context.curPost.username === context.loggedUser && context.curPost.pid === post.pid) {
         context.setDoesPostExist(false);
         navigate("/");
         document.title = "AIChatHub";
@@ -60,7 +60,7 @@ const LeftBarPostItem: React.FC<{ post: PostModel; removePost: (post: PostModel)
     handleCloseMenu();
   }
   let style = {};
-  if (context.curPost && context.curPost.authoremail === context.auth.loggedEmail && context.curPost.pid === post.pid) {
+  if (context.curPost && context.curPost.username === context.loggedUser && context.curPost.pid === post.pid) {
     style = {
       backgroundColor: context.darkMode ? "rgba(39,30,20,0.7)" : "rgba(254,251,195,0.7)",
       borderLeft: isMobile ? "2px solid #d30" : "4px solid red"

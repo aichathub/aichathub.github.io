@@ -145,7 +145,7 @@ const TopLeftBar: React.FC<{
   const [show, setShow] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const removePost = (post: PostModel) => {
-    setPosts(posts.filter(p => p.authoremail !== post.authoremail || p.pid !== post.pid));
+    setPosts(posts.filter(p => p.username !== post.username || p.pid !== post.pid));
   }
   useEffect(() => {
     if (!context.auth.loggedEmail) return;
@@ -213,7 +213,7 @@ const TopLeftBar: React.FC<{
             <IconButton
               color="inherit"
               // onClick={() => { window.location.href = "/"; }}
-              onClick={() => { 
+              onClick={() => {
                 context.setCurPost(DummyPostModel);
                 navigate("/");
                 document.title = "AIChatHub";

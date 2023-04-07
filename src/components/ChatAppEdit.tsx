@@ -99,8 +99,6 @@ const ChatAppEdit = () => {
     context.setTopLeftBarOpen(false);
   };
 
-  const canFork = context.auth && context.auth.loggedEmail && context.auth.loggedEmail !== context.curPost?.authoremail;
-
   useEffect(() => {
     if (context.isSendingMessage) {
       const interval = setInterval(() => {

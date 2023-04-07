@@ -240,7 +240,7 @@ export const isStarred = async (username: string, authorusername: string, pid: s
   return responseJson;
 }
 
-export const starPost = async (authoremail: string, pid: string, useremail: string, token: string) => {
+export const starPost = async (authorusername: string, pid: string, useremail: string, token: string) => {
   const response = await fetch(`${backendServer}/api/star`, {
     method: "POST",
     headers: {
@@ -248,7 +248,7 @@ export const starPost = async (authoremail: string, pid: string, useremail: stri
     },
     mode: "cors",
     body: JSON.stringify({
-      authoremail: authoremail,
+      authorusername: authorusername,
       useremail: useremail,
       pid: pid,
       token: token
@@ -258,7 +258,7 @@ export const starPost = async (authoremail: string, pid: string, useremail: stri
   return responseJson;
 }
 
-export const unstarPost = async (authoremail: string, pid: string, useremail: string, token: string) => {
+export const unstarPost = async (authorusername: string, pid: string, useremail: string, token: string) => {
   const response = await fetch(`${backendServer}/api/unstar`, {
     method: "POST",
     headers: {
@@ -266,7 +266,7 @@ export const unstarPost = async (authoremail: string, pid: string, useremail: st
     },
     mode: "cors",
     body: JSON.stringify({
-      authoremail: authoremail,
+      authorusername: authorusername,
       useremail: useremail,
       pid: pid,
       token: token
