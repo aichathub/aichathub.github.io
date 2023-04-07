@@ -37,8 +37,7 @@ const TopBarAvatar = () => {
       <Button color="inherit" onClick={() => navigate("/signup")}>Signup</Button>
     </>;
   }
-  // const avatarColor = deepPurple[500];
-  const avatarColor = generateColor(context.auth.loggedEmail);
+  const avatarColor = generateColor(context.loggedUser);
   return <Box sx={{ flexGrow: 0 }}>
     <Tooltip title={context.auth.loggedEmail}>
       <IconButton onClick={handleMenu} >

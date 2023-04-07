@@ -1,9 +1,9 @@
 export type MessageModel = {
   content: string;
-  sender: string;
+  sender?: string;
   time: Date;
   mid: number;
-  authorusername?: string;
+  authorusername: string;
   editdate?: Date;
   shouldSpeak?: boolean;
 }

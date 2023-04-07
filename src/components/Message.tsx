@@ -38,11 +38,11 @@ const Message: React.FC<{
   typeEffect?: boolean;
 }> = (props) => {
   let avatarName = "You";
-  const avatarColor = props.message.sender === "ai" ? deepOrange[500] : generateColor(props.message.sender);
-  if (props.message.sender === "ai") {
+  const avatarColor = props.message.authorusername === undefined ? deepOrange[500] : generateColor(props.message.authorusername);
+  if (props.message.authorusername === undefined) {
     avatarName = "AI";
   } else {
-    avatarName = props.message.sender.substring(0, 2).toUpperCase();
+    avatarName = props.message.authorusername.substring(0, 2).toUpperCase();
   }
   const context = useContext(AppContext);
   const tooLong = props.message.content.length > 2000;
