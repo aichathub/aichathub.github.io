@@ -11,6 +11,7 @@ const MessageInputSettings: React.FC<{
   inputRef: React.RefObject<HTMLInputElement>;
 }> = (props) => {
   const triggerAI = props.inputText.indexOf("@ai") !== -1 || props.inputText.indexOf("@AI") !== -1;
+  const triggerPython = props.inputText.indexOf("@python") !== -1 || props.inputText.indexOf("@PYTHON") !== -1;
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const hasVoice = window.speechSynthesis.getVoices().length > 0;
@@ -27,12 +28,15 @@ const MessageInputSettings: React.FC<{
       props.setInputText("@AI " + props.inputText.trim());
     }
   }
-  const handleClearInput = () => {
-    if (triggerAI) {
-      props.setInputText("@AI ");
+  const toggleTriggerPython = () => {
+    if (triggerPython) {
+      props.setInputText(props.inputText.replace("@python", "").replace("@PYTHON", ""));
     } else {
-      props.setInputText("");
+      props.setInputText("@python " + props.inputText.trim());
     }
+  }
+  const handleClearInput = () => {
+    props.setInputText("");
     props.inputRef.current!.focus();
     handleClose();
   }
@@ -61,10 +65,18 @@ const MessageInputSettings: React.FC<{
               <MenuList>
                 <MenuItem >
                   <FormControlLabel
-                    label="AI Response"
+                    label="@AI"
                     control={<Checkbox style={{
                       color: "#d30",
                     }} checked={triggerAI} onClick={toggleTriggerAI} />}
+                  />
+                </MenuItem>
+                <MenuItem >
+                  <FormControlLabel
+                    label="@python"
+                    control={<Checkbox style={{
+                      color: "#d30",
+                    }} checked={triggerPython} onClick={toggleTriggerPython} />}
                   />
                 </MenuItem>
                 {

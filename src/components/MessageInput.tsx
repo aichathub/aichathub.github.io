@@ -49,12 +49,15 @@ export const MessageInput: React.FC<{
     if (ref.value.trim().length !== 0) {
       const content = ref.value;
       const triggerAI = content.toLowerCase().indexOf("@ai") !== -1;
+      const triggerPython = content.toLowerCase().indexOf("@python") !== -1;
       if (triggerAI && context.dailyAILimit === context.dailyAIUsuage) {
         context.showSnack("Opps, Seems you have reached your daily @AI limit! Let's continue tomorrow!");
         return;
       }
       if (triggerAI) {
         setInputText("@AI ");
+      } else if (triggerPython) {
+        setInputText("@python ");
       } else {
         setInputText("");
       }
@@ -67,6 +70,9 @@ export const MessageInput: React.FC<{
         ref.blur();
       }
       if (content.toLowerCase().indexOf("@ai") !== -1) {
+        context.setIsSendingMessage(true);
+      }
+      if (content.toLowerCase().indexOf("@python") !== -1) {
         context.setIsSendingMessage(true);
       }
       let optionalSocketId: string | undefined;
