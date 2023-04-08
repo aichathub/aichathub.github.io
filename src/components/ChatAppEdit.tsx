@@ -51,7 +51,6 @@ const ChatAppEdit = () => {
           editdate: msgs[i].editdate,
         });
       }
-      console.log("msgmodels", msgmodels);
       const oldMsgLength = context.messages.length === 0 ? Infinity : context.messages.length;
       // if there is new message and the scroll is at the bottom, scroll to the bottom
       if (!context.isFirstLoad && msgs.length > oldMsgLength && window.scrollY + window.innerHeight >= document.body.offsetHeight) {

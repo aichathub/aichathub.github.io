@@ -235,7 +235,7 @@ const Message: React.FC<{
             </>
           } */}
           {isEditing && editor}
-          {props.message.sender === "ai" && <LikeDislikePanel message={props.message} />}
+          {props.message.authorusername === undefined && <LikeDislikePanel message={props.message} />}
         </Grid>
       </Grid>
     </StyledPaper>
