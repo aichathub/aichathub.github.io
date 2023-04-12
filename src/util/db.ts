@@ -490,3 +490,18 @@ export const getDailyAILimit = async () => {
   const responseJson = await response.json();
   return responseJson;
 }
+
+export const loginWithGoogle = async (idToken: string) => {
+  const response = await fetch(`${backendServer}/api/googlelogin`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    mode: "cors",
+    body: JSON.stringify({
+      idToken: idToken
+    })
+  });
+  const responseJson = await response.json();
+  return responseJson;
+}

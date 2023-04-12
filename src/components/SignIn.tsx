@@ -9,11 +9,13 @@ import Link from "@mui/material/Link";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
+import { GoogleLogin } from "@react-oauth/google";
 import * as React from "react";
 import { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../store/AppContext";
 import { backendServer } from "../util/constants";
+import { loginWithGoogle } from "../util/db";
 
 function Copyright(props: any) {
   return (
@@ -104,6 +106,23 @@ export default function SignIn() {
             >
               Sign In
             </Button>
+            <GoogleLogin
+              onSuccess={credentialResponse => {
+                const idToken = credentialResponse.credential;
+                loginWithGoogle(idToken!).then((responseJson) => {
+                  if (responseJson.message === "SUCCESS") {
+                    context.changeAuth({
+                      loggedEmail: responseJson.loggedEmail,
+                      token: responseJson.token
+                    });
+                    window.location.href = "/";
+                  }
+                });
+              }}
+              onError={() => {
+                console.log("Login failed");
+              }}
+            />
             <Grid container justifyContent="flex-end">
               <Grid item>
                 <Link href="/signup" variant="body2">
