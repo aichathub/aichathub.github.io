@@ -164,7 +164,7 @@ export default function SignIn() {
               />
             </Box>
             <GithubLoginButton
-              style={{ height: "40px" }}
+              style={{ height: "40px", width: "200px" }}
               onClick={() => {
                 window.location.href = `https://github.com/login/oauth/authorize?client_id=${GITHUB_LOGIN_CLIENT_ID}&scope=user`;
               }} text="Sign in with Github" />
