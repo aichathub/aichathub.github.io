@@ -16,8 +16,8 @@ const MainLoading: React.FC<{
       }}
     >
       <img className={classes.rotate} src={logo} alt="Logo" style={{ width: "250px", height: "250px" }} />
-      <Typography variant="h6" style={{ marginTop: "20px", marginLeft: "75px", color: props.darkMode ? "white" : "black" }}>
-        Initializing...
+      <Typography variant="h6" style={{ marginTop: "20px", marginLeft: "60px", color: props.darkMode ? "white" : "black" }}>
+        Just a moment...
       </Typography>
     </div>
   </Box>;
