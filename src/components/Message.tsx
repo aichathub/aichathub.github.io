@@ -5,7 +5,7 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import { deepOrange } from "@mui/material/colors";
 import { ThemeProvider, createTheme, styled } from "@mui/material/styles";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import Timeago from "react-timeago";
 import remarkGfm from "remark-gfm";
@@ -38,7 +38,8 @@ const Message: React.FC<{
   typeEffect?: boolean;
 }> = (props) => {
   let avatarName = "You";
-  const avatarColor = props.message.authorusername === undefined ? deepOrange[500] : generateColor(props.message.authorusername);
+  const isAI = props.message.authorusername === undefined;
+  const avatarColor = isAI ? deepOrange[500] : generateColor(props.message.authorusername);
   if (props.message.authorusername === undefined) {
     avatarName = "AI";
   } else {
@@ -51,13 +52,14 @@ const Message: React.FC<{
   const [showFullMsg, setShowFullMsg] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editedMsg, setEditedMsg] = useState(props.message.content);
-  const justNow = (date: Date) => {
+  const justNow = (date: Date, seconds = 60) => {
     if (date === undefined) return false;
     const now = new Date();
     const diff = now.getTime() - new Date(date).getTime();
-    return diff < 1000 * 60;
+    return diff < 1000 * seconds;
   };
-
+  const shouldAnimate = isAI && justNow(props.message.time, 10);
+  const [content, setContent] = useState(shouldAnimate ? "" : props.message.content);
   const toMessageView = (messages: string[]) => {
     const body = messages.map((content, index) =>
       index % 2 === 0 ? (
@@ -135,6 +137,20 @@ const Message: React.FC<{
       borderLeft: isMobile ? "2px solid #d30" : "4px solid red"
     }
   }
+  useEffect(() => {
+    // Repeat every 100ms
+    const interval = setInterval(() => {
+      setContent(prev => {
+        const curLen = prev.length;
+        if (curLen >= props.message.content.length) {
+          // Stop the interval
+          clearInterval(interval);
+        }
+        return props.message.content.substring(0, curLen + 1) + (curLen < props.message.content.length ? "▌" : "");
+      })
+    }, 10);
+    return () => clearInterval(interval);
+  }, []);
   return (
     <StyledPaper
       sx={sx}
@@ -200,7 +216,7 @@ const Message: React.FC<{
             <>
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
-                children={props.message.content}
+                children={content}
                 linkTarget="_blank"
                 components={{
                   code({ node, inline, className, children, ...props }) {
