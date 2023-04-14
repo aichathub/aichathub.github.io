@@ -200,7 +200,7 @@ export default function SignUp() {
               />
             </Box>
             <GithubLoginButton
-              style={{ height: "40px", marginTop: "10px", width: "200px" }}
+              style={{ height: "40px", marginTop: "10px" }}
               onClick={() => {
                 localStorage.setItem("github_register_username", usernameRef.current!.value);
                 window.location.href = `https://github.com/login/oauth/authorize?client_id=${GITHUB_LOGIN_CLIENT_ID}&scope=user`;
