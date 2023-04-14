@@ -1,4 +1,5 @@
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import { Chip, Divider } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -6,15 +7,16 @@ import Container from "@mui/material/Container";
 import CssBaseline from "@mui/material/CssBaseline";
 import Grid from "@mui/material/Grid";
 import Link from "@mui/material/Link";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { GoogleLogin } from "@react-oauth/google";
 import * as React from "react";
 import { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { GithubLoginButton } from "react-social-login-buttons";
 import { AppContext } from "../store/AppContext";
-import { backendServer } from "../util/constants";
+import { GITHUB_LOGIN_CLIENT_ID, backendServer } from "../util/constants";
 import { loginWithGoogle } from "../util/db";
 
 function Copyright(props: any) {
@@ -54,6 +56,33 @@ export default function SignIn() {
     const responseJson = await response.json();
     alert(responseJson.message);
   };
+  // const googleLogin = useGoogleLogin({
+  //   onSuccess: async tokenResponse => {
+  //     console.log(tokenResponse);
+  //     const idToken = tokenResponse.access_token;
+  //     const userInfo = await axios
+  //       .get('https://www.googleapis.com/oauth2/v3/userinfo', {
+  //         headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
+  //       })
+  //       .then(res => res.data);
+
+  //     console.log(userInfo);
+  //     loginWithGoogle(idToken!).then((responseJson) => {
+  //       if (responseJson.message === "SUCCESS") {
+  //         context.changeAuth({
+  //           loggedEmail: responseJson.loggedEmail,
+  //           token: responseJson.token
+  //         });
+  //         window.location.href = "/";
+  //       } else {
+  //         context.showSnack("Login failed: " + responseJson.message);
+  //       }
+  //     });
+  //   },
+  //   onError: () => {
+  //     context.showSnack("Login Failed");
+  //   }
+  // });
 
   useEffect(() => {
     context.setShouldDisplayTopLeftBar(false);
@@ -106,23 +135,39 @@ export default function SignIn() {
             >
               Sign In
             </Button>
-            <GoogleLogin
-              onSuccess={credentialResponse => {
-                const idToken = credentialResponse.credential;
-                loginWithGoogle(idToken!).then((responseJson) => {
-                  if (responseJson.message === "SUCCESS") {
-                    context.changeAuth({
-                      loggedEmail: responseJson.loggedEmail,
-                      token: responseJson.token
-                    });
-                    window.location.href = "/";
-                  }
-                });
-              }}
-              onError={() => {
-                console.log("Login failed");
-              }}
-            />
+            <Divider style={{ marginBottom: "10px" }}>
+              <Chip label="OR" />
+            </Divider>
+            <Box style={{
+              transform: "translateX(5px)",
+              marginBottom: "10px"
+            }}>
+              <GoogleLogin
+                useOneTap={true}
+                onSuccess={credentialResponse => {
+                  const idToken = credentialResponse.credential;
+                  loginWithGoogle(idToken!).then((responseJson) => {
+                    if (responseJson.message === "SUCCESS") {
+                      context.changeAuth({
+                        loggedEmail: responseJson.loggedEmail,
+                        token: responseJson.token
+                      });
+                      window.location.href = "/";
+                    } else {
+                      context.showSnack("Login failed: " + responseJson.message);
+                    }
+                  });
+                }}
+                onError={() => {
+                  context.showSnack("Login failed");
+                }}
+              />
+            </Box>
+            <GithubLoginButton
+              style={{ height: "40px" }}
+              onClick={() => {
+                window.location.href = `https://github.com/login/oauth/authorize?client_id=${GITHUB_LOGIN_CLIENT_ID}&scope=user`;
+              }} text="Sign in with Github" />
             <Grid container justifyContent="flex-end">
               <Grid item>
                 <Link href="/signup" variant="body2">

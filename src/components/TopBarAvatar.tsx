@@ -39,14 +39,14 @@ const TopBarAvatar = () => {
   }
   const avatarColor = generateColor(context.loggedUser);
   return <Box sx={{ flexGrow: 0 }}>
-    <Tooltip title={context.auth.loggedEmail}>
+    <Tooltip title={`@${context.loggedUser}`}>
       <IconButton onClick={handleMenu} >
         <Avatar
           alt={context.auth.loggedEmail}
           src=""
           style={{ background: avatarColor }}
         >
-          {context.auth.loggedEmail.substring(0, 2).toUpperCase()}
+          {context.loggedUser.substring(0, 2).toUpperCase()}
         </Avatar>
       </IconButton>
     </Tooltip>

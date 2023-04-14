@@ -8,6 +8,7 @@ import SearchTagPage from "./components/SearchTagPage";
 import SignIn from "./components/SignIn";
 import SignInByToken from "./components/SignInByToken";
 import SignUp from "./components/SignUp";
+import SignInByGithub from "./components/SigninByGithub";
 import { AppContextProvider } from "./store/AppContext";
 import { GOOGLE_LOGIN_CLIENT_ID } from "./util/constants";
 
@@ -25,6 +26,7 @@ const App = () => {
             <Route path="/forgetpassword" element={<ForgetPassword />} />
             <Route path="/" element={<ExplorePage />} />
             <Route path="/signin/t/:token" element={<SignInByToken />} />
+            <Route path="/signin/github" element={<SignInByGithub />} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </AppContextProvider>

@@ -1,4 +1,5 @@
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import { Chip, Divider } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -6,15 +7,18 @@ import Container from "@mui/material/Container";
 import CssBaseline from "@mui/material/CssBaseline";
 import Grid from "@mui/material/Grid";
 import Link from "@mui/material/Link";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import { GoogleLogin } from "@react-oauth/google";
 import * as React from "react";
 import { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { adjectives, animals, colors, NumberDictionary, uniqueNamesGenerator } from 'unique-names-generator';
+import { GithubLoginButton } from "react-social-login-buttons";
+import { NumberDictionary, adjectives, animals, colors, uniqueNamesGenerator } from 'unique-names-generator';
 import { AppContext } from "../store/AppContext";
-import { backendServer } from "../util/constants";
+import { GITHUB_LOGIN_CLIENT_ID, backendServer } from "../util/constants";
+import { signupWithGoogle } from "../util/db";
 
 function Copyright(props: any) {
   return (
@@ -74,6 +78,7 @@ export default function SignUp() {
     separator: '-',
     style: 'lowerCase'
   });
+  const usernameRef = React.useRef<HTMLInputElement>(null);
   useEffect(() => {
     context.setShouldDisplayTopLeftBar(false);
     context.setIsInitializing(false);
@@ -105,6 +110,18 @@ export default function SignUp() {
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
+                  inputRef={usernameRef}
+                  autoComplete="username"
+                  name="username"
+                  required
+                  fullWidth
+                  id="username"
+                  label="Username"
+                  defaultValue={randomUsername}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
                   required
                   fullWidth
                   id="email"
@@ -113,17 +130,6 @@ export default function SignUp() {
                   autoComplete="email"
                   type="email"
                   autoFocus
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  autoComplete="username"
-                  name="username"
-                  required
-                  fullWidth
-                  id="username"
-                  label="Username"
-                  defaultValue={randomUsername}
                 />
               </Grid>
               {/* <Grid item xs={12}>
@@ -165,6 +171,40 @@ export default function SignUp() {
             >
               Sign Up
             </Button>
+            <Divider style={{ marginBottom: "10px" }}>
+              <Chip label="OR" />
+            </Divider>
+            <Box style={{ marginLeft: "5px" }}>
+              <GoogleLogin
+                shape="rectangular"
+                logo_alignment="left"
+                text="signup_with"
+                useOneTap={true}
+                onSuccess={credentialResponse => {
+                  const idToken = credentialResponse.credential;
+                  signupWithGoogle(idToken!, usernameRef.current!.value).then((responseJson) => {
+                    if (responseJson.message === "SUCCESS") {
+                      context.changeAuth({
+                        loggedEmail: responseJson.loggedEmail,
+                        token: responseJson.token
+                      });
+                      window.location.href = "/";
+                    } else {
+                      context.showSnack("Login failed: " + responseJson.message);
+                    }
+                  });
+                }}
+                onError={() => {
+                  context.showSnack("Login failed");
+                }}
+              />
+            </Box>
+            <GithubLoginButton
+              style={{ height: "40px", marginTop: "10px" }}
+              onClick={() => {
+                localStorage.setItem("github_register_username", usernameRef.current!.value);
+                window.location.href = `https://github.com/login/oauth/authorize?client_id=${GITHUB_LOGIN_CLIENT_ID}&scope=user`;
+              }} text="Sign up with Github" />
             <Grid container justifyContent="flex-end">
               <Grid item>
                 <Link href="/signin" variant="body2">

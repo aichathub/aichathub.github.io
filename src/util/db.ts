@@ -505,3 +505,19 @@ export const loginWithGoogle = async (idToken: string) => {
   const responseJson = await response.json();
   return responseJson;
 }
+
+export const signupWithGoogle = async (idToken: string, username: string) => {
+  const response = await fetch(`${backendServer}/api/googlesignup`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    mode: "cors",
+    body: JSON.stringify({
+      idToken: idToken,
+      username: username
+    })
+  });
+  const responseJson = await response.json();
+  return responseJson;
+}
