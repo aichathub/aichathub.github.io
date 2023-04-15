@@ -153,7 +153,7 @@ const Message: React.FC<{
     const interval = setInterval(() => {
       setContent(prev => {
         const curLen = prev.length;
-        if (curLen === 1) {
+        if (curLen >= 20) {
           autoScroll = true;
         }
         if (context.shouldStopTypingMessage || curLen >= props.message.content.length) {
