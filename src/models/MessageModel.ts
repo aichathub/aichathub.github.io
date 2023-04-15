@@ -6,4 +6,5 @@ export type MessageModel = {
   authorusername: string;
   editdate?: Date;
   shouldSpeak?: boolean;
+  justSent?: boolean;
 }

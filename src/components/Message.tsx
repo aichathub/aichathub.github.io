@@ -58,7 +58,7 @@ const Message: React.FC<{
     const diff = now.getTime() - new Date(date).getTime();
     return diff < 1000 * seconds;
   };
-  const shouldAnimate = isAI && justNow(props.message.time, 10);
+  const shouldAnimate = isAI && props.message.justSent;
   const [content, setContent] = useState(shouldAnimate ? "" : props.message.content);
   const toMessageView = (messages: string[]) => {
     const body = messages.map((content, index) =>
@@ -146,9 +146,13 @@ const Message: React.FC<{
           // Stop the interval
           clearInterval(interval);
         }
+        window.scroll({
+          top: document.body.offsetHeight,
+          behavior: "smooth",
+        });
         return props.message.content.substring(0, curLen + 1) + (curLen < props.message.content.length ? "▌" : "");
       })
-    }, 10);
+    }, 50);
     return () => clearInterval(interval);
   }, []);
   return (
