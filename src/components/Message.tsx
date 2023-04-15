@@ -154,6 +154,7 @@ const Message: React.FC<{
         const curLen = prev.length;
         if (curLen === 5) {
           autoScroll = true;
+          context.setIsAutoScrolling(true);
         }
         if (context.shouldStopTypingMessage || curLen >= props.message.content.length) {
           clearInterval(interval);
