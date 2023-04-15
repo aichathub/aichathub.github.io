@@ -48,7 +48,9 @@ type AppContextObj = {
   dailyAILimit: number;
   isTypingMessage: boolean;
   shouldStopTypingMessage: boolean;
+  isAutoScrolling: boolean;
 
+  setIsAutoScrolling: (isAutoScrolling: boolean) => void;
   setShouldStopTypingMessage: (shouldStopTypingMessage: boolean) => void;
   setIsTypingMessage: (isTypingMessage: boolean) => void;
   setDailyAILimit: (dailyAILimit: number) => void;
@@ -118,7 +120,9 @@ export const AppContext = createContext<AppContextObj>({
   dailyAIUsuage: 0,
   isTypingMessage: false,
   shouldStopTypingMessage: false,
+  isAutoScrolling: false,
 
+  setIsAutoScrolling: () => { },
   setShouldStopTypingMessage: () => { },
   setIsTypingMessage: () => { },
   setDailyAILimit: () => { },
@@ -210,6 +214,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
   const [dailyAILimit, setDailyAILimit] = useState(0);
   const [isTypingMessage, setIsTypingMessage] = useState(false);
   const [shouldStopTypingMessage, setShouldStopTypingMessage] = useState(false);
+  const [isAutoScrolling, setIsAutoScrolling] = useState(false);
 
   const isOnPostPage = useMatch("/:username/:postid");
   const hasRightToSendMsg = isOnPostPage && curPost && curPost.username === loggedUser;
@@ -330,7 +335,9 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
     dailyAILimit: dailyAILimit,
     isTypingMessage: isTypingMessage,
     shouldStopTypingMessage: shouldStopTypingMessage,
+    isAutoScrolling: isAutoScrolling,
 
+    setIsAutoScrolling: setIsAutoScrolling,
     setShouldStopTypingMessage: setShouldStopTypingMessage,
     setIsTypingMessage: setIsTypingMessage,
     addDailyAIUsuage: addDailyAIUsuage,

@@ -148,13 +148,15 @@ const Message: React.FC<{
     window.addEventListener("scroll", () => {
       if (window.scrollY < document.body.offsetHeight - window.innerHeight) {
         autoScroll = false;
+        context.setIsAutoScrolling(false);
       }
     });
     const interval = setInterval(() => {
       setContent(prev => {
         const curLen = prev.length;
-        if (curLen >= 20) {
+        if (curLen === 20) {
           autoScroll = true;
+          context.setIsAutoScrolling(true);
         }
         if (context.shouldStopTypingMessage || curLen >= props.message.content.length) {
           clearInterval(interval);

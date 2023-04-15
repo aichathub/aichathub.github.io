@@ -55,7 +55,7 @@ const ScrollButton = () => {
     });
   }, []);
 
-  if (!showScrollButton) return <></>;
+  if (!showScrollButton || context.isAutoScrolling) return <></>;
 
   return (
     <Grid

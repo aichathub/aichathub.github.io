@@ -156,7 +156,7 @@ export const MessageInput: React.FC<{
       <div className={classes.wrapForm}
         style={{
           background: context.darkMode ? "rgb(39,39,39)" : "white",
-          display: (document.activeElement !== inputRef.current && !isAtBottom) ? "none" : "flex",
+          display: (!context.isAutoScrolling && document.activeElement !== inputRef.current && !isAtBottom) ? "none" : "flex",
         }}
       >
         <TextField
