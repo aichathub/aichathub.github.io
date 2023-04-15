@@ -45,6 +45,7 @@ export const MessageInput: React.FC<{
 
   const handleSend = async () => {
     if (!inputRef.current) return;
+    if (context.isSendingMessage) return;
     const ref = inputRef.current!;
     if (ref.value.trim().length !== 0) {
       const content = ref.value;

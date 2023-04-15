@@ -138,21 +138,23 @@ const Message: React.FC<{
     }
   }
   useEffect(() => {
-    // Repeat every 100ms
+    if (!shouldAnimate) return;
     const interval = setInterval(() => {
       setContent(prev => {
         const curLen = prev.length;
+        context.setIsSendingMessage(true);
         if (curLen >= props.message.content.length) {
-          // Stop the interval
           clearInterval(interval);
+          context.setIsSendingMessage(false);
+          return prev;
         }
         window.scroll({
           top: document.body.offsetHeight,
           behavior: "smooth",
         });
-        return props.message.content.substring(0, curLen + 1) + (curLen < props.message.content.length ? "▌" : "");
+        return props.message.content.substring(0, curLen + 1) + (curLen >= props.message.content.length ? "" : "▌");
       })
-    }, 50);
+    }, 30);
     return () => clearInterval(interval);
   }, []);
   return (
