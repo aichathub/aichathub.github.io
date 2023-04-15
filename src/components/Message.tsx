@@ -100,7 +100,7 @@ const Message: React.FC<{
       }}
     />
     <Button variant="text" onClick={() => {
-      props.message.content = editedMsg;
+      setContent(editedMsg);
       props.message.editdate = new Date();
       editMessage(props.message.mid, context.auth.loggedEmail, context.auth.token, editedMsg).then(res => {
         context.showSnack(res.message);
@@ -141,6 +141,7 @@ const Message: React.FC<{
     if (!shouldAnimate || context.shouldStopTypingMessage) return;
     context.setIsTypingMessage(true);
     let autoScroll = true;
+    context.setIsAutoScrolling(true);
     // Cancel autoScroll if user scrolled up
     window.addEventListener("scroll", () => {
       if (window.scrollY < document.body.offsetHeight - window.innerHeight) {
@@ -151,9 +152,8 @@ const Message: React.FC<{
     const interval = setInterval(() => {
       setContent(prev => {
         const curLen = prev.length;
-        if (curLen === 20) {
+        if (curLen === 5) {
           autoScroll = true;
-          context.setIsAutoScrolling(true);
         }
         if (context.shouldStopTypingMessage || curLen >= props.message.content.length) {
           clearInterval(interval);
