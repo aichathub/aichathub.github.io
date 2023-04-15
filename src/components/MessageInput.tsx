@@ -1,6 +1,7 @@
 import { CircularProgress, Tooltip } from "@material-ui/core";
 import { Theme, createStyles, makeStyles } from "@material-ui/core/styles";
 import SendIcon from "@material-ui/icons/Send";
+import StopIcon from '@mui/icons-material/Stop';
 import { IconButton, TextField } from "@mui/material";
 import React, { KeyboardEvent, useContext, useEffect, useRef, useState } from "react";
 import { MessageModel } from "../models/MessageModel";
@@ -43,11 +44,15 @@ export const MessageInput: React.FC<{
   const [inputText, setInputText] = useState("@AI ");
   const [isAtBottom, setIsAtBottom] = useState(false);
 
+  const handleStop = () => {
+    context.setShouldStopTypingMessage(true);
+    context.setIsTypingMessage(false);
+  };
   const handleSend = async () => {
     if (!inputRef.current) return;
-    if (context.isSendingMessage) return;
+    if (context.isSendingMessage || context.isTypingMessage) return;
     const ref = inputRef.current!;
-    if (ref.value.trim().length !== 0) {
+    if (ref.value.toLowerCase().replaceAll("@ai", "").trim().length !== 0) {
       const content = ref.value;
       const triggerAI = content.toLowerCase().indexOf("@ai") !== -1;
       const triggerPython = content.toLowerCase().indexOf("@python") !== -1;
@@ -120,13 +125,15 @@ export const MessageInput: React.FC<{
       event.preventDefault();
     }
   }
-  const sendBtn = <Tooltip title={context.isSendingMessage ? "Loading" : "Send"} arrow>
+  const sendBtn = <Tooltip title={context.isSendingMessage ? "Loading" :
+    context.isTypingMessage ? "Stop" : "Send"} arrow>
     <IconButton
-      onClick={handleSend}
+      onClick={context.isTypingMessage ? handleStop : handleSend}
       style={{ borderRadius: 0, borderLeft: '0.1em solid lightgrey', padding: '0.5em' }}
       disabled={context.isSendingMessage}
     >
-      {context.isSendingMessage ? <CircularProgress color="inherit" size="24px" /> : <SendIcon />}
+      {context.isSendingMessage ? <CircularProgress color="inherit" size="24px" /> :
+        context.isTypingMessage ? <StopIcon /> : <SendIcon />}
     </IconButton>
   </Tooltip>;
   useEffect(() => {

@@ -46,7 +46,11 @@ type AppContextObj = {
   shouldDisplayTopLeftBar: boolean;
   dailyAIUsuage: number;
   dailyAILimit: number;
+  isTypingMessage: boolean;
+  shouldStopTypingMessage: boolean;
 
+  setShouldStopTypingMessage: (shouldStopTypingMessage: boolean) => void;
+  setIsTypingMessage: (isTypingMessage: boolean) => void;
   setDailyAILimit: (dailyAILimit: number) => void;
   setDailyAIUsuage: (dailyAIUsuage: number) => void;
   addDailyAIUsuage: () => void;
@@ -112,7 +116,11 @@ export const AppContext = createContext<AppContextObj>({
   shouldDisplayTopLeftBar: true,
   dailyAILimit: 0,
   dailyAIUsuage: 0,
+  isTypingMessage: false,
+  shouldStopTypingMessage: false,
 
+  setShouldStopTypingMessage: () => { },
+  setIsTypingMessage: () => { },
   setDailyAILimit: () => { },
   setDailyAIUsuage: () => { },
   addDailyAIUsuage: () => { },
@@ -200,6 +208,8 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
   const [shouldDisplayTopLeftBar, setShouldDisplayTopLeftBar] = useState(true);
   const [dailyAIUsuage, setDailyAIUsuage] = useState(0);
   const [dailyAILimit, setDailyAILimit] = useState(0);
+  const [isTypingMessage, setIsTypingMessage] = useState(false);
+  const [shouldStopTypingMessage, setShouldStopTypingMessage] = useState(false);
 
   const isOnPostPage = useMatch("/:username/:postid");
   const hasRightToSendMsg = isOnPostPage && curPost && curPost.username === loggedUser;
@@ -318,7 +328,11 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
     shouldDisplayTopLeftBar: shouldDisplayTopLeftBar,
     dailyAIUsuage: dailyAIUsuage,
     dailyAILimit: dailyAILimit,
+    isTypingMessage: isTypingMessage,
+    shouldStopTypingMessage: shouldStopTypingMessage,
 
+    setShouldStopTypingMessage: setShouldStopTypingMessage,
+    setIsTypingMessage: setIsTypingMessage,
     addDailyAIUsuage: addDailyAIUsuage,
     setDailyAILimit: setDailyAILimit,
     setDailyAIUsuage: setDailyAIUsuage,

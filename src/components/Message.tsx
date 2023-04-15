@@ -59,6 +59,9 @@ const Message: React.FC<{
     return diff < 1000 * seconds;
   };
   const shouldAnimate = isAI && props.message.justSent;
+  if (shouldAnimate) {
+    context.setShouldStopTypingMessage(false);
+  }
   const [content, setContent] = useState(shouldAnimate ? "" : props.message.content);
   const toMessageView = (messages: string[]) => {
     const body = messages.map((content, index) =>
@@ -138,25 +141,37 @@ const Message: React.FC<{
     }
   }
   useEffect(() => {
-    if (!shouldAnimate) return;
+    if (!shouldAnimate || context.shouldStopTypingMessage) return;
+    context.setIsTypingMessage(true);
+    let autoScroll = true;
+    // Cancel autoScroll if user scrolled up
+    window.addEventListener("scroll", () => {
+      if (window.scrollY < document.body.offsetHeight - window.innerHeight) {
+        autoScroll = false;
+      }
+    });
     const interval = setInterval(() => {
       setContent(prev => {
         const curLen = prev.length;
-        context.setIsSendingMessage(true);
-        if (curLen >= props.message.content.length) {
+        if (curLen === 1) {
+          autoScroll = true;
+        }
+        if (context.shouldStopTypingMessage || curLen >= props.message.content.length) {
           clearInterval(interval);
-          context.setIsSendingMessage(false);
+          context.setIsTypingMessage(false);
           return prev;
         }
-        window.scroll({
-          top: document.body.offsetHeight,
-          behavior: "smooth",
-        });
+        if (autoScroll) {
+          window.scroll({
+            top: document.body.offsetHeight,
+            behavior: "smooth",
+          });
+        }
         return props.message.content.substring(0, curLen + 1);
       })
-    }, 30);
+    }, 50);
     return () => clearInterval(interval);
-  }, []);
+  }, [context.shouldStopTypingMessage]);
   return (
     <StyledPaper
       sx={sx}
@@ -222,7 +237,7 @@ const Message: React.FC<{
             <>
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
-                children={content + (content.length < props.message.content.length ? "▌" : "")}
+                children={content + ((content.length < props.message.content.length && context.isTypingMessage) ? "▌" : "")}
                 linkTarget="_blank"
                 components={{
                   code({ node, inline, className, children, ...props }) {
