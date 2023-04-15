@@ -66,6 +66,7 @@ const ChatAppEdit = () => {
         msgmodels[msgmodels.length - 1].shouldSpeak = true;
       }
       if (msgs.length > context.messages.length) {
+        context.setShouldStopTypingMessage(false);
         context.setMessages(msgmodels);
       }
       if (context.isSendingMessage) {

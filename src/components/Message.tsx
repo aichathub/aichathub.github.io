@@ -59,9 +59,6 @@ const Message: React.FC<{
     return diff < 1000 * seconds;
   };
   const shouldAnimate = isAI && props.message.justSent;
-  if (shouldAnimate) {
-    context.setShouldStopTypingMessage(false);
-  }
   const [content, setContent] = useState(shouldAnimate ? "" : props.message.content);
   const toMessageView = (messages: string[]) => {
     const body = messages.map((content, index) =>
@@ -166,7 +163,6 @@ const Message: React.FC<{
         if (autoScroll) {
           window.scroll({
             top: document.body.offsetHeight,
-            behavior: "smooth",
           });
         }
         return props.message.content.substring(0, curLen + 1);
