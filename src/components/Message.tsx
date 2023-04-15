@@ -152,7 +152,7 @@ const Message: React.FC<{
           top: document.body.offsetHeight,
           behavior: "smooth",
         });
-        return props.message.content.substring(0, curLen + 1) + (curLen >= props.message.content.length ? "" : "▌");
+        return props.message.content.substring(0, curLen + 1);
       })
     }, 30);
     return () => clearInterval(interval);
@@ -222,7 +222,7 @@ const Message: React.FC<{
             <>
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
-                children={content}
+                children={content + (content.length < props.message.content.length ? "▌" : "")}
                 linkTarget="_blank"
                 components={{
                   code({ node, inline, className, children, ...props }) {
