@@ -31,7 +31,7 @@ const MessageMoreButton: React.FC<{
   const [isForking, setIsForking] = useState(false);
   const { username, postid } = useParams();
   const navigate = useNavigate();
-  if (props.message.sender === 'ai') {
+  if (props.message.authorusername === undefined) {
     const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
     if (isSafari) {
       utterance.pitch = 1;
