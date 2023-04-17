@@ -166,7 +166,11 @@ const Message: React.FC<{
             top: document.body.offsetHeight,
           });
         }
-        return props.message.content.substring(0, curLen + 1);
+        let nextStart = curLen + 1;
+        while (nextStart + 1 < props.message.content.length && props.message.content[nextStart] != ' ') {
+          nextStart++;
+        }
+        return props.message.content.substring(0, nextStart);
       })
     }, 50);
     return () => clearInterval(interval);
