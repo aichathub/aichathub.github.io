@@ -141,6 +141,7 @@ const Message: React.FC<{
     if (!shouldAnimate || context.shouldStopTypingMessage) return;
     context.setIsTypingMessage(true);
     let autoScroll = true;
+    let autoScrollStarted = false;
     context.setIsAutoScrolling(true);
     // Cancel autoScroll if user scrolled up
     window.addEventListener("scroll", () => {
@@ -152,8 +153,9 @@ const Message: React.FC<{
     const interval = setInterval(() => {
       setContent(prev => {
         const curLen = prev.length;
-        if (curLen === 5) {
+        if (curLen > 10 && !autoScrollStarted) {
           autoScroll = true;
+          autoScrollStarted = true;
           context.setIsAutoScrolling(true);
         }
         if (context.shouldStopTypingMessage || curLen >= props.message.content.length) {
