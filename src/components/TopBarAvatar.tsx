@@ -71,7 +71,7 @@ const TopBarAvatar = () => {
             {context.dailyAILimit === context.dailyAIUsuage ? <ErrorIcon /> : <DataSaverOffIcon />}
           </Grid>
           <Grid item xs={12}>
-            <Typography> @AI Daily Limit: {context.dailyAIUsuage} / {context.dailyAILimit} </Typography>
+            <Typography> @AI (CHATGPT) Daily Limit: {context.dailyAIUsuage} / {context.dailyAILimit} </Typography>
           </Grid>
         </Grid>
       </MenuItem>
