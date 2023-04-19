@@ -6,7 +6,7 @@ import { IconButton, TextField } from "@mui/material";
 import React, { KeyboardEvent, useContext, useEffect, useRef, useState } from "react";
 import { MessageModel } from "../models/MessageModel";
 import { AppContext } from "../store/AppContext";
-import { customModelReply, getCustomModelName, insertMessage } from "../util/db";
+import { customModelReply, insertMessage } from "../util/db";
 import MessageInputSettings from "./MessageInputSettings";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -112,7 +112,7 @@ export const MessageInput: React.FC<{
       if (triggerCustomModel) {
         context.setIsSendingMessage(true);
         const api = context.yourmodelUrl;
-        const modelName = await getCustomModelName(api);
+        const modelName = context.yourmodelName;
         const aiResponse = await customModelReply(content, api, context.messages);
         await insertMessage({
           username: props.username,
@@ -165,6 +165,11 @@ export const MessageInput: React.FC<{
       setIsAtBottom(window.innerHeight + window.scrollY >= document.documentElement.scrollHeight);
     }
   }, [context.isLoadingMessages]);
+
+  let agent: string = context.agent;
+  if (agent === "yourmodel") {
+    agent = context.yourmodelName;
+  }
   return (
     <>
       <div className={classes.wrapForm}
@@ -175,7 +180,7 @@ export const MessageInput: React.FC<{
       >
         <TextField
           id="standard-text"
-          label={`Your Message, current agent: ${context.agent}`}
+          label={`Your Message, current agent: ${agent}`}
           className={classes.wrapText}
           // inputProps={{ style: { color: context.darkMode ? "white" : "black" } }}
           //margin="normal"

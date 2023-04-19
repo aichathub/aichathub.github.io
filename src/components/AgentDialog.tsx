@@ -4,6 +4,7 @@ import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
 import * as React from 'react';
 import { Agent, AppContext } from '../store/AppContext';
+import { getCustomModelName } from '../util/db';
 import linkClasses from './Link.module.css';
 
 const Transition = React.forwardRef(function Transition(
@@ -26,12 +27,22 @@ const AgentDialog: React.FC<{
     onClose();
   }
 
-  const handleSave = () => {
-    context.setAgent(agent as Agent);
+  const handleSave = async () => {
     if (agent === "yourmodel") {
-      context.setYourmodelUrl(yourmodelUrl);
+      try {
+        const modelName = await getCustomModelName(yourmodelUrl);
+        if (!modelName) throw new Error("Failed to get model name");
+        context.setYourmodelName(modelName);
+        context.setYourmodelUrl(yourmodelUrl);
+        context.setAgent(agent as Agent);
+        handleClose();
+      } catch (err) {
+        context.showSnack("Failed to get model name. Please check your url.");
+      }
+    } else {
+      context.setAgent(agent as Agent);
+      handleClose();
     }
-    handleClose();
   }
 
   const [agent, setAgent] = React.useState(context.agent);

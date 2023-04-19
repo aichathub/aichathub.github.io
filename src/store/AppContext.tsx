@@ -53,7 +53,9 @@ type AppContextObj = {
   isAutoScrolling: boolean;
   agent: Agent;
   yourmodelUrl: string;
+  yourmodelName: string;
 
+  setYourmodelName: (yourmodelName: string) => void;
   setYourmodelUrl: (yourmodelUrl: string) => void;
   setAgent: (agent: Agent) => void;
   setIsAutoScrolling: (isAutoScrolling: boolean) => void;
@@ -129,7 +131,9 @@ export const AppContext = createContext<AppContextObj>({
   isAutoScrolling: false,
   agent: "none",
   yourmodelUrl: "",
+  yourmodelName: "",
 
+  setYourmodelName: () => { },
   setYourmodelUrl: () => { },
   setAgent: () => { },
   setIsAutoScrolling: () => { },
@@ -227,6 +231,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
   const [isAutoScrolling, setIsAutoScrolling] = useState(false);
   const [agent, setAgent] = useState<Agent>((localStorage.getItem("agent") || "none") as Agent);
   const [yourmodelUrl, setYourmodelUrl] = useState(localStorage.getItem("yourmodelUrl") || "");
+  const [yourmodelName, setYourmodelName] = useState(localStorage.getItem("yourmodelName") || "");
 
   const isOnPostPage = useMatch("/:username/:postid");
   const hasRightToSendMsg = isOnPostPage && curPost && curPost.username === loggedUser;
@@ -350,7 +355,9 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
     isAutoScrolling: isAutoScrolling,
     agent: agent,
     yourmodelUrl: yourmodelUrl,
+    yourmodelName: yourmodelName,
 
+    setYourmodelName: setYourmodelName,
     setYourmodelUrl: setYourmodelUrl,
     setAgent: setAgent,
     setIsAutoScrolling: setIsAutoScrolling,
@@ -513,6 +520,10 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
   useEffect(() => {
     localStorage.setItem("yourmodelUrl", yourmodelUrl);
   }, [yourmodelUrl]);
+
+  useEffect(() => {
+    localStorage.setItem("yourmodelName", yourmodelName);
+  }, [yourmodelName]);
 
   const getSeverity = (message: string) => {
     if (message.toLowerCase().indexOf("error") !== -1) return "error";

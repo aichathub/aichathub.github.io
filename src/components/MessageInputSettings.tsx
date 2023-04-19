@@ -50,6 +50,10 @@ const MessageInputSettings: React.FC<{
   const handleAgentDialogClose = () => {
     setShowAgentDialog(false);
   }
+  let agent: string = context.agent;
+  if (agent === "yourmodel") {
+    agent = context.yourmodelName;
+  }
   return <>
     <Tooltip title="Settings" arrow placement="left-start">
       <IconButton
@@ -78,7 +82,7 @@ const MessageInputSettings: React.FC<{
                   <ListItemIcon>
                     <AdbIcon fontSize="small" />
                   </ListItemIcon>
-                  <ListItemText>Agent: {context.agent}</ListItemText>
+                  <ListItemText>Agent: {agent}</ListItemText>
                 </MenuItem>
                 {/* <MenuItem >
                   <FormControlLabel
