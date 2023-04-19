@@ -57,7 +57,7 @@ const ChatAppEdit = () => {
       if (!context.isFirstLoad && msgs.length > oldMsgLength && window.scrollY + window.innerHeight >= document.body.offsetHeight) {
         msgmodels[msgmodels.length - 1].justSent = true;
 
-        setTimeout(function() {
+        setTimeout(() => {
           window.scroll({
             top: document.body.offsetHeight,
           });
