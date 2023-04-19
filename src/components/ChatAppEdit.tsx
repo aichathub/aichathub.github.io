@@ -49,6 +49,7 @@ const ChatAppEdit = () => {
           time: msgs[i].createdate,
           authorusername: msgs[i].authorusername,
           editdate: msgs[i].editdate,
+          sendernickname: msgs[i].sendernickname
         });
       }
       const oldMsgLength = context.messages.length === 0 ? Infinity : context.messages.length;

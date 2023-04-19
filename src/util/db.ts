@@ -1,3 +1,4 @@
+import { MessageModel } from "../models/MessageModel";
 import { PostModel } from "../models/PostModel";
 import { TagModel } from "../models/TagModel";
 import { backendServer } from "../util/constants";
@@ -61,7 +62,7 @@ export const insertSessionMessage = async (insertMsgObj: { username: string, pid
   return responseJson;
 }
 
-export const insertMessage = async (insertMsgObj: { username: string, pid: string, content: string, token: string, triggerAI: boolean, authoremail: string, socketId?: string }) => {
+export const insertMessage = async (insertMsgObj: { username: string, pid: string, content: string, token: string, triggerAI: boolean, authoremail: string, socketId?: string, triggerUserModel?: boolean, sendernickname?: string, triggerPython?: boolean }) => {
   const response = await fetch(`${backendServer}/api/insert/messages`, {
     method: "POST",
     headers: {
@@ -520,4 +521,47 @@ export const signupWithGoogle = async (idToken: string, username: string) => {
   });
   const responseJson = await response.json();
   return responseJson;
+}
+
+export const getCustomModelName = async (api: string) => {
+  const url = `${api}/v1/model`;
+  const response = await fetch(url, {
+    method: "GET",
+    mode: "cors",
+  });
+  const responseJson = await response.json();
+  return responseJson.result as string;
+}
+
+export const customModelReply = async (content: string, api: string, messages: MessageModel[]) => {
+  const url = `${api}/v1/generate`;
+  const formPrompt = (messages: MessageModel[], content: string) => {
+    messages = messages.filter((m) => m.mid !== -1);
+    let result = "";
+    for (let i = 0; i < messages.length; i++) {
+      const msg = messages[i];
+      const isAI = msg.authorusername === "undefined";
+      if (isAI) {
+        result += `### Assistant: ${msg.content}\n`;
+      } else {
+        result += `### Human: ${msg.content}\n`;
+      }
+    }
+    result += `### Human: ${content}\n`;
+    result += `### Assistant: `;
+    return result;
+  }
+  const response = await fetch(url, {
+    method: "POST",
+    mode: "cors",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      "prompt": formPrompt(messages, content),
+      "custom_stopping_strings_to_answer": "### Human,### Assistant"
+    }),
+  });
+  const res = await response.json();
+  return res.results[0].text;
 }

@@ -6,7 +6,7 @@ import { IconButton, TextField } from "@mui/material";
 import React, { KeyboardEvent, useContext, useEffect, useRef, useState } from "react";
 import { MessageModel } from "../models/MessageModel";
 import { AppContext } from "../store/AppContext";
-import { insertMessage } from "../util/db";
+import { customModelReply, getCustomModelName, insertMessage } from "../util/db";
 import MessageInputSettings from "./MessageInputSettings";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -41,7 +41,7 @@ export const MessageInput: React.FC<{
   const classes = useStyles();
   const inputRef = useRef<HTMLInputElement>(null);
   const context = useContext(AppContext);
-  const [inputText, setInputText] = useState("@AI ");
+  const [inputText, setInputText] = useState("");
   const [isAtBottom, setIsAtBottom] = useState(false);
 
   const handleStop = () => {
@@ -54,19 +54,15 @@ export const MessageInput: React.FC<{
     const ref = inputRef.current!;
     if (ref.value.toLowerCase().replaceAll("@ai", "").trim().length !== 0) {
       const content = ref.value;
-      const triggerAI = content.toLowerCase().indexOf("@ai") !== -1;
-      const triggerPython = content.toLowerCase().indexOf("@python") !== -1;
+      // const triggerAI = content.toLowerCase().indexOf("@ai") !== -1;
+      // const triggerPython = content.toLowerCase().indexOf("@python") !== -1;
+      const triggerAI = context.agent === "chatgpt";
+      const triggerPython = context.agent === "python";
       if (triggerAI && context.dailyAILimit === context.dailyAIUsuage) {
         context.showSnack("Opps, Seems you have reached your daily @AI limit! Let's continue tomorrow!");
         return;
       }
-      if (triggerAI) {
-        setInputText("@AI ");
-      } else if (triggerPython) {
-        setInputText("@python ");
-      } else {
-        setInputText("");
-      }
+      setInputText("");
       // Focus back to the input field if the user is from desktop
       const isMobile = window.innerWidth <= 600;
       if (!isMobile) {
@@ -75,10 +71,7 @@ export const MessageInput: React.FC<{
         // If the user is from mobile, hide the keyboard
         ref.blur();
       }
-      if (content.toLowerCase().indexOf("@ai") !== -1) {
-        context.setIsSendingMessage(true);
-      }
-      if (content.toLowerCase().indexOf("@python") !== -1) {
+      if (triggerAI || triggerPython) {
         context.setIsSendingMessage(true);
       }
       let optionalSocketId: string | undefined;
@@ -99,9 +92,10 @@ export const MessageInput: React.FC<{
         pid: props.postid,
         content: content,
         token: context.auth.token,
-        triggerAI: context.sendTriggerAIVoice,
+        triggerAI: triggerAI,
         authoremail: context.auth.loggedEmail,
         socketId: optionalSocketId,
+        triggerPython: triggerPython
       });
       response = result.message;
       if (response.indexOf("ERROR") === -1) {
@@ -111,6 +105,26 @@ export const MessageInput: React.FC<{
         }
       } else {
         context.showSnack(response);
+      }
+
+      const triggerCustomModel = context.agent === "yourmodel";
+
+      if (triggerCustomModel) {
+        context.setIsSendingMessage(true);
+        const api = context.yourmodelUrl;
+        const modelName = await getCustomModelName(api);
+        const aiResponse = await customModelReply(content, api, context.messages);
+        await insertMessage({
+          username: props.username,
+          pid: props.postid,
+          content: aiResponse,
+          token: context.auth.token,
+          triggerAI: false,
+          authoremail: context.auth.loggedEmail,
+          triggerUserModel: true,
+          sendernickname: modelName
+        });
+        props.reloadMessage();
       }
     }
   };
@@ -161,7 +175,7 @@ export const MessageInput: React.FC<{
       >
         <TextField
           id="standard-text"
-          label="Use @AI to trigger AI response"
+          label={`Your Message, current agent: ${context.agent}`}
           className={classes.wrapText}
           // inputProps={{ style: { color: context.darkMode ? "white" : "black" } }}
           //margin="normal"

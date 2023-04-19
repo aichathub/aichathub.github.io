@@ -21,6 +21,8 @@ type AuthObj = {
   token: string;
 }
 
+export type Agent = "chatgpt" | "python" | "yourmodel" | "none";
+
 type AppContextObj = {
   pagePostId: string;
   posts: LocalPostModel[];
@@ -49,7 +51,11 @@ type AppContextObj = {
   isTypingMessage: boolean;
   shouldStopTypingMessage: boolean;
   isAutoScrolling: boolean;
+  agent: Agent;
+  yourmodelUrl: string;
 
+  setYourmodelUrl: (yourmodelUrl: string) => void;
+  setAgent: (agent: Agent) => void;
   setIsAutoScrolling: (isAutoScrolling: boolean) => void;
   setShouldStopTypingMessage: (shouldStopTypingMessage: boolean) => void;
   setIsTypingMessage: (isTypingMessage: boolean) => void;
@@ -121,7 +127,11 @@ export const AppContext = createContext<AppContextObj>({
   isTypingMessage: false,
   shouldStopTypingMessage: false,
   isAutoScrolling: false,
+  agent: "none",
+  yourmodelUrl: "",
 
+  setYourmodelUrl: () => { },
+  setAgent: () => { },
   setIsAutoScrolling: () => { },
   setShouldStopTypingMessage: () => { },
   setIsTypingMessage: () => { },
@@ -215,6 +225,8 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
   const [isTypingMessage, setIsTypingMessage] = useState(false);
   const [shouldStopTypingMessage, setShouldStopTypingMessage] = useState(false);
   const [isAutoScrolling, setIsAutoScrolling] = useState(false);
+  const [agent, setAgent] = useState<Agent>((localStorage.getItem("agent") || "none") as Agent);
+  const [yourmodelUrl, setYourmodelUrl] = useState(localStorage.getItem("yourmodelUrl") || "");
 
   const isOnPostPage = useMatch("/:username/:postid");
   const hasRightToSendMsg = isOnPostPage && curPost && curPost.username === loggedUser;
@@ -336,7 +348,11 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
     isTypingMessage: isTypingMessage,
     shouldStopTypingMessage: shouldStopTypingMessage,
     isAutoScrolling: isAutoScrolling,
+    agent: agent,
+    yourmodelUrl: yourmodelUrl,
 
+    setYourmodelUrl: setYourmodelUrl,
+    setAgent: setAgent,
     setIsAutoScrolling: setIsAutoScrolling,
     setShouldStopTypingMessage: setShouldStopTypingMessage,
     setIsTypingMessage: setIsTypingMessage,
@@ -489,6 +505,14 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
       setDailyAILimit(response.result);
     });
   }, [loggedUser]);
+
+  useEffect(() => {
+    localStorage.setItem("agent", agent);
+  }, [agent]);
+
+  useEffect(() => {
+    localStorage.setItem("yourmodelUrl", yourmodelUrl);
+  }, [yourmodelUrl]);
 
   const getSeverity = (message: string) => {
     if (message.toLowerCase().indexOf("error") !== -1) return "error";

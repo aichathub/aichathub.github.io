@@ -7,4 +7,5 @@ export type MessageModel = {
   editdate?: Date;
   shouldSpeak?: boolean;
   justSent?: boolean;
+  sendernickname?: string;
 }

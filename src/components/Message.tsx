@@ -229,7 +229,7 @@ const Message: React.FC<{
                   <ThemeProvider theme={theme}>
                     <Typography variant="overline" color={"common.grey"}>
                       {(props.message.authorusername !== "python" && props.message.authorusername) && <UserLink username={props.message.authorusername} />}
-                      {props.message.authorusername === undefined && "@AI"}
+                      {props.message.authorusername === undefined && ("@AI" + (props.message.sendernickname ? " (" + props.message.sendernickname + ")" : ""))}
                       {props.message.authorusername === "python" && "@Python"}
                     </Typography>
                   </ThemeProvider>

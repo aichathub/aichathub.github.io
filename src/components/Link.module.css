@@ -1,0 +1,14 @@
+.link a {
+  text-decoration: none;
+  font-size: smaller;
+}
+
+.link a:hover,
+.link a:visited,
+.link a:link {
+  color: #d30;
+}
+
+.link a:hover {
+  text-decoration: underline;
+}

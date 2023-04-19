@@ -1,9 +1,11 @@
-import { ClickAwayListener, FormControlLabel, Grow, Tooltip } from "@material-ui/core";
+import { ClickAwayListener, Grow, Tooltip } from "@material-ui/core";
+import AdbIcon from '@mui/icons-material/Adb';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SettingsIcon from '@mui/icons-material/Settings';
-import { Checkbox, IconButton, ListItemIcon, ListItemText, MenuItem, MenuList, Paper, Popper } from "@mui/material";
+import { IconButton, ListItemIcon, ListItemText, MenuItem, MenuList, Paper, Popper } from "@mui/material";
 import { useContext, useState } from "react";
 import { AppContext } from "../store/AppContext";
+import AgentDialog from "./AgentDialog";
 
 const MessageInputSettings: React.FC<{
   inputText: string;
@@ -41,6 +43,13 @@ const MessageInputSettings: React.FC<{
     handleClose();
   }
   const context = useContext(AppContext);
+  const [showAgentDialog, setShowAgentDialog] = useState(false);
+  const handleAgentBtnClick = () => {
+    setShowAgentDialog(true);
+  }
+  const handleAgentDialogClose = () => {
+    setShowAgentDialog(false);
+  }
   return <>
     <Tooltip title="Settings" arrow placement="left-start">
       <IconButton
@@ -63,7 +72,15 @@ const MessageInputSettings: React.FC<{
           <Paper>
             <ClickAwayListener onClickAway={handleClose}>
               <MenuList>
-                <MenuItem >
+                <MenuItem
+                  onClick={handleAgentBtnClick}
+                >
+                  <ListItemIcon>
+                    <AdbIcon fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText>Agent: {context.agent}</ListItemText>
+                </MenuItem>
+                {/* <MenuItem >
                   <FormControlLabel
                     label="@AI"
                     control={<Checkbox style={{
@@ -91,7 +108,7 @@ const MessageInputSettings: React.FC<{
                       />
                     </MenuItem>
                   )
-                }
+                } */}
                 <MenuItem
                   onClick={handleClearInput}
                 >
@@ -106,6 +123,7 @@ const MessageInputSettings: React.FC<{
         </Grow>
       )}
     </Popper>
+    <AgentDialog onClose={handleAgentDialogClose} open={showAgentDialog} />
   </>;
 };
 
