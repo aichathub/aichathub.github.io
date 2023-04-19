@@ -56,9 +56,12 @@ const ChatAppEdit = () => {
       // if there is new message and the scroll is at the bottom, scroll to the bottom
       if (!context.isFirstLoad && msgs.length > oldMsgLength && window.scrollY + window.innerHeight >= document.body.offsetHeight) {
         msgmodels[msgmodels.length - 1].justSent = true;
-        window.scroll({
-          top: document.body.offsetHeight,
-        });
+
+        setTimeout(function() {
+          window.scroll({
+            top: document.body.offsetHeight,
+          });
+        }, 300);
       }
       if (!context.isFirstLoad && msgs.length > oldMsgLength && msgmodels[msgmodels.length - 1].authorusername === undefined && context.sendTriggerAIVoice) {
         msgmodels[msgmodels.length - 1].shouldSpeak = true;
