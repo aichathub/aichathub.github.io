@@ -65,7 +65,7 @@ const AgentDialog: React.FC<{
         TransitionComponent={Transition}
       >
         <FormControl
-          style={{ width: "20%" }}
+          style={{ width: "30vh" }}
         >
           <Select
             label="Agent"
