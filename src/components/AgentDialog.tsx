@@ -25,6 +25,9 @@ const AgentDialog: React.FC<{
 
   const handleClose = () => {
     onClose();
+    window.scroll({
+      top: document.body.offsetHeight,
+    });
   }
 
   const handleSave = async () => {
