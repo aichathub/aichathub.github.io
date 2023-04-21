@@ -334,7 +334,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
     setDailyAIUsuage(prev => +prev + 1);
   }
   const pingYourmodel = async () => {
-    if (agent !== "yourmodel") return false;
+    if (agent !== "yourmodel") return true;
     try {
       const name = await getCustomModelName(yourmodelUrl);
       setYourmodelName(name);
@@ -541,6 +541,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
 
   useEffect(() => {
     localStorage.setItem("yourmodelUrl", yourmodelUrl);
+    pingYourmodel();
   }, [yourmodelUrl]);
 
   useEffect(() => {
