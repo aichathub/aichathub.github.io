@@ -1,4 +1,5 @@
-import { Button, FormControl, MenuItem, Select, TextField } from '@mui/material';
+import ClearIcon from '@mui/icons-material/Clear';
+import { Button, IconButton, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import Dialog from '@mui/material/Dialog';
 import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
@@ -22,9 +23,13 @@ const AgentDialog: React.FC<{
 }> = (props) => {
   const { open, onClose } = props;
   const context = React.useContext(AppContext);
+  const [agent, setAgent] = React.useState(context.agent);
+  const [yourmodelUrl, setYourmodelUrl] = React.useState(context.yourmodelUrl);
 
   const handleClose = () => {
     onClose();
+    setYourmodelUrl(context.yourmodelUrl);
+
     setTimeout(() => {
       window.scroll({
         top: document.body.offsetHeight,
@@ -41,6 +46,7 @@ const AgentDialog: React.FC<{
         context.setYourmodelUrl(yourmodelUrl);
         context.setAgent(agent as Agent);
         context.setIsYourmodelConnected(true);
+        context.showSnack("Connected to " + modelName + "!");
         handleClose();
       } catch (err) {
         context.showSnack("Failed to get model name. Please check your url.");
@@ -51,11 +57,12 @@ const AgentDialog: React.FC<{
     }
   }
 
-  const [agent, setAgent] = React.useState(context.agent);
-  const [yourmodelUrl, setYourmodelUrl] = React.useState(context.yourmodelUrl);
-
   const onUrlChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setYourmodelUrl(event.target.value);
+  }
+
+  const handleClearClick = () => {
+    setYourmodelUrl("");
   }
 
   return (
@@ -64,27 +71,43 @@ const AgentDialog: React.FC<{
         open={open}
         onClose={handleClose}
         TransitionComponent={Transition}
+        fullWidth
       >
-        <FormControl
-          style={{ width: "30vh" }}
+        <InputLabel variant="standard" htmlFor="uncontrolled-native">
+          Agent
+        </InputLabel>
+        <Select
+          style={{ paddingTop: "10px", paddingBottom: "10px" }}
+          defaultValue={"none"}
+          value={agent}
+          onChange={(event) => {
+            setAgent(event.target.value as Agent);
+          }}
         >
-          <Select
-            label="Agent"
-            defaultValue={"none"}
-            value={agent}
-            onChange={(event) => {
-              setAgent(event.target.value as Agent);
-            }}
-          >
-            <MenuItem value={"none"}>None</MenuItem>
-            <MenuItem value={"chatgpt"}>AI (chatgpt)</MenuItem>
-            <MenuItem value={"yourmodel"}>Your Model</MenuItem>
-            <MenuItem value={"python"}>Python</MenuItem>
-          </Select>
-          {agent === "yourmodel" && <TextField id="standard-basic" label="Your model api url" variant="standard" placeholder="https://detected-move-folders-legends.trycloudflare.com/api" value={yourmodelUrl} onChange={onUrlChange} />}
-          {agent === "yourmodel" && <div className={linkClasses.link}><a target="_blank" href="https://colab.research.google.com/drive/1teDosN4zxuTuqRq5rIzidgrqf0P9XmKJ?usp=sharing">How to generate one?</a></div>}
-          <Button variant="text" onClick={handleSave}>Save</Button>
-        </FormControl>
+          <MenuItem value={"none"}>None</MenuItem>
+          <MenuItem value={"chatgpt"}>AI (chatgpt)</MenuItem>
+          <MenuItem value={"yourmodel"}>Your Model</MenuItem>
+          <MenuItem value={"python"}>Python</MenuItem>
+        </Select>
+        {agent === "yourmodel" && <TextField id="standard-basic"
+          label="Your model api url"
+          variant="standard"
+          placeholder="https://detected-move-folders-legends.trycloudflare.com/api"
+          value={yourmodelUrl}
+          onChange={onUrlChange}
+          InputProps={{
+            endAdornment: (
+              <IconButton
+                sx={{ visibility: yourmodelUrl ? "visible" : "hidden" }}
+                onClick={handleClearClick}
+              >
+                <ClearIcon />
+              </IconButton>
+            ),
+          }}
+        />}
+        {agent === "yourmodel" && <div className={linkClasses.link}><a target="_blank" href="https://colab.research.google.com/drive/1teDosN4zxuTuqRq5rIzidgrqf0P9XmKJ?usp=sharing">How to generate one?</a></div>}
+        <Button variant="text" onClick={handleSave}>Save</Button>
       </Dialog>
     </div>
   );
