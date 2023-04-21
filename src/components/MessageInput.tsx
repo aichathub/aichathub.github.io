@@ -159,7 +159,7 @@ export const MessageInput: React.FC<{
   </Tooltip>;
   useEffect(() => {
     const onScroll = () => {
-      const tolerance = 5;
+      const tolerance = 50;
       setIsAtBottom(window.innerHeight + window.scrollY + tolerance >= document.documentElement.scrollHeight);
     }
     window.removeEventListener("scroll", onScroll);
@@ -168,8 +168,9 @@ export const MessageInput: React.FC<{
   }, []);
 
   useEffect(() => {
+    const tolerance = 50;
     if (!context.isLoadingMessages) {
-      setIsAtBottom(window.innerHeight + window.scrollY >= document.documentElement.scrollHeight);
+      setIsAtBottom(window.innerHeight + window.scrollY + tolerance >= document.documentElement.scrollHeight);
     }
   }, [context.isLoadingMessages]);
 
