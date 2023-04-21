@@ -1,6 +1,7 @@
 import { CircularProgress, Tooltip } from "@material-ui/core";
 import { Theme, createStyles, makeStyles } from "@material-ui/core/styles";
 import SendIcon from "@material-ui/icons/Send";
+import ClearIcon from '@mui/icons-material/Clear';
 import StopIcon from '@mui/icons-material/Stop';
 import { IconButton, TextField } from "@mui/material";
 import React, { KeyboardEvent, useContext, useEffect, useRef, useState } from "react";
@@ -178,6 +179,9 @@ export const MessageInput: React.FC<{
   if (agent === "yourmodel") {
     agent = context.yourmodelName;
   }
+  const handleClearClick = () => {
+    setInputText("");
+  }
   return (
     <>
       <div className={classes.wrapForm}
@@ -198,6 +202,17 @@ export const MessageInput: React.FC<{
           multiline
           onKeyDownCapture={handleInputOnKeyDown}
           onKeyUpCapture={handleInputOnKeyUp}
+          InputProps={{
+            endAdornment: (
+              <IconButton
+                sx={{ visibility: inputText ? "visible" : "hidden" }}
+                onClick={handleClearClick}
+                size="small"
+              >
+                <ClearIcon />
+              </IconButton>
+            ),
+          }}
         />
         {/* <MessageInputUpload setInputText={setInputText} /> */}
         <MessageInputSettings inputText={inputText} setInputText={setInputText} inputRef={inputRef} />

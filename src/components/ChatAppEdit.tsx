@@ -167,7 +167,7 @@ const ChatAppEdit = () => {
     </Box>);
   } else {
     bodyContent = (
-      <Grid container style={{ marginBottom: "20px" }} >
+      <Grid container style={{ marginBottom: "27px" }} >
         {context.messages.map((x, index) => (
           <Message key={index} message={x} typeEffect={index === context.messages.length - 1 && x.sender === 'ai'} />
         ))}

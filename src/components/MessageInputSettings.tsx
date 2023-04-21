@@ -1,6 +1,5 @@
 import { ClickAwayListener, Grow, Tooltip } from "@material-ui/core";
 import AdbIcon from '@mui/icons-material/Adb';
-import DeleteIcon from '@mui/icons-material/Delete';
 import SettingsIcon from '@mui/icons-material/Settings';
 import SignalWifiOffIcon from '@mui/icons-material/SignalWifiOff';
 import { IconButton, ListItemIcon, ListItemText, MenuItem, MenuList, Paper, Popper } from "@mui/material";
@@ -117,14 +116,14 @@ const MessageInputSettings: React.FC<{
                     </MenuItem>
                   )
                 } */}
-                <MenuItem
+                {/* <MenuItem
                   onClick={handleClearInput}
                 >
                   <ListItemIcon>
                     <DeleteIcon fontSize="small" />
                   </ListItemIcon>
                   <ListItemText>Clear Input</ListItemText>
-                </MenuItem>
+                </MenuItem> */}
               </MenuList>
             </ClickAwayListener>
           </Paper>
