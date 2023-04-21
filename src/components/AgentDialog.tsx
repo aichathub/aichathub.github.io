@@ -35,6 +35,7 @@ const AgentDialog: React.FC<{
         context.setYourmodelName(modelName);
         context.setYourmodelUrl(yourmodelUrl);
         context.setAgent(agent as Agent);
+        context.setIsYourmodelConnected(true);
         handleClose();
       } catch (err) {
         context.showSnack("Failed to get model name. Please check your url.");

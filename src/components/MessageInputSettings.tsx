@@ -2,6 +2,7 @@ import { ClickAwayListener, Grow, Tooltip } from "@material-ui/core";
 import AdbIcon from '@mui/icons-material/Adb';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SettingsIcon from '@mui/icons-material/Settings';
+import SignalWifiOffIcon from '@mui/icons-material/SignalWifiOff';
 import { IconButton, ListItemIcon, ListItemText, MenuItem, MenuList, Paper, Popper } from "@mui/material";
 import { useContext, useState } from "react";
 import { AppContext } from "../store/AppContext";
@@ -19,6 +20,7 @@ const MessageInputSettings: React.FC<{
   const hasVoice = window.speechSynthesis.getVoices().length > 0;
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
+    context.pingYourmodel();
   };
   const handleClose = () => {
     setAnchorEl(null);
@@ -80,7 +82,9 @@ const MessageInputSettings: React.FC<{
                   onClick={handleAgentBtnClick}
                 >
                   <ListItemIcon>
-                    <AdbIcon fontSize="small" />
+                    {(context.agent === "yourmodel" && !context.isYourmodelConnected) ?
+                      <SignalWifiOffIcon fontSize="small" /> :
+                      <AdbIcon fontSize="small" />}
                   </ListItemIcon>
                   <ListItemText>Agent: {agent}</ListItemText>
                 </MenuItem>

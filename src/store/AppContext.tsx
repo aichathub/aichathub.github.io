@@ -13,7 +13,7 @@ import { LocalPostModel } from "../models/LocalPostModel";
 import { MessageModel } from "../models/MessageModel";
 import { PostModel } from "../models/PostModel";
 import { TagModel } from "../models/TagModel";
-import { getDailyAILimit, getTags, getTodayAIUsage, verify } from "../util/db";
+import { getCustomModelName, getDailyAILimit, getTags, getTodayAIUsage, verify } from "../util/db";
 import useDidMountEffect from "../util/useDidMountEffect";
 
 type AuthObj = {
@@ -54,7 +54,10 @@ type AppContextObj = {
   agent: Agent;
   yourmodelUrl: string;
   yourmodelName: string;
+  isYourmodelConnected: boolean;
 
+  pingYourmodel: () => Promise<boolean>;
+  setIsYourmodelConnected: (isYourmodelConnected: boolean) => void;
   setYourmodelName: (yourmodelName: string) => void;
   setYourmodelUrl: (yourmodelUrl: string) => void;
   setAgent: (agent: Agent) => void;
@@ -132,7 +135,10 @@ export const AppContext = createContext<AppContextObj>({
   agent: "none",
   yourmodelUrl: "",
   yourmodelName: "",
+  isYourmodelConnected: false,
 
+  pingYourmodel: () => Promise.resolve(false),
+  setIsYourmodelConnected: () => { },
   setYourmodelName: () => { },
   setYourmodelUrl: () => { },
   setAgent: () => { },
@@ -232,6 +238,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
   const [agent, setAgent] = useState<Agent>((localStorage.getItem("agent") || "none") as Agent);
   const [yourmodelUrl, setYourmodelUrl] = useState(localStorage.getItem("yourmodelUrl") || "");
   const [yourmodelName, setYourmodelName] = useState(localStorage.getItem("yourmodelName") || "");
+  const [isYourmodelConnected, setIsYourmodelConnected] = useState(false);
 
   const isOnPostPage = useMatch("/:username/:postid");
   const hasRightToSendMsg = isOnPostPage && curPost && curPost.username === loggedUser;
@@ -326,6 +333,18 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
   const addDailyAIUsuage = () => {
     setDailyAIUsuage(prev => +prev + 1);
   }
+  const pingYourmodel = async () => {
+    if (agent !== "yourmodel") return false;
+    try {
+      const name = await getCustomModelName(yourmodelUrl);
+      setYourmodelName(name);
+      setIsYourmodelConnected(true);
+      return true;
+    } catch (e) {
+      setIsYourmodelConnected(false);
+      return false;
+    }
+  }
   const contextValue = {
     pagePostId: pagePostId,
     auth: auth,
@@ -356,7 +375,10 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
     agent: agent,
     yourmodelUrl: yourmodelUrl,
     yourmodelName: yourmodelName,
+    isYourmodelConnected: isYourmodelConnected,
 
+    pingYourmodel: pingYourmodel,
+    setIsYourmodelConnected: setIsYourmodelConnected,
     setYourmodelName: setYourmodelName,
     setYourmodelUrl: setYourmodelUrl,
     setAgent: setAgent,

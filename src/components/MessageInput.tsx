@@ -51,6 +51,13 @@ export const MessageInput: React.FC<{
   const handleSend = async () => {
     if (!inputRef.current) return;
     if (context.isSendingMessage || context.isTypingMessage) return;
+    if (context.agent === "yourmodel") {
+      const isConnected = await context.pingYourmodel();
+      if (!isConnected) {
+        context.showSnack("Opps, Seems your model is disconnected! Please check your model and try again.");
+        return;
+      }
+    }
     const ref = inputRef.current!;
     if (ref.value.toLowerCase().replaceAll("@ai", "").trim().length !== 0) {
       const content = ref.value;
@@ -180,7 +187,7 @@ export const MessageInput: React.FC<{
       >
         <TextField
           id="standard-text"
-          label={`Your Message, current agent: ${agent}`}
+          label={`Your Message, current agent: ${agent} ${(context.agent === "yourmodel" && !context.isYourmodelConnected) ? " (disconnected)" : ""}`}
           className={classes.wrapText}
           // inputProps={{ style: { color: context.darkMode ? "white" : "black" } }}
           //margin="normal"
