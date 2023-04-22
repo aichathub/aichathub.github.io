@@ -7,7 +7,7 @@ const QRButton: React.FC<{
   url: string;
 }> = (props) => {
   const [showQRCodeDialog, setShowQRCodeDialog] = useState(false);
-  const handleQRClick = () => {
+  const handleQRClick = async () => {
     setShowQRCodeDialog(true);
   };
   const handleQRClose = () => {
@@ -20,10 +20,10 @@ const QRButton: React.FC<{
       flexWrap: "wrap",
       cursor: "pointer",
     }} onClick={handleQRClick}>
-      <QrCode2Icon />
+      {<QrCode2Icon />}
     </Box>
   </Tooltip>
-    <QRCodeDialog url={props.url} onClose={handleQRClose} open={showQRCodeDialog} />
+    <QRCodeDialog url={props.url} onClose={handleQRClose} open={showQRCodeDialog} genShortUrl={true} />
   </>;
 }
 export default QRButton;

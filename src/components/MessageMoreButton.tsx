@@ -225,7 +225,7 @@ const MessageMoreButton: React.FC<{
           </Grow>
         )}
       </Popper>
-      <QRCodeDialog url={window.location.href.split('#')[0] + "#m" + props.message.mid} onClose={handleQRClose} open={showQRCodeDialog} />
+      <QRCodeDialog url={window.location.href.split('#')[0] + "#m" + props.message.mid} onClose={handleQRClose} open={showQRCodeDialog} genShortUrl={true} />
     </>
   );
 };

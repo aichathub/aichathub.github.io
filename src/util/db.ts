@@ -600,3 +600,34 @@ export const customModelReply = async (content: string, api: string, messages: M
   const res = await response.json();
   return res.results[0].text;
 }
+
+export const generateShortUrl = async (url: string, origin: string) => {
+  const response = await fetch(`${backendServer}/api/generateshorturl`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    mode: "cors",
+    body: JSON.stringify({
+      url: url,
+      origin: origin
+    })
+  });
+  const responseJson = await response.json();
+  return responseJson;
+}
+
+export const findUrlByShortUrl = async (shortUrl: string) => {
+  const response = await fetch(`${backendServer}/api/findurlbyshorturl`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    mode: "cors",
+    body: JSON.stringify({
+      shortUrl: shortUrl
+    })
+  });
+  const responseJson = await response.json();
+  return responseJson;
+}

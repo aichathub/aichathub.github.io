@@ -3,7 +3,9 @@ import Dialog from '@mui/material/Dialog';
 import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
 import * as React from 'react';
+import { useEffect } from 'react';
 import QRCode from "react-qr-code";
+import { generateShortUrl } from '../util/db';
 import CopyButton from './CopyButton';
 
 const Transition = React.forwardRef(function Transition(
@@ -19,9 +21,21 @@ const QRCodeDialog: React.FC<{
   url: string;
   open: boolean;
   onClose: () => void;
+  genShortUrl?: boolean;
 }> = (props) => {
   const { url, open, onClose } = props;
-
+  const [isGenerating, setIsGenerating] = React.useState(props.genShortUrl);
+  const [displayUrl, setDisplayUrl] = React.useState(props.url);
+  useEffect(() => {
+    if (props.genShortUrl && open) {
+      setIsGenerating(true);
+      generateShortUrl(props.url, window.location.origin).then((shortUrlResponse) => {
+        const shortUrl = shortUrlResponse.result;
+        setIsGenerating(false);
+        setDisplayUrl(shortUrl);
+      });
+    }
+  }, [open])
   const handleClose = () => {
     onClose();
   }
@@ -35,29 +49,11 @@ const QRCodeDialog: React.FC<{
       >
         <Tooltip title={props.url} arrow>
           <>
-            {props.url.substring(0, 25) + "..."}
+            {displayUrl.substring(0, 25) + "..."}
           </>
         </Tooltip>
-        {/* <AppBar sx={{ position: 'relative', bgcolor: "white", color: "black" }}>
-          <Toolbar>
-            <IconButton
-              edge="start"
-              color="inherit"
-              onClick={handleClose}
-              aria-label="close"
-            >
-              <CloseIcon />
-            </IconButton>
-          </Toolbar>
-        </AppBar> */}
-        <QRCode value={url} />
-        {/* <CopyWrapper content={url}>
-          <>
-
-          </>
-        </CopyWrapper> */}
-        {/* <ContentCopyIcon fontSize="small" /> */}
-        <CopyButton content={url} placement={"top"} />
+        <QRCode value={displayUrl} />
+        <CopyButton content={displayUrl} placement={"top"} />
       </Dialog>
     </div>
   );

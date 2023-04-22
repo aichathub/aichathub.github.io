@@ -5,6 +5,7 @@ import ExplorePage from "./components/ExplorePage";
 import ForgetPassword from "./components/ForgetPassword";
 import SearchPage from "./components/SearchPage";
 import SearchTagPage from "./components/SearchTagPage";
+import ShortLinkPage from "./components/ShortLinkPage";
 import SignIn from "./components/SignIn";
 import SignInByToken from "./components/SignInByToken";
 import SignUp from "./components/SignUp";
@@ -18,6 +19,7 @@ const App = () => {
       <BrowserRouter>
         <AppContextProvider>
           <Routes>
+            <Route path="/s/:shortid/" element={<ShortLinkPage />} />
             <Route path="/:username/:postid/" element={<ChatAppEdit />} />
             <Route path="/tag" element={<SearchTagPage />} />
             <Route path="/search" element={<SearchPage />} />
