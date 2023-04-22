@@ -7,7 +7,7 @@ import { IconButton, TextField } from "@mui/material";
 import React, { KeyboardEvent, useContext, useEffect, useRef, useState } from "react";
 import { MessageModel } from "../models/MessageModel";
 import { AppContext } from "../store/AppContext";
-import { customModelReply, insertMessage } from "../util/db";
+import { chatgptReply, customModelReply, insertMessage, pythonReply } from "../util/db";
 import MessageInputSettings from "./MessageInputSettings";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -100,19 +100,29 @@ export const MessageInput: React.FC<{
         pid: props.postid,
         content: content,
         token: context.auth.token,
-        triggerAI: triggerAI,
+        triggerAI: false,
         authoremail: context.auth.loggedEmail,
         socketId: optionalSocketId,
-        triggerPython: triggerPython
+        triggerPython: false
       });
       response = result.message;
       if (response.indexOf("ERROR") === -1) {
         props.reloadMessage();
         if (triggerAI) {
-          context.addDailyAIUsuage();
+          const result: any = await chatgptReply(props.postid, props.username, context.auth.token);
+          if (result.message.indexOf("ERROR") === -1) {
+            context.addDailyAIUsuage();
+          } else {
+            context.showSnack(result.message);
+          }
+          props.reloadMessage();
+        } else if (triggerPython) {
+          await pythonReply(props.postid, props.username, context.auth.token, content);
+          props.reloadMessage();
         }
       } else {
         context.showSnack(response);
+        return;
       }
 
       const triggerCustomModel = context.agent === "yourmodel";

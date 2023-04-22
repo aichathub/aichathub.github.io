@@ -102,18 +102,6 @@ const ChatAppEdit = () => {
   };
 
   useEffect(() => {
-    if (context.isSendingMessage) {
-      const interval = setInterval(() => {
-        reloadMessage();
-      }, 500);
-      setReloadInterval(interval);
-    } else {
-      if (reloadInterval) clearInterval(reloadInterval);
-      setReloadInterval(undefined);
-    }
-  }, [context.isSendingMessage]);
-
-  useEffect(() => {
     context.setIsLoadingMessages(true);
     reloadMessage();
     const noAuth = !localStorage.getItem("auth");

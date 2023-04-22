@@ -533,6 +533,41 @@ export const getCustomModelName = async (api: string) => {
   return responseJson.result as string;
 }
 
+export const pythonReply = async (pid: string, username: string, token: string, content: string) => {
+  const response = await fetch(`${backendServer}/api/pythonreply`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    mode: "cors",
+    body: JSON.stringify({
+      pid: pid,
+      username: username,
+      token: token,
+      content: content
+    })
+  });
+  const responseJson = await response.json();
+  return responseJson;
+}
+
+export const chatgptReply = async (pid: string, username: string, token: string) => {
+  const response = await fetch(`${backendServer}/api/chatgptreply`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    mode: "cors",
+    body: JSON.stringify({
+      pid: pid,
+      username: username,
+      token: token
+    })
+  });
+  const responseJson = await response.json();
+  return responseJson;
+}
+
 export const customModelReply = async (content: string, api: string, messages: MessageModel[]) => {
   const url = `${api}/v1/generate`;
   const formPrompt = (messages: MessageModel[], content: string) => {
