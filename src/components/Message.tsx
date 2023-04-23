@@ -81,16 +81,11 @@ const Message: React.FC<{
       {body}
     </Grid>;
   };
-  const messagesView = toMessageView(messages);
-  const trimmedMessagesView = <Grid style={{
-    WebkitMaskImage: "-webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,1)), to(rgba(0,0,0,0)))"
-  }}>{toMessageView(trimmedMsg)}</Grid>;
   let timeText = <Timeago date={props.message.time} title="" />;
   // if under one minute, just show Now
   if (justNow(props.message.time)) {
     timeText = <Typography variant="overline" color="common.grey">Now</Typography>;
   }
-  const hasRightToEdit = context.auth.loggedEmail === props.message.sender;
   const editor = <>
     <TextField multiline
       value={editedMsg}
@@ -180,13 +175,11 @@ const Message: React.FC<{
   return (
     <StyledPaper
       sx={sx}
-    // className={props.message.shouldHighlight ? classes['high-light'] : ""}
     >
       {anchorElement}
       <Grid container wrap="nowrap" spacing={2} style={{ marginBottom: "2px" }}>
         <Grid item xs={!isExtraSmall && isMobile ? 12 : 10}>
           <MessageWrapper message={props.message} isEditing={isEditing} setIsEditing={setIsEditing}>
-            {/* <CopyWrapper content={props.message.content} isEditing={isEditing} setIsEditing={setIsEditing} hasRightToEdit={hasRightToEdit}> */}
             <Grid container spacing={2}>
               <Grid item>
                 <Avatar sx={{ bgcolor: avatarColor }}>{avatarName}</Avatar>
@@ -237,7 +230,6 @@ const Message: React.FC<{
               </Grid>
             </Grid>
           </MessageWrapper>
-          {/* </CopyWrapper> */}
           {!isEditing &&
             <>
               <ReactMarkdown
@@ -268,15 +260,6 @@ const Message: React.FC<{
               {props.message.editdate && <Typography variant="overline" color="common.grey" sx={{ fontStyle: 'italic' }}>(Edited)</Typography>}
             </>
           }
-          {/* {!isEditing && !tooLong && messagesView}
-          {tooLong &&
-            <>
-              {!isEditing && !showFullMsg && trimmedMessagesView}
-              {!isEditing && showFullMsg && messagesView}
-              {!isEditing && !showFullMsg && <Button variant="text" onClick={() => { setShowFullMsg(true) }}>Read More</Button>}
-              {!isEditing && showFullMsg && <Button variant="text" onClick={() => { setShowFullMsg(false) }}>Read Less</Button>}
-            </>
-          } */}
           {isEditing && editor}
           {props.message.authorusername === undefined && <LikeDislikePanel message={props.message} />}
         </Grid>

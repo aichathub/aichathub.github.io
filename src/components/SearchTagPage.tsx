@@ -1,9 +1,9 @@
 import { Grid, Typography } from "@material-ui/core";
 import SearchIcon from "@mui/icons-material/Search";
-import { CircularProgress } from "@mui/material";
 import Box from "@mui/material/Box";
 import { useContext, useEffect, useState } from "react";
 import { useSearchParams } from 'react-router-dom';
+import { DummyPostModel } from "../models/DummyPostModel";
 import { PostModel } from "../models/PostModel";
 import { AppContext } from "../store/AppContext";
 import { searchPostsByTag } from "../util/db";
@@ -47,7 +47,13 @@ const SearchTagPage = () => {
   </>;
 
   if (context.isLoadingMessages) {
-    bodyContent = <Box sx={{ textAlign: "center", marginTop: "20%" }}><CircularProgress color="inherit" /></Box>;
+    bodyContent = <Grid container>
+      {
+        [1, 2, 3, 4, 5, 6, 7].map((x) => {
+          return <SearchItem key={x} post={DummyPostModel} typeEffect={false} isLoading={true} />
+        })
+      }
+    </Grid>
   }
 
   if (resultNotFound) {

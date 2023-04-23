@@ -2,6 +2,7 @@ import { Box, Chip, Tooltip } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import LockIcon from '@mui/icons-material/Lock';
+import { Skeleton } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import { ThemeProvider, createTheme, styled } from "@mui/material/styles";
@@ -31,9 +32,11 @@ const theme = createTheme({
 const SearchItem: React.FC<{
   post: PostModel;
   typeEffect?: boolean;
+  isLoading?: boolean;
 }> = (props) => {
   const navigate = useNavigate();
   const context = useContext(AppContext);
+  const isLoading = props.isLoading;
   return (
     <StyledPaper
       sx={{
@@ -53,29 +56,19 @@ const SearchItem: React.FC<{
                 position: "relative",
               }}
             >
-              <Grid>
-                {props.post.isprivate ?
-                  <LockIcon fontSize="small" sx={{ marginRight: "10px", transform: "translateY(5px)" }} /> :
-                  <ChatBubbleOutlineIcon fontSize="small" sx={{ marginRight: "10px", transform: "translateY(5px)" }} />
-                }
-                <PostLink username={props.post.username!} pid={props.post.pid!} />
-                {/* <Link
-                  component="button"
-                  variant="body2"
-                  onClick={() => {
-                    context.setIsLoadingMessages(true);
-                    context.setIsFirstLoad(true);
-                    context.setMessages([]);
-                    navigate(`/${props.post.username}/${props.post.pid}`);
-                  }}
-                  sx={{ marginBottom: "12px" }}
-                >
-                  {props.post.username}/{props.post.pid}
-                </Link> */}
-              </Grid>
+              {isLoading && <Skeleton width={"300px"} />}
+              {!isLoading &&
+                <Grid>
+                  {props.post.isprivate ?
+                    <LockIcon fontSize="small" sx={{ marginRight: "10px", transform: "translateY(5px)" }} /> :
+                    <ChatBubbleOutlineIcon fontSize="small" sx={{ marginRight: "10px", transform: "translateY(5px)" }} />
+                  }
+                  <PostLink username={props.post.username!} pid={props.post.pid!} />
+                </Grid>
+              }
               <Grid>
                 <Typography variant="h6" style={{ fontWeight: "bold" }}>
-                  {props.post.title}
+                  {isLoading ? <Skeleton /> : props.post.title}
                 </Typography>
               </Grid>
               <Box
@@ -85,7 +78,10 @@ const SearchItem: React.FC<{
               >
                 <ThemeProvider theme={theme}>
                   {
-                    props.post.tags?.map((tag: TagModel, index) => {
+                    isLoading && <Skeleton />
+                  }
+                  {
+                    !isLoading && props.post.tags?.map((tag: TagModel, index) => {
                       return (
                         <Chip
                           key={index}
@@ -101,7 +97,7 @@ const SearchItem: React.FC<{
                     })
                   }
                   <Box style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: "12px" }}>
-                    <StarButton post={props.post} />
+                    {isLoading ? <Skeleton variant="rounded" height={"20px"} width={"20px"} /> : <StarButton post={props.post} />}
                     <Tooltip
                       title={
                         new Date(props.post.createdate).toLocaleDateString() +
@@ -113,7 +109,8 @@ const SearchItem: React.FC<{
                       placement="bottom"
                     >
                       <span style={{ color: '#777' }}>
-                        Created <Timeago date={props.post.createdate} title="" />
+                        {isLoading && <Skeleton width={"100px"} animation={"wave"} />}
+                        {!isLoading && <>Created <Timeago date={props.post.createdate} title="" /></>}
                       </span>
                     </Tooltip>
                   </Box>

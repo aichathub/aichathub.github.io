@@ -1,7 +1,7 @@
 import { Box, Tooltip } from "@material-ui/core";
 import StarIcon from "@mui/icons-material/Star";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
-import { CircularProgress } from "@mui/material";
+import { CircularProgress, Skeleton } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { PostModel } from "../models/PostModel";
 import { AppContext } from "../store/AppContext";
@@ -73,18 +73,20 @@ const StarButton: React.FC<{
     title={`${(!isLogged || !props.canClick) ? "" : (starred ? "UnStar" : "Star")}`}
     arrow
   >
-    <Box style={{
-      display: "flex",
-      alignItems: "center",
-      flexWrap: "wrap",
-      cursor: isLogged && props.canClick ? "pointer" : "default",
-      opacity: isReady ? 1 : 0,
-    }} onClick={handleStarClick}>
-      {isLoading && <CircularProgress color="inherit" size={20} style={{ marginRight: "5px" }} />}
-      {!isLoading && starred && <StarIcon />}
-      {!isLoading && !starred && <StarBorderIcon style={{ fill: "grey" }} />}
-      <span style={{ color: starred ? (context.darkMode ? '#fff' : '#000') : '#777', fontSize: "17px" }}>{starCount}</span>
-    </Box>
+    {!isReady ? <Skeleton variant="rounded" animation="wave" width={20} height={20} />
+      :
+      <Box style={{
+        display: "flex",
+        alignItems: "center",
+        flexWrap: "wrap",
+        cursor: isLogged && props.canClick ? "pointer" : "default",
+        opacity: isReady ? 1 : 0,
+      }} onClick={handleStarClick}>
+        {isLoading && <CircularProgress color="inherit" size={20} style={{ marginRight: "5px" }} />}
+        {!isLoading && starred && <StarIcon />}
+        {!isLoading && !starred && <StarBorderIcon style={{ fill: "grey" }} />}
+        <span style={{ color: starred ? (context.darkMode ? '#fff' : '#000') : '#777', fontSize: "17px" }}>{starCount}</span>
+      </Box>}
   </Tooltip>;
 }
 export default StarButton;
