@@ -11,3 +11,9 @@
 .mdlink a:hover {
   text-decoration: underline;
 }
+
+.blockquote {
+  font-style: italic;
+  margin: 0.3em;
+  font-weight: bold;
+}

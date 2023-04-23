@@ -253,7 +253,7 @@ const Message: React.FC<{
                       return !inline ? (
                         <CodeBlock content={String(children).replace(/\n$/, '')} />
                       ) : (
-                        <code className={className} {...props}>
+                        <code className={className + ` ${classes.blockquote}`} {...props} >
                           {children}
                         </code>
                       )
