@@ -13,7 +13,7 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { GoogleLogin } from "@react-oauth/google";
 import * as React from "react";
 import { useContext, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { GithubLoginButton } from "react-social-login-buttons";
 import { NumberDictionary, adjectives, animals, colors, uniqueNamesGenerator } from 'unique-names-generator';
 import { AppContext } from "../store/AppContext";
@@ -42,6 +42,8 @@ const theme = createTheme();
 
 export default function SignUp() {
   const context = useContext(AppContext);
+  const [searchParams] = useSearchParams();
+  const redirectUrl = searchParams.get("redirect");
   const navigate = useNavigate();
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -82,6 +84,7 @@ export default function SignUp() {
   useEffect(() => {
     context.setShouldDisplayTopLeftBar(false);
     context.setIsInitializing(false);
+    context.setTopLeftBarOpen(false);
   }, []);
   return (
     <ThemeProvider theme={theme}>
@@ -188,7 +191,11 @@ export default function SignUp() {
                         loggedEmail: responseJson.loggedEmail,
                         token: responseJson.token
                       });
-                      window.location.href = "/";
+                      if (redirectUrl) {
+                        window.location.href = redirectUrl;
+                      } else {
+                        window.location.href = "/";
+                      }
                     } else {
                       context.showSnack("Login failed: " + responseJson.message);
                     }

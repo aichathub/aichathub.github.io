@@ -33,8 +33,14 @@ const TopBarAvatar = () => {
   const navigate = useNavigate();
   if (context.auth.token === "") {
     return <>
-      <Button color="inherit" onClick={() => navigate("/signin")}>Signin</Button>
-      <Button color="inherit" onClick={() => navigate("/signup")}>Signup</Button>
+      <Button color="inherit" onClick={() => {
+        const curUrl = window.location.href;
+        window.location.href = "/signin?redirect=" + curUrl;
+      }}>Signin</Button>
+      <Button color="inherit" onClick={() => {
+        const curUrl = window.location.href;
+        window.location.href = "/signup?redirect=" + curUrl;
+      }}>Signup</Button>
     </>;
   }
   const avatarColor = generateColor(context.loggedUser);

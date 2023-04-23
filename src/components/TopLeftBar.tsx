@@ -132,7 +132,7 @@ const TopLeftBar: React.FC<{
   const navigate = useNavigate();
   const handleNewPostBtnClick = () => {
     if (context.loggedUser === "") {
-      navigate("/signin");
+      context.showSnack("You need to sign in to create a new post.");
       return;
     }
     setOpenNewPostForm(true);

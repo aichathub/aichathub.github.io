@@ -13,7 +13,7 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { GoogleLogin } from "@react-oauth/google";
 import * as React from "react";
 import { useContext, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { GithubLoginButton } from "react-social-login-buttons";
 import { AppContext } from "../store/AppContext";
 import { GITHUB_LOGIN_CLIENT_ID, backendServer } from "../util/constants";
@@ -40,6 +40,8 @@ function Copyright(props: any) {
 const theme = createTheme();
 
 export default function SignIn() {
+  const [searchParams] = useSearchParams();
+  const redirectUrl = searchParams.get("redirect");
   const context = useContext(AppContext);
   const navigate = useNavigate();
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -56,33 +58,6 @@ export default function SignIn() {
     const responseJson = await response.json();
     alert(responseJson.message);
   };
-  // const googleLogin = useGoogleLogin({
-  //   onSuccess: async tokenResponse => {
-  //     console.log(tokenResponse);
-  //     const idToken = tokenResponse.access_token;
-  //     const userInfo = await axios
-  //       .get('https://www.googleapis.com/oauth2/v3/userinfo', {
-  //         headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
-  //       })
-  //       .then(res => res.data);
-
-  //     console.log(userInfo);
-  //     loginWithGoogle(idToken!).then((responseJson) => {
-  //       if (responseJson.message === "SUCCESS") {
-  //         context.changeAuth({
-  //           loggedEmail: responseJson.loggedEmail,
-  //           token: responseJson.token
-  //         });
-  //         window.location.href = "/";
-  //       } else {
-  //         context.showSnack("Login failed: " + responseJson.message);
-  //       }
-  //     });
-  //   },
-  //   onError: () => {
-  //     context.showSnack("Login Failed");
-  //   }
-  // });
 
   useEffect(() => {
     context.setShouldDisplayTopLeftBar(false);
@@ -152,7 +127,11 @@ export default function SignIn() {
                         loggedEmail: responseJson.loggedEmail,
                         token: responseJson.token
                       });
-                      window.location.href = "/";
+                      if (redirectUrl) {
+                        window.location.href = redirectUrl;
+                      } else {
+                        window.location.href = "/";
+                      }
                     } else {
                       context.showSnack("Login failed: " + responseJson.message);
                     }
