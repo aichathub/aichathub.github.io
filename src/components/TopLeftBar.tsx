@@ -2,6 +2,7 @@ import { Grid, Tooltip } from "@material-ui/core";
 import AddIcon from "@mui/icons-material/Add";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import ClearIcon from '@mui/icons-material/Clear';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 import HomeIcon from '@mui/icons-material/Home';
@@ -189,6 +190,10 @@ const TopLeftBar: React.FC<{
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+  const handleClearSearchClick = () => {
+    setSearchBoxText("");
+    inputRef.current?.focus();
+  }
   return (
     <Grid className={`${shouldHide ? classes.hide : classes.show}`}>
       <AppBar
@@ -233,7 +238,6 @@ const TopLeftBar: React.FC<{
             <StyledInputBase
               inputRef={inputRef}
               placeholder="Search…"
-              inputProps={{ "aria-label": "search" }}
               onChange={(e) => { setSearchBoxText(e.target.value); }}
               value={searchBoxText}
               onKeyPress={(e) => {
@@ -242,6 +246,15 @@ const TopLeftBar: React.FC<{
                 }
               }}
             />
+            {searchBoxText &&
+              <IconButton
+                sx={{ visibility: searchBoxText ? "visible" : "hidden" }}
+                onClick={handleClearSearchClick}
+                size="small"
+              >
+                <ClearIcon />
+              </IconButton>
+            }
           </Search>
           <div style={{ flexGrow: 1 }} />
           <TopBarAvatar />
