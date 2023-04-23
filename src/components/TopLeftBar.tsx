@@ -241,6 +241,7 @@ const TopLeftBar: React.FC<{
               inputRef={inputRef}
               placeholder="Search…"
               fullWidth
+              sx={{ marginTop: "5px" }}
               value={searchBoxText}
               onChange={(e) => { setSearchBoxText(e.target.value); }}
               onKeyPress={(e) => {
