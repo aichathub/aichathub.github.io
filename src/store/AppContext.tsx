@@ -75,6 +75,7 @@ type AppContextObj = {
   setSpeakingMid: (mid: number) => void;
   findNextMessage: (mid: number) => MessageModel | undefined;
   setIsFirstLoad: (isFirstLoad: boolean) => void;
+  hideMessage: (messageId: number) => void;
   deleteMessage: (messageId: number) => void;
   setMessages: (messages: MessageModel[]) => void;
   setCurPost: (post: PostModel) => void;
@@ -156,6 +157,7 @@ export const AppContext = createContext<AppContextObj>({
   setSpeakingMid: () => { },
   findNextMessage: () => undefined,
   setIsFirstLoad: () => { },
+  hideMessage: () => { },
   deleteMessage: () => { },
   setMessages: () => { },
   setCurPost: () => { },
@@ -279,6 +281,20 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
   const deleteMessage = (msgId: number) => {
     setMessages((prevState) => prevState.filter(x => x.mid !== msgId));
   }
+  const hideMessage = (msgId: number) => {
+    setMessages((prevState) => {
+      const newmsgs: MessageModel[] = [];
+      for (let i = 0; i < prevState.length; i++) {
+        if (prevState[i].mid !== msgId) {
+          newmsgs.push(messages[i]);
+        } else {
+          messages[i].isLoading = true;
+          newmsgs.push(messages[i]);
+        }
+      }
+      return newmsgs;
+    });
+  }
   const updateSummary = (newSummary: string) => {
     setPosts((prevState) => {
       const post = getPostById(pagePostId, prevState);
@@ -396,6 +412,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
     findNextMessage: findNextMessage,
     setIsFirstLoad: setIsFirstLoad,
     deleteMessage: deleteMessage,
+    hideMessage: hideMessage,
     setMessages: setMessages,
     setCurPost: setCurPost,
     setDarkMode: setDarkMode,

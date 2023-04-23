@@ -284,7 +284,7 @@ const TopLeftBar: React.FC<{
               overflow: 'auto'
             }}
           >
-            {Array.from(new Array(7)).map((_, index) => (
+            {Array.from(new Array(posts.length === 0 ? 7 : posts.length)).map((_, index) => (
               <LeftBarPostItem key={new Date().toString() + "_leftbarpostitem_" + index} post={DummyPostModel} removePost={removePost} isLoading={true} />
             ))
             }

@@ -8,4 +8,5 @@ export type MessageModel = {
   shouldSpeak?: boolean;
   justSent?: boolean;
   sendernickname?: string;
+  isLoading?: boolean;
 }

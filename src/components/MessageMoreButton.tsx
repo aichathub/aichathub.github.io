@@ -100,11 +100,14 @@ const MessageMoreButton: React.FC<{
   }, [context.speakingMid]);
   const handleDeleteClick = async () => {
     handleClose();
+    props.message.isLoading = true;
+    context.hideMessage(props.message.mid);
     const result = await deleteMessageByMid(props.message.mid, context.auth.token, context.loggedUser);
     if (result.message === "SUCCESS") {
       context.deleteMessage(props.message.mid);
+    } else {
+      context.showSnack("DELETE MESSAGE: " + result.message);
     }
-    context.showSnack("DELETE MESSAGE: " + result.message);
   }
   const handleShareClick = () => {
     setShowQRCodeDialog(true);
