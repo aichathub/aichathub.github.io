@@ -4,7 +4,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import LockIcon from '@mui/icons-material/Lock';
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import { ListItemButton, ListItemIcon, Tooltip } from "@mui/material";
+import { ListItemButton, ListItemIcon, Skeleton, Tooltip } from "@mui/material";
 import ListItem from "@mui/material/ListItem";
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -15,7 +15,7 @@ import { AppContext } from "../store/AppContext";
 import { deletePostByUsernameAndPid } from "../util/db";
 import EditPostDialog from "./EditPostDialog";
 
-const LeftBarPostItem: React.FC<{ post: PostModel; removePost: (post: PostModel) => void; }> = (props) => {
+const LeftBarPostItem: React.FC<{ post: PostModel; removePost: (post: PostModel) => void; isLoading?: boolean }> = (props) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [showEditPostDialog, setShowEditPostDialog] = useState(false);
   const open = Boolean(anchorEl);
@@ -24,6 +24,7 @@ const LeftBarPostItem: React.FC<{ post: PostModel; removePost: (post: PostModel)
   const { username, postid } = useParams();
   const navigate = useNavigate();
   const isMobile = window.innerWidth <= 600;
+  const isLoading = props.isLoading;
 
   const handleClickPostItem = () => {
     context.setIsFirstLoad(true);
@@ -71,15 +72,19 @@ const LeftBarPostItem: React.FC<{ post: PostModel; removePost: (post: PostModel)
       {showEditPostDialog && <EditPostDialog handleClose={handleCloseEditPostDialog} post={post} />}
       <ListItem key={post.pid} disablePadding style={style}>
         <ListItemButton onClick={handleClickPostItem}>
-          {post.isprivate ? <LockIcon /> : <ChatBubbleOutlineIcon />}
+          {(!isLoading && post.isprivate) ? <LockIcon /> : <ChatBubbleOutlineIcon />}
           <Tooltip title={`${post.username}/${post.pid}`} placement="right">
-            <ListItemText primary={post.title} style={{ marginLeft: "10px" }} />
+            {isLoading ? <Skeleton variant="rounded" height={"30px"} width={"80%"} sx={{ marginLeft: "5px" }} /> :
+              <ListItemText primary={post.title} style={{ marginLeft: "10px" }} />
+            }
           </Tooltip>
         </ListItemButton>
         <Grid>
-          <ListItemButton onClick={handleClickPostItemMore}>
-            <MoreHorizIcon />
-          </ListItemButton>
+          {!isLoading &&
+            <ListItemButton onClick={handleClickPostItemMore}>
+              <MoreHorizIcon />
+            </ListItemButton>
+          }
         </Grid>
         <Menu
           id="basic-menu"
