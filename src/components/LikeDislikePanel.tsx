@@ -74,16 +74,24 @@ const LikeDislikePanel: React.FC<{
     getLikeCount(props.message.mid).then((response) => {
       setLikeCount(+response.result);
     });
-    isLiked(props.message.mid, context.auth.loggedEmail, context.auth.token).then((response) => {
-      setLiked(response.result);
-    });
+    if (context.auth.token) {
+      isLiked(props.message.mid, context.auth.loggedEmail, context.auth.token).then((response) => {
+        setLiked(response.result);
+      });
+    } else {
+      setLiked(false);
+    }
     getDislikeCount(props.message.mid).then((response) => {
       setDislikeCount(+response.result);
     });
-    isDisliked(props.message.mid, context.auth.loggedEmail, context.auth.token).then((response) => {
-      setDisliked(response.result);
-    });
-  }, []);
+    if (context.auth.token) {
+      isDisliked(props.message.mid, context.auth.loggedEmail, context.auth.token).then((response) => {
+        setDisliked(response.result);
+      });
+    } else {
+      setDisliked(false);
+    }
+  }, [context.auth.token]);
   const handleLikeBtnClick = () => {
     if (!isLogged) return;
     if (liked) {
