@@ -264,27 +264,6 @@ const TopLeftBar: React.FC<{
                 ),
               }}
             />
-            {/* <StyledInputBase
-              inputRef={inputRef}
-              placeholder="Search…"
-              onChange={(e) => { setSearchBoxText(e.target.value); }}
-              value={searchBoxText}
-              onKeyPress={(e) => {
-                if (e.key === 'Enter') {
-                  navigate(`/search?q=${searchBoxText}`);
-                }
-              }}
-              sx={{ width: searchBoxText ? "80vw" : "85vw" }}
-            />
-            {searchBoxText &&
-              <IconButton
-                sx={{ visibility: searchBoxText ? "visible" : "hidden" }}
-                onClick={handleClearSearchClick}
-                size="small"
-              >
-                <ClearIcon />
-              </IconButton>
-            } */}
           </Search>
           <TopBarAvatar />
         </Toolbar>
