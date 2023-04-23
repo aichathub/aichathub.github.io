@@ -32,19 +32,7 @@ const TopBarAvatar = () => {
 
   const navigate = useNavigate();
   if (context.auth.token === "") {
-    return <>
-      {/* <Button color="inherit" onClick={() => {
-        const curUrl = window.location.href;
-        window.location.href = "/signin?redirect=" + curUrl;
-      }}>Signin</Button>
-      <Button color="inherit" onClick={() => {
-        const curUrl = window.location.href;
-        window.location.href = "/signup?redirect=" + curUrl;
-      }}>Signup</Button> */}
-      {/* <IconButton onClick={() => {
-        const curUrl = window.location.href;
-        window.location.href = "/signin?redirect=" + curUrl;
-      }} > */}
+    return <Tooltip title="Sign In" arrow>
       <Box sx={{ flexGrow: 0 }}>
         <IconButton onClick={() => {
           const curUrl = window.location.href;
@@ -55,8 +43,7 @@ const TopBarAvatar = () => {
           </Avatar>
         </IconButton>
       </Box>
-      {/* </IconButton> */}
-    </>;
+    </Tooltip>;
   }
   const avatarColor = generateColor(context.loggedUser);
   return <Box sx={{ flexGrow: 0 }}>

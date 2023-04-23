@@ -180,7 +180,7 @@ const ChatAppEdit = () => {
   return (
     <>
       {<>
-        <Box sx={{ display: "flex", marginLeft: "40px" }}>
+        <Box sx={{ display: "flex", marginLeft: "40px", marginTop: "20px" }}>
           <Tooltip title="Refresh" arrow>
             <Box sx={{ marginTop: "-7px" }}>
               {

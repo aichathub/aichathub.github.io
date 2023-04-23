@@ -234,7 +234,7 @@ const TopLeftBar: React.FC<{
           {/* <Typography variant="h6" noWrap component="div">
             {post && post.title}
           </Typography> */}
-          <Search sx={{ flexGrow: 1 }}>
+          <Search sx={{ flexGrow: 1, marginTop: "5px" }}>
             {/* <Box sx={{ marginTop: "5px" }}>
               <SearchIcon />
             </Box> */}
@@ -243,7 +243,6 @@ const TopLeftBar: React.FC<{
               inputRef={inputRef}
               placeholder="Search…"
               fullWidth
-              sx={{ marginTop: "5px" }}
               value={searchBoxText}
               onChange={(e) => { setSearchBoxText(e.target.value); }}
               onKeyPress={(e) => {
