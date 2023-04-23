@@ -9,7 +9,6 @@ import LightModeIcon from '@mui/icons-material/LightMode';
 import MenuIcon from "@mui/icons-material/Menu";
 import RefreshIcon from '@mui/icons-material/Refresh';
 import SearchIcon from "@mui/icons-material/Search";
-import { CircularProgress } from "@mui/material";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
@@ -281,10 +280,14 @@ const TopLeftBar: React.FC<{
         {context.isLeftBarPostLoading && (
           <List
             sx={{
-              maxHeight: 300
+              maxHeight: window.innerHeight - 200,
+              overflow: 'auto'
             }}
           >
-            <CircularProgress size={30} color="inherit" sx={{ marginLeft: '45%' }} />
+            {Array.from(new Array(7)).map((_, index) => (
+              <LeftBarPostItem key={new Date().toString() + "_leftbarpostitem_" + index} post={DummyPostModel} removePost={removePost} isLoading={true} />
+            ))
+            }
           </List>
         )}
         {!context.isLeftBarPostLoading && posts.length > 0 && (
