@@ -1,11 +1,20 @@
 import { Typography } from "@material-ui/core";
 import { Box } from "@mui/material";
+import { useContext, useEffect } from "react";
 import logo from "../images/logo.png";
+import { AppContext } from "../store/AppContext";
 import classes from "./MainLoading.module.css";
 
 const MainLoading: React.FC<{
   darkMode: boolean;
 }> = (props) => {
+  const context = useContext(AppContext);
+  useEffect(() => {
+    // Don't spend too much time on this page
+    setTimeout(() => {
+      context.setIsInitializing(false);
+    }, 2000);
+  }, []);
   return <Box style={{ height: "100vh", background: props.darkMode ? "black" : "white" }}>
     <div
       style={{

@@ -117,9 +117,8 @@ const ChatAppEdit = () => {
   }, [username, postid, context.auth.token]);
 
   useEffect(() => {
-    if (!username || !postid) return;
     context.setIsLeftBarPostLoading(true);
-    getPostByUsernameAndPid(username, postid, context.auth.token).then(response => {
+    getPostByUsernameAndPid(username ? username : "", postid ? postid : "", context.auth.token).then(response => {
       context.setIsLeftBarPostLoading(false);
       if (response.message !== "SUCCESS") {
         return;

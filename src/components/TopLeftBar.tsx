@@ -1,5 +1,6 @@
 import { Grid, Tooltip } from "@material-ui/core";
 import AddIcon from "@mui/icons-material/Add";
+import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ClearIcon from '@mui/icons-material/Clear';
@@ -7,6 +8,7 @@ import DarkModeIcon from '@mui/icons-material/DarkMode';
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 import HomeIcon from '@mui/icons-material/Home';
 import LightModeIcon from '@mui/icons-material/LightMode';
+import LoginIcon from '@mui/icons-material/Login';
 import MenuIcon from "@mui/icons-material/Menu";
 import RefreshIcon from '@mui/icons-material/Refresh';
 import SearchIcon from "@mui/icons-material/Search";
@@ -290,15 +292,20 @@ const TopLeftBar: React.FC<{
             )}
           </IconButton>
         </DrawerHeader>
-        <Typography variant="h6" noWrap sx={{ marginLeft: "10px", marginBottom: "15px" }}>
-          Your Posts
-          <RefreshIcon
-            onClick={() => { context.setLastPostsRefresh(new Date()); }}
-            style={{ marginLeft: "10px", cursor: "pointer", transform: "translateY(5px)" }}
-          />
-        </Typography>
-        <Divider />
-        {context.isLeftBarPostLoading && (
+        {
+          context.auth.loggedEmail &&
+          <>
+            <Typography variant="h6" noWrap sx={{ marginLeft: "10px", marginBottom: "15px" }}>
+              Your Posts
+              <RefreshIcon
+                onClick={() => { context.setLastPostsRefresh(new Date()); }}
+                style={{ marginLeft: "10px", cursor: "pointer", transform: "translateY(5px)" }}
+              />
+            </Typography>
+            <Divider />
+          </>
+        }
+        {context.isLeftBarPostLoading && context.auth.loggedEmail && (
           <List
             sx={{
               maxHeight: window.innerHeight - 200,
@@ -306,12 +313,12 @@ const TopLeftBar: React.FC<{
             }}
           >
             {Array.from(new Array(posts.length === 0 ? 7 : posts.length)).map((_, index) => (
-              <LeftBarPostItem key={new Date().toString() + "_leftbarpostitem_" + index} post={DummyPostModel} removePost={removePost} isLoading={true} />
+              <LeftBarPostItem key={Math.random() + "_leftbarpostitem_" + index} post={DummyPostModel} removePost={removePost} isLoading={true} />
             ))
             }
           </List>
         )}
-        {!context.isLeftBarPostLoading && posts.length > 0 && (
+        {!context.isLeftBarPostLoading && context.auth.loggedEmail && posts.length > 0 && (
           <List sx={{
             maxHeight: window.innerHeight - 200,
             overflow: 'auto'
@@ -321,7 +328,7 @@ const TopLeftBar: React.FC<{
             ))}
           </List>
         )}
-        {!context.isLeftBarPostLoading && (!posts || posts.length === 0) && (
+        {!context.isLeftBarPostLoading && context.auth.loggedEmail && (!posts || posts.length === 0) && (
           <List
             sx={{
               maxHeight: 300
@@ -337,18 +344,47 @@ const TopLeftBar: React.FC<{
         )}
         <Divider />
         <List>
-          <ListItem disablePadding>
+          {!context.auth.loggedEmail && <ListItem disablePadding>
             <ListItemButton>
               <ListItemIcon>
-                <AddIcon />
+                <LoginIcon />
               </ListItemIcon>
               <ListItemText
-                primary={"New Post"}
-                onClick={handleNewPostBtnClick}
+                primary={"Sign In"}
+                onClick={() => {
+                  const curUrl = window.location.href;
+                  window.location.href = "/signin?redirect=" + curUrl;
+                }}
               />
             </ListItemButton>
-
-          </ListItem>
+          </ListItem>}
+          {!context.auth.loggedEmail &&
+            <ListItem disablePadding>
+              <ListItemButton>
+                <ListItemIcon>
+                  <AppRegistrationIcon />
+                </ListItemIcon>
+                <ListItemText
+                  primary={"Sign Up"}
+                  onClick={() => {
+                    const curUrl = window.location.href;
+                    window.location.href = "/signup?redirect=" + curUrl;
+                  }}
+                />
+              </ListItemButton>
+            </ListItem>}
+          {context.auth.loggedEmail &&
+            <ListItem disablePadding>
+              <ListItemButton>
+                <ListItemIcon>
+                  <AddIcon />
+                </ListItemIcon>
+                <ListItemText
+                  primary={"New Post"}
+                  onClick={handleNewPostBtnClick}
+                />
+              </ListItemButton>
+            </ListItem>}
           <ListItem disablePadding>
             <ListItemButton>
               <ListItemIcon>
