@@ -81,6 +81,11 @@ export const MessageInput: React.FC<{
       }
       if (triggerAI || triggerPython) {
         context.setIsSendingMessage(true);
+        setTimeout(() => {
+          window.scroll({
+            top: document.body.offsetHeight,
+          });
+        }, 500);
       }
       let optionalSocketId: string | undefined;
       if (localStorage.getItem("socketId")) {
@@ -129,6 +134,11 @@ export const MessageInput: React.FC<{
 
       if (triggerCustomModel) {
         context.setIsSendingMessage(true);
+        setTimeout(() => {
+          window.scroll({
+            top: document.body.offsetHeight,
+          });
+        }, 500);
         const api = context.yourmodelUrl;
         const modelName = context.yourmodelName;
         const aiResponse = await customModelReply(content, api, context.messages);

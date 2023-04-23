@@ -168,6 +168,7 @@ const ChatAppEdit = () => {
         {context.messages.map((x, index) => (
           <Message key={x.mid} message={x} typeEffect={index === context.messages.length - 1 && x.sender === 'ai'} />
         ))}
+        {context.isSendingMessage && <Message message={DummyMessageModel} typeEffect={false} isLoading={true} />}
       </Grid>
     );
   }
