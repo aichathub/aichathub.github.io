@@ -5,9 +5,9 @@ import ErrorIcon from '@mui/icons-material/Error';
 import ForkLeftIcon from '@mui/icons-material/ForkLeft';
 import LockIcon from '@mui/icons-material/Lock';
 import Box from "@mui/material/Box";
-import CircularProgress from '@mui/material/CircularProgress';
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { DummyMessageModel } from "../models/DummyMessageModel";
 import { MessageModel } from "../models/MessageModel";
 import { AppContext } from "../store/AppContext";
 import { getMessagesByUsernameAndPid, getPostByUsernameAndPid } from "../util/db";
@@ -138,7 +138,15 @@ const ChatAppEdit = () => {
   let bodyContent = <></>;
 
   if (context.isLoadingMessages) {
-    bodyContent = <Box sx={{ textAlign: "center", marginTop: "20%" }}><CircularProgress color="inherit" /></Box>;
+    bodyContent = (
+      <Grid container style={{ marginBottom: "27px" }} >
+        {
+          [1, 2, 3, 4, 5, 6, 7].map((width) => (
+            <Message key={"t_" + width} message={DummyMessageModel} typeEffect={false} isLoading={true} />
+          ))
+        }
+      </Grid>
+    );
   } else if (!context.doesPostExist) {
     bodyContent = (<Box sx={{ textAlign: "center" }}>
       <ErrorIcon sx={{ fontSize: 100 }} />
@@ -175,7 +183,9 @@ const ChatAppEdit = () => {
           <Box sx={{ display: "flex", marginLeft: "40px" }}>
             <Tooltip title="Refresh" arrow>
               <Box sx={{ marginTop: "-7px" }}>
-                <PostLink username={context.curPost?.username!} pid={context.curPost?.pid!} />
+                {
+                  <PostLink username={context.curPost?.username!} pid={context.curPost?.pid!} />
+                }
               </Box>
             </Tooltip>
           </Box>

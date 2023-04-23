@@ -73,7 +73,7 @@ const StarButton: React.FC<{
     title={`${(!isLogged || !props.canClick) ? "" : (starred ? "UnStar" : "Star")}`}
     arrow
   >
-    {!isReady ? <Skeleton variant="rounded" animation="wave" width={20} height={20} />
+    {!isReady ? <Skeleton variant="rounded" animation="wave" width={25} height={25} />
       :
       <Box style={{
         display: "flex",

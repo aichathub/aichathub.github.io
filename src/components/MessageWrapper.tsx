@@ -7,11 +7,12 @@ const MessageWrapper: React.FC<{
   message: MessageModel;
   isEditing: boolean;
   setIsEditing: (isEditing: boolean) => void;
+  isLoading?: boolean;
 }> = (props) => {
   return (
     <>
       <Grid style={{ position: "relative" }}>
-        <MessageMoreButton message={props.message} isEditing={props.isEditing} setIsEditing={props.setIsEditing} />
+        {!props.isLoading && <MessageMoreButton message={props.message} isEditing={props.isEditing} setIsEditing={props.setIsEditing} />}
         {props.children}
       </Grid>
     </>

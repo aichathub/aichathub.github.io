@@ -43,7 +43,7 @@ const ExplorePage = () => {
     bodyContent = <Grid container>
       {
         [1, 2, 3, 4, 5, 6, 7].map((x) => {
-          return <SearchItem key={x} post={DummyPostModel} typeEffect={false} isLoading={true} />
+          return <SearchItem key={new Date().toString()} post={DummyPostModel} typeEffect={false} isLoading={true} />
         })
       }
     </Grid>

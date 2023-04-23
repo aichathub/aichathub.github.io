@@ -3,6 +3,6 @@ import { PostModel } from "./PostModel";
 export const DummyPostModel = {
   pid: "",
   title: "",
-  createdate: "",
+  createdate: new Date().toISOString(),
   username: "",
 } as PostModel;

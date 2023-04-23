@@ -1,4 +1,4 @@
-import { Tooltip } from '@mui/material';
+import { Skeleton, Tooltip } from '@mui/material';
 import Dialog from '@mui/material/Dialog';
 import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
@@ -30,9 +30,11 @@ const QRCodeDialog: React.FC<{
     if (props.genShortUrl && open) {
       setIsGenerating(true);
       generateShortUrl(props.url, window.location.origin).then((shortUrlResponse) => {
-        const shortUrl = shortUrlResponse.result;
+        if (shortUrlResponse.message === "SUCCESS") {
+          const shortUrl = shortUrlResponse.result;
+          setDisplayUrl(shortUrl);
+        }
         setIsGenerating(false);
-        setDisplayUrl(shortUrl);
       });
     }
   }, [open])
@@ -49,7 +51,9 @@ const QRCodeDialog: React.FC<{
       >
         <Tooltip title={props.url} arrow>
           <>
-            {displayUrl.substring(0, 25) + "..."}
+            {isGenerating ? <Skeleton variant="text" width={200} /> :
+              displayUrl.substring(0, 25) + "..."
+            }
           </>
         </Tooltip>
         <QRCode value={displayUrl} />

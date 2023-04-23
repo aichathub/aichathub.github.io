@@ -68,7 +68,7 @@ const SearchItem: React.FC<{
               }
               <Grid>
                 <Typography variant="h6" style={{ fontWeight: "bold" }}>
-                  {isLoading ? <Skeleton /> : props.post.title}
+                  {isLoading ? <Skeleton width={"70px"} /> : props.post.title}
                 </Typography>
               </Grid>
               <Box

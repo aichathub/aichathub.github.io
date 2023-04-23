@@ -1,5 +1,5 @@
 import { Box, Tooltip } from "@material-ui/core";
-import { Button, Grid, SxProps, TextField, Theme } from "@mui/material";
+import { Button, Grid, Skeleton, SxProps, TextField, Theme } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
@@ -36,6 +36,7 @@ const theme = createTheme({
 const Message: React.FC<{
   message: MessageModel;
   typeEffect?: boolean;
+  isLoading?: boolean;
 }> = (props) => {
   let avatarName = "You";
   const isAI = props.message.authorusername === undefined;
@@ -132,6 +133,7 @@ const Message: React.FC<{
       borderLeft: isMobile ? "2px solid #d30" : "4px solid red"
     }
   }
+  const isLoading = props.isLoading;
   useEffect(() => {
     if (!shouldAnimate || context.shouldStopTypingMessage) return;
     context.setIsTypingMessage(true);
@@ -179,10 +181,10 @@ const Message: React.FC<{
       {anchorElement}
       <Grid container wrap="nowrap" spacing={2} style={{ marginBottom: "2px" }}>
         <Grid item xs={!isExtraSmall && isMobile ? 12 : 10}>
-          <MessageWrapper message={props.message} isEditing={isEditing} setIsEditing={setIsEditing}>
+          <MessageWrapper message={props.message} isEditing={isEditing} setIsEditing={setIsEditing} isLoading={isLoading}>
             <Grid container spacing={2}>
               <Grid item>
-                <Avatar sx={{ bgcolor: avatarColor }}>{avatarName}</Avatar>
+                {isLoading ? <Skeleton variant="circular" width={40} height={40} /> : <Avatar sx={{ bgcolor: avatarColor }}>{avatarName}</Avatar>}
               </Grid>
               <Grid
                 item
@@ -208,7 +210,7 @@ const Message: React.FC<{
                       placement="top"
                     >
                       <Typography variant="overline" color="common.grey">
-                        {timeText}
+                        {isLoading ? <Skeleton width="100px" /> : timeText}
                       </Typography>
                     </Tooltip>
                   </ThemeProvider>
@@ -221,47 +223,58 @@ const Message: React.FC<{
                 >
                   <ThemeProvider theme={theme}>
                     <Typography variant="overline" color={"common.grey"}>
-                      {(props.message.authorusername !== "python" && props.message.authorusername) && <UserLink username={props.message.authorusername} />}
-                      {props.message.authorusername === undefined && ("@AI" + (props.message.sendernickname ? " (" + props.message.sendernickname + ")" : ""))}
-                      {props.message.authorusername === "python" && "@Python"}
+                      {
+                        isLoading ? <Skeleton variant="text" width="50px" sx={{ marginTop: "5px" }} /> :
+                          <>
+                            {(props.message.authorusername !== "python" && props.message.authorusername) && <UserLink username={props.message.authorusername} />}
+                            {props.message.authorusername === undefined && ("@AI" + (props.message.sendernickname ? " (" + props.message.sendernickname + ")" : ""))}
+                            {props.message.authorusername === "python" && "@Python"}
+                          </>
+                      }
                     </Typography>
                   </ThemeProvider>
                 </Box>
               </Grid>
             </Grid>
           </MessageWrapper>
-          {!isEditing &&
-            <>
-              <ReactMarkdown
-                remarkPlugins={[remarkGfm]}
-                children={content + ((content.length < props.message.content.length && context.isTypingMessage) ? "▌" : "")}
-                linkTarget="_blank"
-                components={{
-                  code({ node, inline, className, children, ...props }) {
-                    return !inline ? (
-                      <CodeBlock content={String(children).replace(/\n$/, '')} />
-                    ) : (
-                      <code className={className} {...props}>
-                        {children}
-                      </code>
-                    )
-                  },
-                  a({ node, className, children, ...props }) {
-                    return (
-                      <span className={classes.mdlink}>
-                        <a className={className} {...props}>
+          {!isEditing && (
+            isLoading ? <>
+              {
+                [30, 50, 80, 40].map((width, i) => <Skeleton sx={{ marginTop: "5px" }} key={i} variant="text" width={`${width}%`} />)
+              }
+            </> :
+              <>
+                <ReactMarkdown
+                  remarkPlugins={[remarkGfm]}
+                  children={content + ((content.length < props.message.content.length && context.isTypingMessage) ? "▌" : "")}
+                  linkTarget="_blank"
+                  components={{
+                    code({ node, inline, className, children, ...props }) {
+                      return !inline ? (
+                        <CodeBlock content={String(children).replace(/\n$/, '')} />
+                      ) : (
+                        <code className={className} {...props}>
                           {children}
-                        </a>
-                      </span>
-                    )
-                  },
-                }}
-              />
-              {props.message.editdate && <Typography variant="overline" color="common.grey" sx={{ fontStyle: 'italic' }}>(Edited)</Typography>}
-            </>
+                        </code>
+                      )
+                    },
+                    a({ node, className, children, ...props }) {
+                      return (
+                        <span className={classes.mdlink}>
+                          <a className={className} {...props}>
+                            {children}
+                          </a>
+                        </span>
+                      )
+                    },
+                  }}
+                />
+                {props.message.editdate && <Typography variant="overline" color="common.grey" sx={{ fontStyle: 'italic' }}>(Edited)</Typography>}
+              </>
+          )
           }
           {isEditing && editor}
-          {props.message.authorusername === undefined && <LikeDislikePanel message={props.message} />}
+          {props.message.authorusername === undefined && !isLoading && <LikeDislikePanel message={props.message} />}
         </Grid>
       </Grid>
     </StyledPaper>
