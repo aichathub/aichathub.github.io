@@ -154,11 +154,11 @@ const TopLeftBar: React.FC<{
     if (!context.auth.loggedEmail) return;
     context.setIsLeftBarPostLoading(true);
     findPostsByAuthoremail(context.auth.loggedEmail).then((response) => {
-      context.setIsLeftBarPostLoading(false);
       if (response.message !== "SUCCESS") {
         context.showSnack(response.message);
         return;
       }
+      context.setIsLeftBarPostLoading(false);
       const posts = response.result;
       if (posts) {
         setPosts(posts);

@@ -199,7 +199,7 @@ const MessageMoreButton: React.FC<{
                     </MenuItem>)
                   }
                   {hasRightToFork && (
-                    <Tooltip placement="left" arrow title="Continue the conversation from this point">
+                    <Tooltip placement="left" arrow title="Continue the conversation from this point privately">
                       <MenuItem
                         onClick={handleForkClick}
                       >

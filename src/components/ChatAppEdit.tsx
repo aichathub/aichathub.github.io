@@ -113,13 +113,12 @@ const ChatAppEdit = () => {
       }
       context.setCurPost(response.result);
       document.title = `${response.result.title} · ${username}/${postid}`;
+      context.setCurPost(response.result);
     });
   }, [username, postid, context.auth.token]);
 
   useEffect(() => {
-    context.setIsLeftBarPostLoading(true);
     getPostByUsernameAndPid(username ? username : "", postid ? postid : "", context.auth.token).then(response => {
-      context.setIsLeftBarPostLoading(false);
       if (response.message !== "SUCCESS") {
         return;
       }

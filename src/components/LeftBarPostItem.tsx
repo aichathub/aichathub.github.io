@@ -2,6 +2,7 @@ import { Grid, ListItemText } from "@material-ui/core";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import ForkLeftIcon from '@mui/icons-material/ForkLeft';
 import LockIcon from '@mui/icons-material/Lock';
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { ListItemButton, ListItemIcon, Skeleton, Tooltip } from "@mui/material";
@@ -73,7 +74,11 @@ const LeftBarPostItem: React.FC<{ post: PostModel; removePost: (post: PostModel)
       {showEditPostDialog && <EditPostDialog handleClose={handleCloseEditPostDialog} post={post} />}
       <ListItem key={post.pid} disablePadding style={style}>
         <ListItemButton onClick={handleClickPostItem}>
-          {(!isLoading && post.isprivate) ? <LockIcon /> : <ChatBubbleOutlineIcon />}
+          {
+            isLoading ? <Skeleton variant="circular" width={"30px"} height={"30px"} /> :
+              post.forkedfrompid ? <ForkLeftIcon /> :
+                post.isprivate ? <LockIcon /> : <ChatBubbleOutlineIcon />
+          }
           <Tooltip title={isLoading ? "" : `${post.username}/${post.pid}`} placement="right">
             {isLoading ? <Skeleton variant="rounded" height={"30px"} width={"80%"} sx={{ marginLeft: "5px" }} /> :
               <ListItemText primary={post.title} style={{ marginLeft: "10px" }} />
