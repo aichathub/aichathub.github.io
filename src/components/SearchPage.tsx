@@ -2,7 +2,7 @@ import { Grid, Typography } from "@material-ui/core";
 import SearchIcon from "@mui/icons-material/Search";
 import Box from "@mui/material/Box";
 import { useContext, useEffect, useState } from "react";
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { DummyPostModel } from "../models/DummyPostModel";
 import { PostModel } from "../models/PostModel";
 import { AppContext } from "../store/AppContext";
@@ -15,6 +15,7 @@ const SearchPage = () => {
   const searchQuery = searchParams.get('q');
   const [posts, setPosts] = useState<PostModel[]>([]);
   const [resultNotFound, setResultNotFound] = useState(false);
+  const navigate = useNavigate();
   const handleDrawerOpen = () => {
     context.setTopLeftBarOpen(true);
   };
@@ -23,6 +24,10 @@ const SearchPage = () => {
   };
 
   useEffect(() => {
+    if (searchQuery?.trim().length === 0) {
+      navigate("/");
+      return;
+    }
     document.title = `Search · ${searchQuery}`;
     context.setIsLoadingMessages(true);
     searchPostsByKeyword(searchQuery!, { username: context.loggedUser, token: context.auth.token }).then((result) => {
