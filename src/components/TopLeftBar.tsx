@@ -10,6 +10,7 @@ import LightModeIcon from '@mui/icons-material/LightMode';
 import MenuIcon from "@mui/icons-material/Menu";
 import RefreshIcon from '@mui/icons-material/Refresh';
 import SearchIcon from "@mui/icons-material/Search";
+import { TextField } from "@mui/material";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
@@ -231,11 +232,38 @@ const TopLeftBar: React.FC<{
           {/* <Typography variant="h6" noWrap component="div">
             {post && post.title}
           </Typography> */}
-          <Search sx={{ flexGrow: 0 }}>
-            <SearchIconWrapper>
+          <Search sx={{ flexGrow: 1 }}>
+            {/* <Box sx={{ marginTop: "5px" }}>
               <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
+            </Box> */}
+            <TextField
+              id="standard-text"
+              inputRef={inputRef}
+              placeholder="Search…"
+              fullWidth
+              value={searchBoxText}
+              onChange={(e) => { setSearchBoxText(e.target.value); }}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter') {
+                  navigate(`/search?q=${searchBoxText}`);
+                }
+              }}
+              InputProps={{
+                startAdornment: (
+                  <SearchIcon sx={{ marginRight: "5px" }} />
+                ),
+                endAdornment: (
+                  <IconButton
+                    sx={{ visibility: searchBoxText ? "visible" : "hidden" }}
+                    onClick={handleClearSearchClick}
+                    size="small"
+                  >
+                    <ClearIcon />
+                  </IconButton>
+                ),
+              }}
+            />
+            {/* <StyledInputBase
               inputRef={inputRef}
               placeholder="Search…"
               onChange={(e) => { setSearchBoxText(e.target.value); }}
@@ -245,6 +273,7 @@ const TopLeftBar: React.FC<{
                   navigate(`/search?q=${searchBoxText}`);
                 }
               }}
+              sx={{ width: searchBoxText ? "80vw" : "85vw" }}
             />
             {searchBoxText &&
               <IconButton
@@ -254,9 +283,8 @@ const TopLeftBar: React.FC<{
               >
                 <ClearIcon />
               </IconButton>
-            }
+            } */}
           </Search>
-          <div style={{ flexGrow: 1 }} />
           <TopBarAvatar />
         </Toolbar>
       </AppBar>
