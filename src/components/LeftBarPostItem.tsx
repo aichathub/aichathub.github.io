@@ -27,6 +27,7 @@ const LeftBarPostItem: React.FC<{ post: PostModel; removePost: (post: PostModel)
   const isLoading = props.isLoading;
 
   const handleClickPostItem = () => {
+    if (isLoading) return;
     context.setIsFirstLoad(true);
     context.setMessages([]);
     context.setIsLoadingMessages(true);
@@ -73,7 +74,7 @@ const LeftBarPostItem: React.FC<{ post: PostModel; removePost: (post: PostModel)
       <ListItem key={post.pid} disablePadding style={style}>
         <ListItemButton onClick={handleClickPostItem}>
           {(!isLoading && post.isprivate) ? <LockIcon /> : <ChatBubbleOutlineIcon />}
-          <Tooltip title={`${post.username}/${post.pid}`} placement="right">
+          <Tooltip title={isLoading ? "" : `${post.username}/${post.pid}`} placement="right">
             {isLoading ? <Skeleton variant="rounded" height={"30px"} width={"80%"} sx={{ marginLeft: "5px" }} /> :
               <ListItemText primary={post.title} style={{ marginLeft: "10px" }} />
             }
