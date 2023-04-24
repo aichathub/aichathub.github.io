@@ -254,7 +254,7 @@ const Message: React.FC<{
                         <CodeBlock content={String(children).replace(/\n$/, '')} />
                       ) : (
                         <code className={className + ` ${classes.blockquote}`} {...props} >
-                          {children}
+                          `{children}`
                         </code>
                       )
                     },
