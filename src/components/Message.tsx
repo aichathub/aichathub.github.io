@@ -54,7 +54,7 @@ const Message: React.FC<{
   const [isEditing, setIsEditing] = useState(false);
   const [editedMsg, setEditedMsg] = useState(props.message.content);
   if (context.searchBoxText) {
-    props.message.content = props.message.content.replace(new RegExp(searchBoxText, 'g'), '*' + searchBoxText + '*');
+    props.message.content = props.message.content.replace(new RegExp(context.searchBoxText, 'g'), '*' + context.searchBoxText + '*');
   }
   const justNow = (date: Date, seconds = 60) => {
     if (date === undefined) return false;
