@@ -53,6 +53,9 @@ const Message: React.FC<{
   const [showFullMsg, setShowFullMsg] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editedMsg, setEditedMsg] = useState(props.message.content);
+  if (context.searchBoxText) {
+    props.message.content = props.message.content.replace(new RegExp(searchBoxText, 'g'), '*' + searchBoxText + '*');
+  }
   const justNow = (date: Date, seconds = 60) => {
     if (date === undefined) return false;
     const now = new Date();
@@ -267,6 +270,11 @@ const Message: React.FC<{
                         </span>
                       )
                     },
+                    em({node, className, children, ...props}) {
+                      return (
+                        <mark>{children}</mark>
+                      )
+                    }
                   }}
                 />
                 {props.message.editdate && <Typography variant="overline" color="common.grey" sx={{ fontStyle: 'italic' }}>(Edited)</Typography>}
