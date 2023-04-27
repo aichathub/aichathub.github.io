@@ -12,7 +12,14 @@
   text-decoration: underline;
 }
 
-.blockquote {
+.inline-code {
   margin: 0.2em;
   font-weight: bold;
+}
+
+.blockquote {
+  color: #666;
+  margin: 0;
+  padding-left: 3em;
+  border-left: 0.5em #d30 solid;
 }

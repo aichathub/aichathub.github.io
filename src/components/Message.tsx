@@ -253,7 +253,7 @@ const Message: React.FC<{
                       return !inline ? (
                         <CodeBlock content={String(children).replace(/\n$/, '')} />
                       ) : (
-                        <code className={className + ` ${classes.blockquote}`} {...props} >
+                        <code className={className + ` ${classes["inline-code"]}`} {...props} >
                           `{children}`
                         </code>
                       )
@@ -267,6 +267,13 @@ const Message: React.FC<{
                         </span>
                       )
                     },
+                    blockquote({ node, className, children, ...props }) {
+                      return (
+                        <blockquote className={classes.blockquote}>
+                          {children}
+                        </blockquote>
+                      )
+                    }
                   }}
                 />
                 {props.message.editdate && <Typography variant="overline" color="common.grey" sx={{ fontStyle: 'italic' }}>(Edited)</Typography>}
