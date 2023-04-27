@@ -168,9 +168,6 @@ const TopLeftBar: React.FC<{
       setPosts([]);
     }
   }, [context.auth.loggedEmail, context.lastPostsRefresh]);
-  useEffect(() => {
-    context.setSearchBoxText(searchBoxText);
-  }, [searchBoxText]);
 
   const handleThemeBtnClick = () => {
     context.setDarkMode(!context.darkMode);
