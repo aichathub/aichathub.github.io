@@ -60,7 +60,7 @@ const Message: React.FC<{
     return diff < 1000 * seconds;
   };
   const shouldAnimate = isAI && props.message.justSent;
-  const [content, setContent] = useState(shouldAnimate ? "" : props.message.content);
+  const [content, setContent] = useState(shouldAnimate ? "" : props.message.content.replaceAll("\n", "\n\n"));
   const toMessageView = (messages: string[]) => {
     const body = messages.map((content, index) =>
       index % 2 === 0 ? (
