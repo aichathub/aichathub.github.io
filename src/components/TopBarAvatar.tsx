@@ -1,8 +1,10 @@
-import { Avatar, Box, Grid, Tooltip } from "@material-ui/core";
+import { Avatar, Box, Grid } from "@material-ui/core";
+import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
 import DataSaverOffIcon from '@mui/icons-material/DataSaverOff';
 import ErrorIcon from '@mui/icons-material/Error';
 import LoginIcon from "@mui/icons-material/Login";
 import PersonIcon from '@mui/icons-material/Person';
+import { ListItemIcon, ListItemText } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -32,43 +34,68 @@ const TopBarAvatar = () => {
 
   const navigate = useNavigate();
   if (context.auth.token === "") {
-    return <Tooltip title="Sign In" arrow>
-      <Box sx={{ flexGrow: 0 }}>
-        <IconButton onClick={() => {
-          const curUrl = window.location.href;
-          window.location.href = "/signin?redirect=" + curUrl;
-        }} >
-          <Avatar>
-            <PersonIcon />
-          </Avatar>
-        </IconButton>
-      </Box>
-    </Tooltip>;
+    return <Box sx={{ flexGrow: 0 }}>
+      <IconButton onClick={handleMenu} >
+        <Avatar>
+          <PersonIcon />
+        </Avatar>
+      </IconButton>
+      <Menu
+        id="menu-appbar"
+        anchorEl={anchorEl}
+        keepMounted
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "right"
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "left"
+        }}
+      >
+        <MenuItem onClick={() => {
+          window.location.href = "/signin?redirect=" + window.location.href;
+        }}>
+          <ListItemIcon>
+            <LoginIcon />
+          </ListItemIcon>
+          <ListItemText>Sign in</ListItemText>
+        </MenuItem>
+        <MenuItem onClick={() => {
+          window.location.href = "/signup?redirect=" + window.location.href;
+        }}>
+          <ListItemIcon>
+            <AppRegistrationIcon />
+          </ListItemIcon>
+          <ListItemText>Sign up</ListItemText>
+        </MenuItem>
+      </Menu>
+    </Box>;
   }
   const avatarColor = generateColor(context.loggedUser);
   return <Box sx={{ flexGrow: 0 }}>
-    <Tooltip title={`@${context.loggedUser}`}>
-      <IconButton onClick={handleMenu} >
-        <Avatar
-          alt={context.auth.loggedEmail}
-          src=""
-          style={{ background: avatarColor }}
-        >
-          {context.loggedUser.substring(0, 2).toUpperCase()}
-        </Avatar>
-      </IconButton>
-    </Tooltip>
+    <IconButton onClick={handleMenu} >
+      <Avatar
+        alt={context.auth.loggedEmail}
+        src=""
+        style={{ background: avatarColor }}
+      >
+        {context.loggedUser.substring(0, 2).toUpperCase()}
+      </Avatar>
+    </IconButton>
     <Menu
       id="menu-appbar"
       anchorEl={anchorEl}
-      anchorOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
       keepMounted
+      anchorOrigin={{
+        vertical: "bottom",
+        horizontal: "right"
+      }}
       transformOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
+        vertical: "top",
+        horizontal: "left"
       }}
       open={Boolean(anchorEl)}
       onClose={handleClose}
