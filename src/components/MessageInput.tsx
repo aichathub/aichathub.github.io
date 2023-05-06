@@ -64,7 +64,7 @@ export const MessageInput: React.FC<{
       const content = ref.value;
       // const triggerAI = content.toLowerCase().indexOf("@ai") !== -1;
       // const triggerPython = content.toLowerCase().indexOf("@python") !== -1;
-      const triggerAI = context.agent === "chatgpt";
+      const triggerAI = context.agent === "gpt3.5" || context.agent === "gpt4";
       const triggerPython = context.agent === "python";
       if (triggerAI && context.dailyAILimit === context.dailyAIUsuage) {
         context.showSnack("Opps, Seems you have reached your daily @AI limit! Let's continue tomorrow!");
@@ -114,9 +114,13 @@ export const MessageInput: React.FC<{
       if (response.indexOf("ERROR") === -1) {
         props.reloadMessage();
         if (triggerAI) {
-          const result: any = await chatgptReply(props.postid, props.username, context.auth.token);
+          const isGpt4 = context.agent === "gpt4";
+          const result: any = await chatgptReply(props.postid, props.username, context.auth.token, isGpt4);
           if (result.message.indexOf("ERROR") === -1) {
-            context.addDailyAIUsuage();
+            let rep = isGpt4 ? 10 : 1;
+            for (let i = 0; i < rep; i++) {
+              context.addDailyAIUsuage();
+            }
           } else {
             context.showSnack(result.message);
           }
@@ -201,6 +205,7 @@ export const MessageInput: React.FC<{
   }
   const handleClearClick = () => {
     setInputText("");
+    inputRef.current?.focus();
   }
   return (
     <>

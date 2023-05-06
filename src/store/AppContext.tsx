@@ -21,7 +21,7 @@ type AuthObj = {
   token: string;
 }
 
-export type Agent = "chatgpt" | "python" | "yourmodel" | "none";
+export type Agent = "gpt3.5" | "gpt4" | "python" | "yourmodel" | "none";
 
 type AppContextObj = {
   pagePostId: string;

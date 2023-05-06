@@ -551,7 +551,7 @@ export const pythonReply = async (pid: string, username: string, token: string, 
   return responseJson;
 }
 
-export const chatgptReply = async (pid: string, username: string, token: string) => {
+export const chatgptReply = async (pid: string, username: string, token: string, isGpt4: boolean) => {
   const response = await fetch(`${backendServer}/api/chatgptreply`, {
     method: "POST",
     headers: {
@@ -561,7 +561,8 @@ export const chatgptReply = async (pid: string, username: string, token: string)
     body: JSON.stringify({
       pid: pid,
       username: username,
-      token: token
+      token: token,
+      isGpt4: isGpt4
     })
   });
   const responseJson = await response.json();
