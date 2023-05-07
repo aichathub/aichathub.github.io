@@ -584,7 +584,7 @@ export const customModelReply = async (content: string, api: string, messages: M
       }
     }
     result += `### Human: ${content}\n`;
-    result += `### Assistant: `;
+    result += `### Assistant:`;
     return result;
   }
   const response = await fetch(url, {
@@ -600,10 +600,10 @@ export const customModelReply = async (content: string, api: string, messages: M
   const res = await response.json();
   let answer = res.results[0].text;
   const stopping_string = "###";
-  if (answer.indexOf(stopping_string) != -1) {
+  if (answer.indexOf(stopping_string) !== -1) {
     answer = answer.substring(0, answer.indexOf(stopping_string));
   }
-  return res.results[0].text;
+  return answer;
 }
 
 export const generateShortUrl = async (url: string, origin: string) => {
