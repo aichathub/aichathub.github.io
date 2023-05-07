@@ -594,11 +594,15 @@ export const customModelReply = async (content: string, api: string, messages: M
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      "prompt": formPrompt(messages, content),
-      "custom_stopping_strings_to_answer": "### Human,### Assistant"
+      "prompt": formPrompt(messages, content)
     }),
   });
   const res = await response.json();
+  let answer = res.results[0].text;
+  const stopping_string = "###"
+  if (answer.indexOf(stopping_string) != -1) {
+    s = s.substring(0, s.indexOf(stopping_string));
+  }
   return res.results[0].text;
 }
 
