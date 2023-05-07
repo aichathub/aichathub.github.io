@@ -599,9 +599,9 @@ export const customModelReply = async (content: string, api: string, messages: M
   });
   const res = await response.json();
   let answer = res.results[0].text;
-  const stopping_string = "###"
+  const stopping_string = "###";
   if (answer.indexOf(stopping_string) != -1) {
-    s = s.substring(0, s.indexOf(stopping_string));
+    answer = answer.substring(0, answer.indexOf(stopping_string));
   }
   return res.results[0].text;
 }
