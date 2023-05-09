@@ -5,10 +5,12 @@ import classes from "./PostLink.module.css";
 
 const PostLink = (props: {
   username: string;
-  pid: string
+  pid: string;
+  searchQuery?: string;
 }) => {
   const context = useContext(AppContext);
   const navigate = useNavigate();
+  const url = `/${props.username}/${props.pid}` + (props.searchQuery ? `q=${searchQuery}` : "");
   return <span className={classes.postlink}> <a
     onClick={(e) => {
       const isMiddleMouseClick = e.button === 1;
@@ -18,9 +20,9 @@ const PostLink = (props: {
       context.setIsFirstLoad(true);
       context.setMessages([]);
       context.setLastMessagesRefresh(new Date());
-      navigate(`/${props.username}/${props.pid}`);
+      navigate(url);
     }}
-    href={`/${props.username}/${props.pid}`}
+    href={url}
   >
     {props.username}/{props.pid}
   </a> </span>

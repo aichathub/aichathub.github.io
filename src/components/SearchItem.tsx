@@ -33,6 +33,7 @@ const SearchItem: React.FC<{
   post: PostModel;
   typeEffect?: boolean;
   isLoading?: boolean;
+  searchQuery?: string;
 }> = (props) => {
   const navigate = useNavigate();
   const context = useContext(AppContext);
@@ -63,7 +64,7 @@ const SearchItem: React.FC<{
                     <LockIcon fontSize="small" sx={{ marginRight: "10px", transform: "translateY(5px)" }} /> :
                     <ChatBubbleOutlineIcon fontSize="small" sx={{ marginRight: "10px", transform: "translateY(5px)" }} />
                   }
-                  <PostLink username={props.post.username!} pid={props.post.pid!} />
+                  <PostLink username={props.post.username!} pid={props.post.pid!} searchQuery={props.searchQuery} />
                 </Grid>
               }
               <Grid>
