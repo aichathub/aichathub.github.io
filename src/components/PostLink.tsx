@@ -10,7 +10,7 @@ const PostLink = (props: {
 }) => {
   const context = useContext(AppContext);
   const navigate = useNavigate();
-  const url = `/${props.username}/${props.pid}` + (props.searchQuery ? `q=${searchQuery}` : "");
+  const url = `/${props.username}/${props.pid}` + (props.searchQuery ? `q=${props.searchQuery}` : "");
   return <span className={classes.postlink}> <a
     onClick={(e) => {
       const isMiddleMouseClick = e.button === 1;
