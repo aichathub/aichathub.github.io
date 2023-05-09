@@ -45,7 +45,7 @@ const SearchPage = () => {
     <Grid container>
       {
         posts.map((post, index) => {
-          searchQuery ? <SearchItem key={index} post={post} typeEffect={true} searchQuery={searchQuery} />
+          return searchQuery ? <SearchItem key={index} post={post} typeEffect={true} searchQuery={searchQuery} />
                       : <SearchItem key={index} post={post} typeEffect={true} />
         })
       }
