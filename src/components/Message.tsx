@@ -251,7 +251,7 @@ const Message: React.FC<{
                   components={{
                     code({ node, inline, className, children, ...props }) {
                       return !inline ? (
-                        <CodeBlock content={String(children).replace(/\n$/, '')} />
+                        <CodeBlock content={String(children).replace(/\n\n/, '\n').replace(/\n$/, '')} />
                       ) : (
                         <code className={className + ` ${classes["inline-code"]}`} {...props} >
                           `{children}`
