@@ -238,7 +238,7 @@ const TopLeftBar: React.FC<{
               filterOptions={filterOptions}
               options={context.searchBoxAutoComplete}
               onChange={(event, value) => {
-                if (!value) return;
+                if (!value || ((typeof value) !== "string")) return;
                 navigate(`/search?q=${value}`);
                 context.addLocalKeyword(value);
               }}
