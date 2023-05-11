@@ -654,3 +654,18 @@ export const findMidByKeyword = async (username: string, pid: string, keyword: s
   const responseJson = await response.json();
   return responseJson;
 }
+
+export const findTopKSearch = async (k: number) => {
+  const response = await fetch(`${backendServer}/api/findtopksearch`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    mode: "cors",
+    body: JSON.stringify({
+      k: k
+    })
+  });
+  const responseJson = await response.json();
+  return responseJson;
+};

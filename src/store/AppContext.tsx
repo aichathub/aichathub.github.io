@@ -13,7 +13,7 @@ import { LocalPostModel } from "../models/LocalPostModel";
 import { MessageModel } from "../models/MessageModel";
 import { PostModel } from "../models/PostModel";
 import { TagModel } from "../models/TagModel";
-import { getCustomModelName, getDailyAILimit, getTags, getTodayAIUsage, verify } from "../util/db";
+import { findTopKSearch, getCustomModelName, getDailyAILimit, getTags, getTodayAIUsage, verify } from "../util/db";
 import useDidMountEffect from "../util/useDidMountEffect";
 
 type AuthObj = {
@@ -55,7 +55,9 @@ type AppContextObj = {
   yourmodelUrl: string;
   yourmodelName: string;
   isYourmodelConnected: boolean;
+  searchBoxAutoComplete: string[];
 
+  addLocalKeyword: (keyword: string) => void;
   pingYourmodel: () => Promise<boolean>;
   setIsYourmodelConnected: (isYourmodelConnected: boolean) => void;
   setYourmodelName: (yourmodelName: string) => void;
@@ -137,7 +139,9 @@ export const AppContext = createContext<AppContextObj>({
   yourmodelUrl: "",
   yourmodelName: "",
   isYourmodelConnected: false,
+  searchBoxAutoComplete: [],
 
+  addLocalKeyword: () => { },
   pingYourmodel: () => Promise.resolve(false),
   setIsYourmodelConnected: () => { },
   setYourmodelName: () => { },
@@ -241,6 +245,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
   const [yourmodelUrl, setYourmodelUrl] = useState(localStorage.getItem("yourmodelUrl") || "");
   const [yourmodelName, setYourmodelName] = useState(localStorage.getItem("yourmodelName") || "");
   const [isYourmodelConnected, setIsYourmodelConnected] = useState(false);
+  const [searchBoxAutoComplete, setSearchBoxAutoComplete] = useState<string[]>([]);
 
   const isOnPostPage = useMatch("/:username/:postid");
   const hasRightToSendMsg = isOnPostPage && curPost && curPost.username === loggedUser;
@@ -361,6 +366,43 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
       return false;
     }
   }
+  const refreshKeywords = () => {
+    findTopKSearch(7).then(response => {
+      if (response.message !== "SUCCESS") {
+        showSnack(response.message);
+        return;
+      }
+      const keywords: { keyword: string, from: "server" | "local" }[] = [];
+      response.result.forEach((x: any) => {
+        keywords.push({ keyword: x.keyword, from: "server" });
+      });
+      keywords.reverse();
+      const localKeywords = localStorage.getItem("keywords");
+      if (localKeywords) {
+        const localKeywordsObj = JSON.parse(localKeywords) as string[];
+        // Only care about the latest 3 local keywords
+        const localKeywordsObjLatest = localKeywordsObj.slice(Math.max(localKeywordsObj.length - 3, 0));
+        localKeywordsObjLatest.forEach(x => {
+          if (!keywords.find(y => y.keyword === x)) {
+            keywords.push({ keyword: x, from: "local" });
+          }
+        });
+      }
+      keywords.reverse();
+      setSearchBoxAutoComplete(keywords.map(x => x.keyword));
+    });
+  }
+  const addLocalKeyword = (keyword: string) => {
+    const localKeywords = localStorage.getItem("keywords");
+    if (localKeywords) {
+      const localKeywordsObj = JSON.parse(localKeywords) as string[];
+      localKeywordsObj.push(keyword);
+      localStorage.setItem("keywords", JSON.stringify(localKeywordsObj));
+    } else {
+      localStorage.setItem("keywords", JSON.stringify([keyword]));
+    }
+    refreshKeywords();
+  }
   const contextValue = {
     pagePostId: pagePostId,
     auth: auth,
@@ -392,7 +434,9 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
     yourmodelUrl: yourmodelUrl,
     yourmodelName: yourmodelName,
     isYourmodelConnected: isYourmodelConnected,
+    searchBoxAutoComplete: searchBoxAutoComplete,
 
+    addLocalKeyword: addLocalKeyword,
     pingYourmodel: pingYourmodel,
     setIsYourmodelConnected: setIsYourmodelConnected,
     setYourmodelName: setYourmodelName,
@@ -564,6 +608,10 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
   useEffect(() => {
     localStorage.setItem("yourmodelName", yourmodelName);
   }, [yourmodelName]);
+
+  useEffect(() => {
+    refreshKeywords();
+  }, []);
 
   const getSeverity = (message: string) => {
     if (message.toLowerCase().indexOf("error") !== -1) return "error";

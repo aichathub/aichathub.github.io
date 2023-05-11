@@ -3,7 +3,6 @@ import AddIcon from "@mui/icons-material/Add";
 import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import ClearIcon from '@mui/icons-material/Clear';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 import HomeIcon from '@mui/icons-material/Home';
@@ -12,7 +11,7 @@ import LoginIcon from '@mui/icons-material/Login';
 import MenuIcon from "@mui/icons-material/Menu";
 import RefreshIcon from '@mui/icons-material/Refresh';
 import SearchIcon from "@mui/icons-material/Search";
-import { TextField } from "@mui/material";
+import { Autocomplete, TextField } from "@mui/material";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
@@ -193,10 +192,6 @@ const TopLeftBar: React.FC<{
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
-  const handleClearSearchClick = () => {
-    setSearchBoxText("");
-    inputRef.current?.focus();
-  }
   return (
     <Grid className={`${shouldHide ? classes.hide : classes.show}`}>
       <AppBar
@@ -231,39 +226,37 @@ const TopLeftBar: React.FC<{
               <HomeIcon />
             </IconButton>
           </Tooltip>
-          {/* <Typography variant="h6" noWrap component="div">
-            {post && post.title}
-          </Typography> */}
           <Search sx={{ flexGrow: 1, marginTop: "5px" }}>
-            {/* <Box sx={{ marginTop: "5px" }}>
-              <SearchIcon />
-            </Box> */}
-            <TextField
-              id="standard-text"
-              inputRef={inputRef}
-              placeholder="Search…"
-              fullWidth
-              value={searchBoxText}
-              onChange={(e) => { setSearchBoxText(e.target.value); }}
-              onKeyPress={(e) => {
-                if (e.key === 'Enter') {
-                  navigate(`/search?q=${searchBoxText}`);
-                }
+            <Autocomplete
+              id="free-solo-demo"
+              freeSolo
+              options={context.searchBoxAutoComplete}
+              onChange={(event, value) => {
+                if (!value) return;
+                navigate(`/search?q=${value}`);
+                context.addLocalKeyword(value);
               }}
-              InputProps={{
-                startAdornment: (
-                  <SearchIcon sx={{ marginRight: "5px" }} />
-                ),
-                endAdornment: (
-                  <IconButton
-                    sx={{ visibility: searchBoxText ? "visible" : "hidden" }}
-                    onClick={handleClearSearchClick}
-                    size="small"
-                  >
-                    <ClearIcon />
-                  </IconButton>
-                ),
-              }}
+              renderInput={(params) => (
+                <TextField {...params}
+                  placeholder="Search…"
+                  InputProps={{
+                    ...params.InputProps,
+                    startAdornment: (
+                      <SearchIcon sx={{ marginRight: "5px" }} />
+                    )
+                  }}
+                  onChange={(e) => {
+                    setSearchBoxText(e.target.value);
+                  }}
+                  onKeyPress={(e) => {
+                    if (e.key === 'Enter') {
+                      if (!searchBoxText) return;
+                      navigate(`/search?q=${searchBoxText}`);
+                      context.addLocalKeyword(searchBoxText);
+                    }
+                  }}
+                />
+              )}
             />
           </Search>
           <TopBarAvatar />
