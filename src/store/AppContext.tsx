@@ -373,10 +373,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
         return;
       }
       const keywords: { keyword: string, from: "server" | "local" }[] = [];
-      response.result.forEach((x: any) => {
-        keywords.push({ keyword: x.keyword, from: "server" });
-      });
-      keywords.reverse();
+
       const localKeywords = localStorage.getItem("keywords");
       if (localKeywords) {
         const localKeywordsObj = JSON.parse(localKeywords) as string[];
@@ -389,6 +386,11 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
         });
       }
       keywords.reverse();
+      response.result.forEach((x: any) => {
+        if (!keywords.find(y => y.keyword === x.keyword)) {
+          keywords.push({ keyword: x.keyword, from: "server" });
+        }
+      });
       setSearchBoxAutoComplete(keywords.map(x => x.keyword));
     });
   }
