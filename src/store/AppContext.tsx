@@ -367,7 +367,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
     }
   }
   const refreshKeywords = () => {
-    findTopKSearch(7).then(response => {
+    findTopKSearch(100).then(response => {
       if (response.message !== "SUCCESS") {
         showSnack(response.message);
         return;

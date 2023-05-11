@@ -11,7 +11,7 @@ import LoginIcon from '@mui/icons-material/Login';
 import MenuIcon from "@mui/icons-material/Menu";
 import RefreshIcon from '@mui/icons-material/Refresh';
 import SearchIcon from "@mui/icons-material/Search";
-import { Autocomplete, TextField } from "@mui/material";
+import { Autocomplete, TextField, createFilterOptions } from "@mui/material";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
@@ -192,6 +192,10 @@ const TopLeftBar: React.FC<{
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+  const OPTIONS_LIMIT = 10;
+  const filterOptions = createFilterOptions({
+    limit: OPTIONS_LIMIT
+  });
   return (
     <Grid className={`${shouldHide ? classes.hide : classes.show}`}>
       <AppBar
@@ -230,6 +234,7 @@ const TopLeftBar: React.FC<{
             <Autocomplete
               id="free-solo-demo"
               freeSolo
+              filterOptions={filterOptions}
               options={context.searchBoxAutoComplete}
               onChange={(event, value) => {
                 if (!value) return;
