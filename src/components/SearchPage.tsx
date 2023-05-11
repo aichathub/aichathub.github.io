@@ -39,14 +39,14 @@ const SearchPage = () => {
       setPosts(result.result);
       context.setIsInitializing(false);
     });
-  }, [searchParams]);
+  }, [searchParams, context.auth.token]);
 
   let bodyContent = <>
     <Grid container>
       {
         posts.map((post, index) => {
           return searchQuery ? <SearchItem key={index} post={post} typeEffect={true} searchQuery={searchQuery} />
-                      : <SearchItem key={index} post={post} typeEffect={true} />
+            : <SearchItem key={index} post={post} typeEffect={true} />
         })
       }
     </Grid>
