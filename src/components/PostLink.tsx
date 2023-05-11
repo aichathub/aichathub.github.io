@@ -21,7 +21,7 @@ const PostLink = (props: {
         }
         const mids = response.result;
         if (mids.length > 0) {
-          setUrl(`/${props.username}/${props.pid}#m${mids[0].mid}`);
+          setUrl(`/${props.username}/${props.pid}#m${mids[mids.length - 1].mid}`);
         }
       });
     }
