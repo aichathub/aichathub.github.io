@@ -11,9 +11,9 @@ import LoginIcon from '@mui/icons-material/Login';
 import MenuIcon from "@mui/icons-material/Menu";
 import RefreshIcon from '@mui/icons-material/Refresh';
 import SearchIcon from "@mui/icons-material/Search";
-import { Autocomplete, TextField } from "@mui/material";
-import { createFilterOptions } from '@mui/material/Autocomplete';
+import { Autocomplete, FilterOptionsState, TextField } from "@mui/material";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
+import { createFilterOptions } from '@mui/material/Autocomplete';
 import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
@@ -193,10 +193,12 @@ const TopLeftBar: React.FC<{
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
-  const OPTIONS_LIMIT = 10;
-  const filterOptions = createFilterOptions({
-    limit: OPTIONS_LIMIT
-  });
+  const OPTIONS_LIMIT = 7;
+  const defaultFilterOptions = createFilterOptions();
+
+  const filterOptions = (options: unknown[], state: FilterOptionsState<unknown>) => {
+    return defaultFilterOptions(options, state).slice(0, OPTIONS_LIMIT);
+  };
   return (
     <Grid className={`${shouldHide ? classes.hide : classes.show}`}>
       <AppBar
@@ -239,8 +241,9 @@ const TopLeftBar: React.FC<{
               options={context.searchBoxAutoComplete}
               onChange={(event, value) => {
                 if (!value || ((typeof value) !== "string")) return;
-                navigate(`/search?q=${value}`);
-                context.addLocalKeyword(value);
+                const str = value as string;
+                navigate(`/search?q=${str}`);
+                context.addLocalKeyword(str);
               }}
               renderInput={(params) => (
                 <TextField {...params}
