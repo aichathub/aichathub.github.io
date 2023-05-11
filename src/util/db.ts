@@ -655,7 +655,7 @@ export const findMidByKeyword = async (username: string, pid: string, keyword: s
   return responseJson;
 }
 
-export const findTopKSearch = async (k: number) => {
+export const findTopKSearch = async (k: number, loggedUser?: string, token?: string) => {
   const response = await fetch(`${backendServer}/api/findtopksearch`, {
     method: "POST",
     headers: {
@@ -663,7 +663,9 @@ export const findTopKSearch = async (k: number) => {
     },
     mode: "cors",
     body: JSON.stringify({
-      k: k
+      k: k,
+      username: loggedUser,
+      token: token
     })
   });
   const responseJson = await response.json();

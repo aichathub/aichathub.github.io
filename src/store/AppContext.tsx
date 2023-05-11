@@ -366,8 +366,8 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
       return false;
     }
   }
-  const refreshKeywords = () => {
-    findTopKSearch(100).then(response => {
+  const refreshKeywords = (loggedUser?: string, token?: string) => {
+    findTopKSearch(100, loggedUser, token).then(response => {
       if (response.message !== "SUCCESS") {
         showSnack(response.message);
         return;
@@ -403,7 +403,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
     } else {
       localStorage.setItem("keywords", JSON.stringify([keyword]));
     }
-    refreshKeywords();
+    refreshKeywords(loggedUser, auth.token);
   }
   const contextValue = {
     pagePostId: pagePostId,
@@ -614,6 +614,10 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
   useEffect(() => {
     refreshKeywords();
   }, []);
+
+  useEffect(() => {
+    refreshKeywords(loggedUser, auth.token);
+  }, [loggedUser, auth.token]);
 
   const getSeverity = (message: string) => {
     if (message.toLowerCase().indexOf("error") !== -1) return "error";
