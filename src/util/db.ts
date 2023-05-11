@@ -636,3 +636,21 @@ export const findUrlByShortUrl = async (shortUrl: string) => {
   const responseJson = await response.json();
   return responseJson;
 }
+
+export const findMidByKeyword = async (username: string, pid: string, keyword: string, token?: string) => {
+  const response = await fetch(`${backendServer}/api/findmidbykeyword`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    mode: "cors",
+    body: JSON.stringify({
+      username: username,
+      pid: pid,
+      keyword: keyword,
+      token: token
+    })
+  });
+  const responseJson = await response.json();
+  return responseJson;
+}
