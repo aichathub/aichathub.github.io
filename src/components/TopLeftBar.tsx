@@ -11,7 +11,7 @@ import LoginIcon from '@mui/icons-material/Login';
 import MenuIcon from "@mui/icons-material/Menu";
 import RefreshIcon from '@mui/icons-material/Refresh';
 import SearchIcon from "@mui/icons-material/Search";
-import { Autocomplete, FilterOptionsState, TextField } from "@mui/material";
+import { Autocomplete, Box, FilterOptionsState, TextField } from "@mui/material";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import { createFilterOptions } from '@mui/material/Autocomplete';
 import Divider from "@mui/material/Divider";
@@ -255,6 +255,16 @@ const TopLeftBar: React.FC<{
                 freeSolo
                 filterOptions={filterOptions}
                 options={context.searchBoxAutoComplete}
+                autoComplete={true}
+                renderOption={(props, option) => {
+                  const optionStr = option as string;
+                  return (
+                    <Box component="li" {...props}>
+                      <SearchIcon sx={{ marginRight: "5px" }} />
+                      {optionStr}
+                    </Box>
+                  );
+                }}
                 onChange={(event, value) => {
                   if (!value || ((typeof value) !== "string")) return;
                   const str = value as string;
