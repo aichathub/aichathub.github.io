@@ -9,6 +9,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import LoginIcon from '@mui/icons-material/Login';
 import MenuIcon from "@mui/icons-material/Menu";
+import PersonIcon from '@mui/icons-material/Person';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import SearchIcon from "@mui/icons-material/Search";
 import { Autocomplete, Box, FilterOptionsState, TextField } from "@mui/material";
@@ -260,7 +261,9 @@ const TopLeftBar: React.FC<{
                   const optionStr = option as string;
                   return (
                     <Box component="li" {...props}>
-                      <SearchIcon sx={{ marginRight: "5px" }} />
+                      {
+                        optionStr.startsWith("@") ? <PersonIcon sx={{ marginRight: "5px" }} /> : <SearchIcon sx={{ marginRight: "5px" }} />
+                      }
                       {optionStr}
                     </Box>
                   );
