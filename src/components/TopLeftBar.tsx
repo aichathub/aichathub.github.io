@@ -175,15 +175,27 @@ const TopLeftBar: React.FC<{
   };
   const newPostForm = <NewPostDialog handleClose={handleNewPostFormClose} />
   let menuBtnHint = "Sidebar";
+  let searchBarHint = "";
   const platform = (navigator?.platform || 'unknown').toLowerCase();
   // If the client is windows, hint is "CTRL b"
   if (platform.indexOf("win") > -1) {
     menuBtnHint += " (CTRL+B)";
+    searchBarHint += "(CTRL+SHIFT+F)";
   }
   // If the client is mac, hint is "CMD b"
   if (platform.indexOf("mac") > -1) {
     menuBtnHint += " (CMD+B)";
+    searchBarHint += "(CMD+SHIFT+F)";
   }
+  const keyDownHandler = (event: KeyboardEvent) => {
+    const { key } = event;
+    const isCtrlKey = event.ctrlKey || event.metaKey;
+    const isShiftKey = event.shiftKey;
+    const isF = key.toLowerCase() === "f";
+    if (isCtrlKey && isShiftKey && isF) {
+      inputRef.current!.focus();
+    }
+  };
   useEffect(() => {
     const onScroll = () => {
       const tolerance = 5;
@@ -191,6 +203,7 @@ const TopLeftBar: React.FC<{
     }
     window.removeEventListener("scroll", onScroll);
     window.addEventListener("scroll", onScroll);
+    window.addEventListener("keydown", keyDownHandler);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
   const OPTIONS_LIMIT = 7;
@@ -247,7 +260,8 @@ const TopLeftBar: React.FC<{
               }}
               renderInput={(params) => (
                 <TextField {...params}
-                  placeholder="Search…"
+                  inputRef={inputRef}
+                  placeholder={"Search…" + searchBarHint}
                   InputProps={{
                     ...params.InputProps,
                     startAdornment: (
