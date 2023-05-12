@@ -194,6 +194,8 @@ const TopLeftBar: React.FC<{
     const isF = key.toLowerCase() === "f";
     if (isCtrlKey && isShiftKey && isF) {
       inputRef.current!.focus();
+      const oldval = isAtTop;
+      setIsAtTop(true);
     }
   };
   useEffect(() => {
