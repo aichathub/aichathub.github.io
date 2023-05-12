@@ -118,6 +118,7 @@ const TopLeftBar: React.FC<{
   const isOnSearchPage = useMatch("/search");
   const [searchParams,] = useSearchParams();
   const [isAtTop, setIsAtTop] = useState(true);
+  let hint = "";
 
   const [searchBoxText, setSearchBoxText] = useState((isOnSearchPage && searchParams.get("q")) ? searchParams.get("q") : "");
   const shouldHide = !context.shouldDisplayTopLeftBar || (!isAtTop && !props.open && document.activeElement !== inputRef.current);
@@ -175,18 +176,18 @@ const TopLeftBar: React.FC<{
   };
   const newPostForm = <NewPostDialog handleClose={handleNewPostFormClose} />
   let menuBtnHint = "Sidebar";
-  let searchBarHint = "";
   const platform = (navigator?.platform || 'unknown').toLowerCase();
   // If the client is windows, hint is "CTRL b"
   if (platform.indexOf("win") > -1) {
     menuBtnHint += " (CTRL+B)";
-    searchBarHint += "(CTRL+SHIFT+F)";
+    hint = "CTRL+SHIFT+F";
   }
   // If the client is mac, hint is "CMD b"
   if (platform.indexOf("mac") > -1) {
     menuBtnHint += " (CMD+B)";
-    searchBarHint += "(CMD+SHIFT+F)";
+    hint = "CMD+SHIFT+F";
   }
+  const [searchBarShortcutHint, setSearchBarShortcutHint] = useState(hint);
   const keyDownHandler = (event: KeyboardEvent) => {
     const { key } = event;
     const isCtrlKey = event.ctrlKey || event.metaKey;
@@ -194,7 +195,6 @@ const TopLeftBar: React.FC<{
     const isF = key.toLowerCase() === "f";
     if (isCtrlKey && isShiftKey && isF) {
       inputRef.current!.focus();
-      const oldval = isAtTop;
       setIsAtTop(true);
     }
   };
@@ -248,42 +248,51 @@ const TopLeftBar: React.FC<{
               <HomeIcon />
             </IconButton>
           </Tooltip>
-          <Search sx={{ flexGrow: 1, marginTop: "5px" }}>
-            <Autocomplete
-              id="free-solo-demo"
-              freeSolo
-              filterOptions={filterOptions}
-              options={context.searchBoxAutoComplete}
-              onChange={(event, value) => {
-                if (!value || ((typeof value) !== "string")) return;
-                const str = value as string;
-                navigate(`/search?q=${str}`);
-                context.addLocalKeyword(str);
-              }}
-              renderInput={(params) => (
-                <TextField {...params}
-                  inputRef={inputRef}
-                  placeholder={"Search…" + searchBarHint}
-                  InputProps={{
-                    ...params.InputProps,
-                    startAdornment: (
-                      <SearchIcon sx={{ marginRight: "5px" }} />
-                    )
-                  }}
-                  onChange={(e) => {
-                    setSearchBoxText(e.target.value);
-                  }}
-                  onKeyPress={(e) => {
-                    if (e.key === 'Enter') {
-                      if (!searchBoxText) return;
-                      navigate(`/search?q=${searchBoxText}`);
-                      context.addLocalKeyword(searchBoxText);
-                    }
-                  }}
-                />
-              )}
-            />
-          </Search>
+          <Tooltip title={searchBoxText ? "" : searchBarShortcutHint}>
+            <Search sx={{ flexGrow: 1, marginTop: "5px" }}>
+              <Autocomplete
+                id="free-solo-demo"
+                freeSolo
+                filterOptions={filterOptions}
+                options={context.searchBoxAutoComplete}
+                onChange={(event, value) => {
+                  if (!value || ((typeof value) !== "string")) return;
+                  const str = value as string;
+                  navigate(`/search?q=${str}`);
+                  context.addLocalKeyword(str);
+                }}
+                renderInput={(params) => (
+                  <TextField {...params}
+                    value={searchBoxText}
+                    onFocus={() => {
+                      setSearchBarShortcutHint("");
+                    }}
+                    onBlur={() => {
+                      setSearchBarShortcutHint(hint);
+                    }}
+                    inputRef={inputRef}
+                    placeholder={"Search…"}
+                    InputProps={{
+                      ...params.InputProps,
+                      startAdornment: (
+                        <SearchIcon sx={{ marginRight: "5px" }} />
+                      )
+                    }}
+                    onChange={(e) => {
+                      setSearchBoxText(e.target.value);
+                    }}
+                    onKeyPress={(e) => {
+                      if (e.key === 'Enter') {
+                        if (!searchBoxText) return;
+                        navigate(`/search?q=${searchBoxText}`);
+                        context.addLocalKeyword(searchBoxText);
+                      }
+                    }}
+                  />
+                )}
+              />
+            </Search>
+          </Tooltip>
           <TopBarAvatar />
         </Toolbar>
       </AppBar>
