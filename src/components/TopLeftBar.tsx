@@ -334,7 +334,6 @@ const TopLeftBar: React.FC<{
                   if (str.startsWith("!Ask: ") && context.loggedUser) {
                     const question = str.slice("!Ask: ".length);
                     handleAskBtnClick(question);
-                    context.addLocalKeyword(str);
                   } else {
                     navigate(`/search?q=${str}`);
                     context.addLocalKeyword(str);
