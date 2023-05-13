@@ -218,7 +218,9 @@ const TopLeftBar: React.FC<{
     const { inputValue } = state;
     const result = defaultFilterOptions(options, state).slice(0, OPTIONS_LIMIT);
     if (inputValue !== "") {
-      result.push("!Ask: " + inputValue);
+      if (context.loggedUser) {
+        result.push("!Ask: " + inputValue);
+      }
     }
     return result;
   };
@@ -325,7 +327,7 @@ const TopLeftBar: React.FC<{
                 onChange={(event, value) => {
                   if (!value || ((typeof value) !== "string")) return;
                   const str = value as string;
-                  if (str.startsWith("!Ask: ")) {
+                  if (str.startsWith("!Ask: ") && context.loggedUser) {
                     const question = str.slice("!Ask: ".length);
                     handleAskBtnClick(question);
                   } else {
