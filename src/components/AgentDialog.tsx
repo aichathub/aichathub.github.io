@@ -78,7 +78,7 @@ const AgentDialog: React.FC<{
         </InputLabel>
         <Select
           style={{ paddingTop: "10px", paddingBottom: "10px" }}
-          defaultValue={"none"}
+          defaultValue={"gpt3.5"}
           value={agent}
           onChange={(event) => {
             setAgent(event.target.value as Agent);
