@@ -1,6 +1,7 @@
 import { Grid, Tooltip } from "@material-ui/core";
 import AddIcon from "@mui/icons-material/Add";
 import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
+import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import DarkModeIcon from '@mui/icons-material/DarkMode';
@@ -12,7 +13,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import PersonIcon from '@mui/icons-material/Person';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import SearchIcon from "@mui/icons-material/Search";
-import { Autocomplete, Box, FilterOptionsState, TextField } from "@mui/material";
+import { Autocomplete, Box, CircularProgress, FilterOptionsState, TextField } from "@mui/material";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import { createFilterOptions } from '@mui/material/Autocomplete';
 import Divider from "@mui/material/Divider";
@@ -32,7 +33,7 @@ import { useMatch, useNavigate, useParams, useSearchParams } from "react-router-
 import { DummyPostModel } from "../models/DummyPostModel";
 import { PostModel } from "../models/PostModel";
 import { AppContext } from "../store/AppContext";
-import { findPostsByAuthoremail, getPostByUsernameAndPid } from "../util/db";
+import { chatgptReply, findPostsByAuthoremail, getPostByUsernameAndPid, insertMessage, insertPostByUsernameAndTitle } from "../util/db";
 import DrawerHeader from "./DrawerHeader";
 import LeftBarPostItem from "./LeftBarPostItem";
 import NewPostDialog from "./NewPostDialog";
@@ -119,6 +120,7 @@ const TopLeftBar: React.FC<{
   const isOnSearchPage = useMatch("/search");
   const [searchParams,] = useSearchParams();
   const [isAtTop, setIsAtTop] = useState(true);
+  const [isAskingQuestion, setIsAskingQuestion] = useState(false);
   let hint = "";
 
   const [searchBoxText, setSearchBoxText] = useState((isOnSearchPage && searchParams.get("q")) ? searchParams.get("q") : "");
@@ -209,12 +211,62 @@ const TopLeftBar: React.FC<{
     window.addEventListener("keydown", keyDownHandler);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
-  const OPTIONS_LIMIT = 7;
+  const OPTIONS_LIMIT = 5;
   const defaultFilterOptions = createFilterOptions();
 
   const filterOptions = (options: unknown[], state: FilterOptionsState<unknown>) => {
-    return defaultFilterOptions(options, state).slice(0, OPTIONS_LIMIT);
+    const { inputValue } = state;
+    const result = defaultFilterOptions(options, state).slice(0, OPTIONS_LIMIT);
+    if (inputValue !== "") {
+      result.push("!Ask: " + inputValue);
+    }
+    return result;
   };
+
+  const handleAskBtnClick = async (question: string) => {
+    setIsAskingQuestion(true);
+    const response = await insertPostByUsernameAndTitle(
+      context.loggedUser,
+      question,
+      context.auth.token,
+      [],
+      false
+    );
+    if (response.message !== "SUCCESS") {
+      context.showSnack(response.message);
+      setIsAskingQuestion(false);
+      return;
+    }
+    const post = response.result;
+    const insertResponse = await insertMessage({
+      username: context.loggedUser,
+      pid: post.pid,
+      content: question,
+      token: context.auth.token,
+      triggerAI: false,
+      authoremail: context.auth.loggedEmail,
+      triggerPython: false
+    });
+    if (insertResponse.message !== "SUCCESS") {
+      context.showSnack(insertResponse.message);
+      setIsAskingQuestion(false);
+      return;
+    }
+    context.showSnack("Your question has been posted. The AI will reply to you soon.");
+    const replyResponse = await chatgptReply(post.pid, post.username, context.auth.token, false);
+    if (replyResponse.message.indexOf("ERROR") === -1) {
+      context.addDailyAIUsuage();
+    } else {
+      context.showSnack(replyResponse.message);
+      setIsAskingQuestion(false);
+      return;
+    }
+    setIsAskingQuestion(false);
+    context.setLastPostsRefresh(new Date());
+    context.setMessages([]);
+    navigate(`/${context.loggedUser}/${response.result.pid}`);
+  }
+
   return (
     <Grid className={`${shouldHide ? classes.hide : classes.show}`}>
       <AppBar
@@ -262,22 +314,30 @@ const TopLeftBar: React.FC<{
                   return (
                     <Box component="li" {...props}>
                       {
-                        optionStr.startsWith("@") ? <PersonIcon sx={{ marginRight: "5px" }} /> : <SearchIcon sx={{ marginRight: "5px" }} />
+                        optionStr.startsWith("@") ? <PersonIcon sx={{ marginRight: "5px" }} /> :
+                          optionStr.startsWith("!Ask") ? <ChatBubbleOutlineIcon sx={{ marginRight: "5px" }} /> :
+                            <SearchIcon sx={{ marginRight: "5px" }} />
                       }
-                      {optionStr}
+                      {optionStr.startsWith("!") ? optionStr.slice(1) : optionStr}
                     </Box>
                   );
                 }}
                 onChange={(event, value) => {
                   if (!value || ((typeof value) !== "string")) return;
                   const str = value as string;
-                  navigate(`/search?q=${str}`);
+                  if (str.startsWith("!Ask: ")) {
+                    const question = str.slice("!Ask: ".length);
+                    handleAskBtnClick(question);
+                  } else {
+                    navigate(`/search?q=${str}`);
+                  }
                   context.addLocalKeyword(str);
                 }}
                 renderInput={(params) => (
                   <TextField {...params}
                     value={searchBoxText}
-                    onFocus={() => {
+                    onFocus={event => {
+                      event.target.select();
                       setSearchBarShortcutHint("");
                     }}
                     onBlur={() => {
@@ -288,7 +348,7 @@ const TopLeftBar: React.FC<{
                     InputProps={{
                       ...params.InputProps,
                       startAdornment: (
-                        <SearchIcon sx={{ marginRight: "5px" }} />
+                        isAskingQuestion ? <CircularProgress size={20} color="inherit" /> : <SearchIcon sx={{ marginRight: "5px" }} />
                       )
                     }}
                     onChange={(e) => {

@@ -115,7 +115,7 @@ export const MessageInput: React.FC<{
         props.reloadMessage();
         if (triggerAI) {
           const isGpt4 = context.agent === "gpt4";
-          const result: any = await chatgptReply(props.postid, props.username, context.auth.token, isGpt4);
+          const result = await chatgptReply(props.postid, props.username, context.auth.token, isGpt4);
           if (result.message.indexOf("ERROR") === -1) {
             let rep = isGpt4 ? 10 : 1;
             for (let i = 0; i < rep; i++) {
