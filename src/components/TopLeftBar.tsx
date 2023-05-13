@@ -33,6 +33,7 @@ import { useMatch, useNavigate, useParams, useSearchParams } from "react-router-
 import { DummyPostModel } from "../models/DummyPostModel";
 import { PostModel } from "../models/PostModel";
 import { AppContext } from "../store/AppContext";
+import { GUEST_EMAIL, GUEST_USERNAME } from "../util/constants";
 import { chatgptReply, findPostsByAuthoremail, getPostByUsernameAndPid, insertMessage, insertPostByUsernameAndTitle } from "../util/db";
 import DrawerHeader from "./DrawerHeader";
 import LeftBarPostItem from "./LeftBarPostItem";
@@ -221,9 +222,9 @@ const TopLeftBar: React.FC<{
       result.push(inputValue);
     }
     if (inputValue.trim() !== "" && !inputValue.trim().startsWith("@") && !inputValue.trim().startsWith("!")) {
-      if (context.loggedUser) {
-        result.push("!Ask: " + inputValue);
-      }
+      // if (context.loggedUser) {
+      result.push("!Ask: " + inputValue);
+      // }
     }
     return result;
   };
@@ -231,29 +232,29 @@ const TopLeftBar: React.FC<{
   const handleAskBtnClick = async (question: string) => {
     setIsAskingQuestion(true);
     const response = await insertPostByUsernameAndTitle(
-      context.loggedUser,
+      context.loggedUser ? context.loggedUser : GUEST_USERNAME,
       question,
       context.auth.token,
       [],
-      true
+      context.loggedUser ? true : false,
     );
     if (response.message !== "SUCCESS") {
-      context.showSnack(response.message);
+      context.showSnack("INSERT POST: " + response.message);
       setIsAskingQuestion(false);
       return;
     }
     const post = response.result;
     const insertResponse = await insertMessage({
-      username: context.loggedUser,
+      username: context.loggedUser ? context.loggedUser : GUEST_USERNAME,
       pid: post.pid,
       content: question,
       token: context.auth.token,
       triggerAI: false,
-      authoremail: context.auth.loggedEmail,
+      authoremail: context.auth.loggedEmail ? context.auth.loggedEmail : GUEST_EMAIL,
       triggerPython: false
     });
     if (insertResponse.message !== "SUCCESS") {
-      context.showSnack(insertResponse.message);
+      context.showSnack("INSERT MESSAGE: " + insertResponse.message);
       setIsAskingQuestion(false);
       return;
     }
@@ -262,14 +263,14 @@ const TopLeftBar: React.FC<{
     if (replyResponse.message.indexOf("ERROR") === -1) {
       context.addDailyAIUsuage();
     } else {
-      context.showSnack(replyResponse.message);
+      context.showSnack("CHATREPLY: " + replyResponse.message);
       setIsAskingQuestion(false);
       return;
     }
     setIsAskingQuestion(false);
     context.setLastPostsRefresh(new Date());
     context.setMessages([]);
-    navigate(`/${context.loggedUser}/${response.result.pid}`);
+    navigate(`/${context.loggedUser ? context.loggedUser : GUEST_USERNAME}/${response.result.pid}`);
   }
 
   return (
@@ -331,7 +332,7 @@ const TopLeftBar: React.FC<{
                 onChange={(event, value) => {
                   if (!value || ((typeof value) !== "string")) return;
                   const str = value as string;
-                  if (str.startsWith("!Ask: ") && context.loggedUser) {
+                  if (str.startsWith("!Ask: ")) {
                     const question = str.slice("!Ask: ".length);
                     handleAskBtnClick(question);
                   } else {

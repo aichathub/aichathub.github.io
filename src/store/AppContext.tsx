@@ -395,6 +395,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
     });
   }
   const addLocalKeyword = (keyword: string) => {
+    if (keyword.startsWith("!")) return;
     const localKeywords = localStorage.getItem("keywords");
     if (localKeywords) {
       const localKeywordsObj = JSON.parse(localKeywords) as string[];
