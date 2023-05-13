@@ -217,7 +217,7 @@ const TopLeftBar: React.FC<{
   const filterOptions = (options: unknown[], state: FilterOptionsState<unknown>) => {
     const { inputValue } = state;
     const result = defaultFilterOptions(options, state).slice(0, OPTIONS_LIMIT);
-    if (inputValue.trim() !== "" && options.indexOf(inputValue) === -1) {
+    if (inputValue.trim() !== "" && options.length === 0) {
       result.push(inputValue);
     }
     if (inputValue.trim() !== "" && !inputValue.trim().startsWith("@") && !inputValue.trim().startsWith("!")) {
