@@ -217,7 +217,7 @@ const TopLeftBar: React.FC<{
   const filterOptions = (options: unknown[], state: FilterOptionsState<unknown>) => {
     const { inputValue } = state;
     const result = defaultFilterOptions(options, state).slice(0, OPTIONS_LIMIT);
-    if (inputValue.trim() !== "") {
+    if (inputValue.trim() !== "" && !inputValue.trim().startsWith("@") && !inputValue.trim().startsWith("!")) {
       result.push("!Search: " + inputValue);
       if (context.loggedUser) {
         result.push("!Ask: " + inputValue);
