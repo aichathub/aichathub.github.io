@@ -217,8 +217,10 @@ const TopLeftBar: React.FC<{
   const filterOptions = (options: unknown[], state: FilterOptionsState<unknown>) => {
     const { inputValue } = state;
     const result = defaultFilterOptions(options, state).slice(0, OPTIONS_LIMIT);
+    if (inputValue.trim() !== "") {
+      result.push(inputValue);
+    }
     if (inputValue.trim() !== "" && !inputValue.trim().startsWith("@") && !inputValue.trim().startsWith("!")) {
-      result.push("!Search: " + inputValue);
       if (context.loggedUser) {
         result.push("!Ask: " + inputValue);
       }
@@ -333,11 +335,6 @@ const TopLeftBar: React.FC<{
                     const question = str.slice("!Ask: ".length);
                     handleAskBtnClick(question);
                     context.addLocalKeyword(str);
-                  } else if (str.startsWith("!Search: ")) {
-                    const realSearch = str.slice("!Search: ".length);
-                    navigate(`/search?q=${realSearch}`);
-                    setSearchBoxText(realSearch);
-                    context.addLocalKeyword(realSearch);
                   } else {
                     navigate(`/search?q=${str}`);
                     context.addLocalKeyword(str);
