@@ -342,6 +342,7 @@ const TopLeftBar: React.FC<{
                 renderInput={(params) => (
                   <TextField {...params}
                     value={searchBoxText}
+                    autoFocus
                     onFocus={event => {
                       event.target.select();
                       setSearchBarShortcutHint("");
