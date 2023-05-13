@@ -312,6 +312,7 @@ const TopLeftBar: React.FC<{
                 filterOptions={filterOptions}
                 options={context.searchBoxAutoComplete}
                 autoComplete={true}
+                value={searchBoxText}
                 renderOption={(props, option) => {
                   const optionStr = option as string;
                   return (
@@ -331,12 +332,16 @@ const TopLeftBar: React.FC<{
                   if (str.startsWith("!Ask: ") && context.loggedUser) {
                     const question = str.slice("!Ask: ".length);
                     handleAskBtnClick(question);
+                    context.addLocalKeyword(str);
                   } else if (str.startsWith("!Search: ")) {
-                    navigate(`/search?q=${str.slice("!Search: ".length)}`);
+                    const realSearch = str.slice("!Search: ".length);
+                    navigate(`/search?q=${realSearch}`);
+                    setSearchBoxText(realSearch);
+                    context.addLocalKeyword(realSearch);
                   } else {
                     navigate(`/search?q=${str}`);
+                    context.addLocalKeyword(str);
                   }
-                  context.addLocalKeyword(str);
                 }}
                 renderInput={(params) => (
                   <TextField {...params}
