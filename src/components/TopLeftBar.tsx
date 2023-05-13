@@ -235,7 +235,7 @@ const TopLeftBar: React.FC<{
       question,
       context.auth.token,
       [],
-      false
+      true
     );
     if (response.message !== "SUCCESS") {
       context.showSnack(response.message);
