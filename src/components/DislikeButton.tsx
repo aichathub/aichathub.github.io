@@ -1,6 +1,7 @@
 import { Box } from "@material-ui/core";
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import ThumbDownOffAltIcon from '@mui/icons-material/ThumbDownOffAlt';
+import { Tooltip } from "@mui/material";
 import { useContext } from "react";
 import { AppContext } from "../store/AppContext";
 
@@ -11,7 +12,7 @@ const DislikeButton: React.FC<{
 }> = (props) => {
   const context = useContext(AppContext);
   const isLogged = context.auth.loggedEmail !== null;
-  return <Box style={{
+  return <Tooltip title="Dislike"><Box style={{
     display: "flex",
     alignItems: "center",
     flexWrap: "wrap",
@@ -20,6 +21,6 @@ const DislikeButton: React.FC<{
     {props.disliked && <ThumbDownIcon />}
     {!props.disliked && <ThumbDownOffAltIcon />}
     <span style={{ color: props.disliked ? (context.darkMode ? '#fff' : '#000') : '#777', fontSize: "17px" }}>{props.dislikeCount === -1 ? '-' : props.dislikeCount}</span>
-  </Box>;
+  </Box></Tooltip>;
 }
 export default DislikeButton;
