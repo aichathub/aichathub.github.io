@@ -352,7 +352,7 @@ const TopLeftBar: React.FC<{
                       setSearchBarShortcutHint(hint);
                     }}
                     inputRef={inputRef}
-                    placeholder={"Search…"}
+                    placeholder={"Search/Ask anything…"}
                     InputProps={{
                       ...params.InputProps,
                       startAdornment: (
