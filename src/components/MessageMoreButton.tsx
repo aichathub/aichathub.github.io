@@ -94,7 +94,7 @@ const MessageMoreButton: React.FC<{
         msgEl.scrollIntoView({
           behavior: "smooth",
         });
-        window.location.href.split('#')[0];
+        history.replaceState({}, "", window.location.href.split('#')[0]);
       }
       handleSpeak();
     }
