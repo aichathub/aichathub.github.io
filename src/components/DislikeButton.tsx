@@ -11,7 +11,7 @@ const DislikeButton: React.FC<{
   handleDislikeBtnClick: () => void;
 }> = (props) => {
   const context = useContext(AppContext);
-  const isLogged = context.auth.loggedEmail !== null;
+  const isLogged = context.loggedUser && context.loggedUser.length > 0;
   return <Tooltip title="Dislike"><Box style={{
     display: "flex",
     alignItems: "center",
