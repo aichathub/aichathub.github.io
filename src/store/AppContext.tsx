@@ -1,8 +1,9 @@
-import { Box, createTheme, CssBaseline, ThemeProvider } from "@mui/material";
+import ForkLeftIcon from '@mui/icons-material/ForkLeft';
+import { Box, Button, CircularProgress, createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 import Snackbar from '@mui/material/Snackbar';
 import { styled } from "@mui/material/styles";
-import { createContext, ReactNode, useCallback, useEffect, useState } from "react";
-import { useMatch } from "react-router-dom";
+import React, { createContext, ReactNode, useCallback, useEffect, useState } from 'react';
+import { useMatch, useNavigate } from "react-router-dom";
 import Alert from "../components/Alert";
 import DrawerHeader from "../components/DrawerHeader";
 import MainLoading from "../components/MainLoading";
@@ -13,7 +14,7 @@ import { LocalPostModel } from "../models/LocalPostModel";
 import { MessageModel } from "../models/MessageModel";
 import { PostModel } from "../models/PostModel";
 import { TagModel } from "../models/TagModel";
-import { findTopKSearch, getCustomModelName, getDailyAILimit, getTags, getTodayAIUsage, verify } from "../util/db";
+import { findTopKSearch, forkPost, getCustomModelName, getDailyAILimit, getTags, getTodayAIUsage, verify } from "../util/db";
 import useDidMountEffect from "../util/useDidMountEffect";
 
 type AuthObj = {
@@ -56,6 +57,7 @@ type AppContextObj = {
   yourmodelName: string;
   isYourmodelConnected: boolean;
   searchBoxAutoComplete: string[];
+  isForking: boolean;
 
   addLocalKeyword: (keyword: string) => void;
   pingYourmodel: () => Promise<boolean>;
@@ -98,7 +100,7 @@ type AppContextObj = {
   changeAuth: (authObj: AuthObj) => void;
   deletePostById: (postId: string) => void;
   updatePost: (post: LocalPostModel) => void;
-  showSnack: (message: string) => void;
+  showSnack: (message: string, action?: ReactNode) => void;
   setLoggedUser: (loggedUser: string) => void;
 };
 
@@ -140,6 +142,7 @@ export const AppContext = createContext<AppContextObj>({
   yourmodelName: "",
   isYourmodelConnected: false,
   searchBoxAutoComplete: [],
+  isForking: false,
 
   addLocalKeyword: () => { },
   pingYourmodel: () => Promise.resolve(false),
@@ -246,6 +249,8 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
   const [yourmodelName, setYourmodelName] = useState(localStorage.getItem("yourmodelName") || "");
   const [isYourmodelConnected, setIsYourmodelConnected] = useState(false);
   const [searchBoxAutoComplete, setSearchBoxAutoComplete] = useState<string[]>([]);
+  const [isForking, setIsForking] = useState(false);
+  const [snackAction, setSnackAction] = useState<ReactNode>(undefined);
 
   const isOnPostPage = useMatch("/:username/:postid");
   const hasRightToSendMsg = isOnPostPage && curPost && curPost.username === loggedUser;
@@ -330,8 +335,9 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
     };
     setPosts(prevState => [...prevState, newPost]);
   };
-  const showSnack = (message: string) => {
+  const showSnack = (message: string, action?: ReactNode) => {
     setIsSnackShown(true);
+    setSnackAction(action);
     setSnackMessage(message);
   }
   const snackOnClose = () => {
@@ -438,6 +444,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
     yourmodelName: yourmodelName,
     isYourmodelConnected: isYourmodelConnected,
     searchBoxAutoComplete: searchBoxAutoComplete,
+    isForking: isForking,
 
     addLocalKeyword: addLocalKeyword,
     pingYourmodel: pingYourmodel,
@@ -626,11 +633,57 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
     return "info";
   }
 
+  const navigate = useNavigate();
+
+  const handleSigninClick = () => {
+    window.location.href = "/signin?redirect=" + window.location.href;
+  }
+
+  const handleSignupClick = () => {
+    window.location.href = "/signup?redirect=" + window.location.href;
+  }
+
+  const action = (
+    <React.Fragment>
+      <Button color="secondary" size="small" onClick={handleSigninClick}>
+        SIGNIN
+      </Button>
+      <Button color="secondary" size="small" onClick={handleSignupClick}>
+        SIGNUP
+      </Button>
+    </React.Fragment>
+  );
+
+  const handleAskFollowupClick = () => {
+    if (loggedUser === "") {
+      showSnack("Join for free to ask follow-ups", action);
+      return;
+    }
+    if (!curPost) {
+      showSnack("Error: Please select a post first");
+      return;
+    }
+    setIsForking(true);
+    forkPost(curPost.username, curPost.pid, auth.loggedEmail, auth.token).then((response) => {
+      setLastPostsRefresh(new Date());
+      showSnack("FORKED: " + response.message);
+      if (response.message === "SUCCESS") {
+        const result = response.result as PostModel;
+        setMessages([]);
+        navigate(`/${loggedUser}/${result.pid}`);
+      }
+      setIsForking(false);
+    });
+  }
+
   const theme = createTheme({
     palette: {
       mode: darkMode ? 'dark' : 'light',
     },
   });
+
+  const showInputMessage = hasRightToSendMsg && !isLoadingMessages;
+  const showAskFollowupButton = !showInputMessage && isOnPostPage && curPost;
 
   const mainBody = <Box sx={{ display: isInitializing ? "none" : "flex", marginBottom: "30px" }}>
     <CssBaseline />
@@ -654,20 +707,30 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
       }}
     >
       <ScrollButton />
-      {hasRightToSendMsg && !isLoadingMessages && <MessageInput username={isOnPostPage.params.username!} postid={isOnPostPage.params.postid!} addMessage={addMessage} reloadMessage={() => {
+      {showInputMessage && <MessageInput username={isOnPostPage.params.username!} postid={isOnPostPage.params.postid!} addMessage={addMessage} reloadMessage={() => {
         setLastMessagesRefresh(new Date());
       }} />}
+      {showAskFollowupButton && <Box textAlign="center" style={{ marginBottom: "5px" }}>
+        {isForking ? <CircularProgress size={20} color="inherit" style={{ marginBottom: "-2px" }} /> : <ForkLeftIcon fontSize="small" style={{ marginBottom: "-2px" }} />}
+        <Button variant="text" color="error" onClick={handleAskFollowupClick}>
+          Ask follow-up questions
+        </Button>
+      </Box>}
     </footer>
   </Box>;
 
   return (
     <AppContext.Provider value={contextValue}>
       <ThemeProvider theme={theme}>
-        <Snackbar open={isSnackShown} autoHideDuration={4000} onClose={snackOnClose}>
-          <Alert onClose={snackOnClose} severity={getSeverity(snackMessage)} sx={{ width: '100%' }}>
-            {snackMessage}
-          </Alert>
-        </Snackbar>
+        {
+          !snackAction ?
+            <Snackbar open={isSnackShown} autoHideDuration={4000} onClose={snackOnClose}>
+              <Alert onClose={snackOnClose} severity={getSeverity(snackMessage)} sx={{ width: '100%' }}>
+                {snackMessage}
+              </Alert>
+            </Snackbar> :
+            <Snackbar open={isSnackShown} message={snackMessage} autoHideDuration={4000} onClose={snackOnClose} action={action} />
+        }
         {isInitializing && <MainLoading darkMode={darkMode} />}
         {mainBody}
       </ThemeProvider>
