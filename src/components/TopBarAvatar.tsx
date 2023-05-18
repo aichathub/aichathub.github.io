@@ -28,6 +28,7 @@ const TopBarAvatar = () => {
 
   const handleSignOutClick = () => {
     context.changeAuth(EMPTY_AUTH);
+    context.setLoggedUser("");
     handleClose();
     context.showSnack("Signed Out");
   }
