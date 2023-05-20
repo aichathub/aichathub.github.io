@@ -706,7 +706,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
         paddingLeft: (topLeftBarOpen ? drawerWidth : 0) + "px",
       }}
     >
-      <ScrollButton />
+      {!showAskFollowupButton && <ScrollButton />}
       {showInputMessage && <MessageInput username={isOnPostPage.params.username!} postid={isOnPostPage.params.postid!} addMessage={addMessage} reloadMessage={() => {
         setLastMessagesRefresh(new Date());
       }} />}
