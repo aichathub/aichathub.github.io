@@ -96,8 +96,10 @@ const Message: React.FC<{
       }}
     />
     <Button variant="text" onClick={() => {
-      setContent(editedMsg.replaceAll("\n", "\n\n"));
+      const newContent = editedMsg.replaceAll("\n", "\n\n");
+      setContent(newContent);
       props.message.editdate = new Date();
+      props.message.content = newContent;
       editMessage(props.message.mid, context.auth.loggedEmail, context.auth.token, editedMsg).then(res => {
         context.showSnack(res.message);
       });
