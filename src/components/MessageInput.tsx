@@ -66,7 +66,7 @@ export const MessageInput: React.FC<{
       // const triggerPython = content.toLowerCase().indexOf("@python") !== -1;
       const triggerAI = context.agent === "gpt3.5" || context.agent === "gpt4";
       const triggerPython = context.agent === "python";
-      if (triggerAI && context.dailyAILimit === context.dailyAIUsuage) {
+      if (triggerAI && context.dailyAILimit >= context.dailyAIUsuage) {
         context.showSnack("Opps, Seems you have reached your daily @AI limit! Let's continue tomorrow!");
         return;
       }
@@ -105,7 +105,7 @@ export const MessageInput: React.FC<{
         pid: props.postid,
         content: content,
         token: context.auth.token,
-        triggerAI: false,
+        triggerAI: triggerAI,
         authoremail: context.auth.loggedEmail,
         socketId: optionalSocketId,
         triggerPython: false
