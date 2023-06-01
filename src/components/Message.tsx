@@ -89,6 +89,7 @@ const Message: React.FC<{
   }
   const editor = <>
     <TextField multiline
+      autoFocus
       value={editedMsg}
       style={{ width: "100%" }}
       onChange={(e) => {
