@@ -40,6 +40,7 @@ import LeftBarPostItem from "./LeftBarPostItem";
 import NewPostDialog from "./NewPostDialog";
 import TopBarAvatar from "./TopBarAvatar";
 import classes from "./TopLeftBar.module.css";
+import GitHubIcon from "@mui/icons-material/GitHub";
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
 }
@@ -178,6 +179,10 @@ const TopLeftBar: React.FC<{
     context.setDarkMode(!context.darkMode);
     localStorage.setItem("darkMode", (!context.darkMode).toString());
   };
+  const handleGithubBtnClick = () => {
+    const url = "https://www.github.com/aichathub/aichathub.github.io";
+    window.open(url, "_blank");
+  }
   const newPostForm = <NewPostDialog handleClose={handleNewPostFormClose} />
   let menuBtnHint = "Sidebar";
   const platform = (navigator?.platform || 'unknown').toLowerCase();
@@ -502,6 +507,19 @@ const TopLeftBar: React.FC<{
               <ListItemText
                 primary={context.darkMode ? "Light Theme" : "Dark Theme (Beta)"}
                 onClick={handleThemeBtnClick}
+              />
+            </ListItemButton>
+          </ListItem>
+          <ListItem disablePadding>
+            <ListItemButton>
+              <ListItemIcon>
+                {
+                  <GithubIcon />
+                }
+              </ListItemIcon>
+              <ListItemText
+                primary={"Source Code"}
+                onClick={handleGithubBtnClick}
               />
             </ListItemButton>
           </ListItem>
