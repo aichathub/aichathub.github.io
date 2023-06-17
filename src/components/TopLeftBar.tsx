@@ -6,6 +6,7 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
+import GitHubIcon from "@mui/icons-material/GitHub";
 import HomeIcon from '@mui/icons-material/Home';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import LoginIcon from '@mui/icons-material/Login';
@@ -40,7 +41,6 @@ import LeftBarPostItem from "./LeftBarPostItem";
 import NewPostDialog from "./NewPostDialog";
 import TopBarAvatar from "./TopBarAvatar";
 import classes from "./TopLeftBar.module.css";
-import GitHubIcon from "@mui/icons-material/GitHub";
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
 }
@@ -514,7 +514,7 @@ const TopLeftBar: React.FC<{
             <ListItemButton>
               <ListItemIcon>
                 {
-                  <GithubIcon />
+                  <GitHubIcon />
                 }
               </ListItemIcon>
               <ListItemText
