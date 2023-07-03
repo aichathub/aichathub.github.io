@@ -434,7 +434,8 @@ const TopLeftBar: React.FC<{
         {!context.isLeftBarPostLoading && context.auth.loggedEmail && posts.length > 0 && (
           <List sx={{
             maxHeight: window.innerHeight - 200,
-            overflow: 'auto'
+            overflowY: 'auto',
+            overflowX: 'hidden'
           }}>
             {posts.map((post) => (
               <LeftBarPostItem key={post.pid + "/" + post.username} post={post} removePost={removePost} />
