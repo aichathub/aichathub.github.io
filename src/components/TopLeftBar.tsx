@@ -421,7 +421,8 @@ const TopLeftBar: React.FC<{
           <List
             sx={{
               maxHeight: window.innerHeight - 200,
-              overflow: 'auto'
+              overflowY: 'auto',
+              overflowX: 'hidden'
             }}
           >
             {Array.from(new Array(posts.length === 0 ? 7 : posts.length)).map((_, index) => (
