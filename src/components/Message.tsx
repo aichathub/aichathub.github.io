@@ -12,7 +12,7 @@ import remarkGfm from "remark-gfm";
 import { MessageModel } from "../models/MessageModel";
 import { AppContext } from "../store/AppContext";
 import { generateColor } from "../util/avatarColor";
-import { editMessage } from "../util/db";
+import { editMessage, uploadImage } from "../util/db";
 import CodeBlock from "./CodeBlock";
 import LikeDislikePanel from "./LikeDislikePanel";
 import classes from "./Message.module.css";
@@ -87,6 +87,29 @@ const Message: React.FC<{
   if (justNow(props.message.time)) {
     timeText = <Typography variant="overline" color="common.grey">Now</Typography>;
   }
+  const handleEditOnPaste = async (e: React.ClipboardEvent) => {
+    const items = e.clipboardData.items;
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+      if (item.kind === "file") {
+        const response = await uploadImage(item);
+        if (response.message !== "SUCCESS") {
+          context.showSnack(response.message);
+          return;
+        }
+        const data = response.result.data;
+        setEditedMsg(editedMsg + `![${data.id}](${data.media})`)
+        let imgInMarkDown = `![${data.id}](${data.media})`;
+        const inputElement = document.activeElement as HTMLInputElement | HTMLTextAreaElement;
+        const cursorPos = inputElement.selectionStart!;
+        const textBeforeCursorPosition = editedMsg.substring(0, cursorPos);
+        const textAfterCursorPosition = editedMsg.substring(cursorPos);
+        if (textBeforeCursorPosition.length > 0) imgInMarkDown = " " + imgInMarkDown;
+        if (textAfterCursorPosition.length > 0) imgInMarkDown += " ";
+        setEditedMsg(textBeforeCursorPosition + imgInMarkDown + textAfterCursorPosition);
+      }
+    }
+  }
   const editor = <>
     <TextField multiline
       autoFocus
@@ -95,6 +118,7 @@ const Message: React.FC<{
       onChange={(e) => {
         setEditedMsg(e.target.value);
       }}
+      onPaste={handleEditOnPaste}
     />
     <Button variant="text" onClick={() => {
       const newContent = editedMsg.replaceAll("\n", "\n\n");

@@ -7,7 +7,7 @@ import { IconButton, TextField } from "@mui/material";
 import React, { KeyboardEvent, useContext, useEffect, useRef, useState } from "react";
 import { MessageModel } from "../models/MessageModel";
 import { AppContext } from "../store/AppContext";
-import { chatgptReply, customModelReply, insertMessage, pythonReply } from "../util/db";
+import { chatgptReply, customModelReply, insertMessage, pythonReply, uploadImage } from "../util/db";
 import MessageInputSettings from "./MessageInputSettings";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -171,6 +171,28 @@ export const MessageInput: React.FC<{
       event.preventDefault();
     }
   }
+  const handlePaste = async (e: React.ClipboardEvent) => {
+    const items = e.clipboardData.items;
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+      if (item.kind === "file") {
+        const response = await uploadImage(item);
+        if (response.message !== "SUCCESS") {
+          context.showSnack(response.message);
+          return;
+        }
+        const data = response.result.data;
+        let imgInMarkDown = `![${data.id}](${data.media})`;
+        const inputElement = document.activeElement as HTMLInputElement | HTMLTextAreaElement;
+        const cursorPos = inputElement.selectionStart!;
+        const textBeforeCursorPosition = inputText.substring(0, cursorPos);
+        const textAfterCursorPosition = inputText.substring(cursorPos);
+        if (textBeforeCursorPosition.length > 0) imgInMarkDown = " " + imgInMarkDown;
+        if (textAfterCursorPosition.length > 0) imgInMarkDown += " ";
+        setInputText(textBeforeCursorPosition + imgInMarkDown + textAfterCursorPosition);
+      }
+    }
+  }
   const sendBtn = <Tooltip title={context.isSendingMessage ? "Loading" :
     context.isTypingMessage ? "Stop" : "Send"} arrow>
     <IconButton
@@ -227,6 +249,7 @@ export const MessageInput: React.FC<{
           multiline
           onKeyDownCapture={handleInputOnKeyDown}
           onKeyUpCapture={handleInputOnKeyUp}
+          onPaste={handlePaste}
           InputProps={{
             endAdornment: (
               <IconButton

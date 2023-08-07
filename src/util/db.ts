@@ -671,3 +671,18 @@ export const findTopKSearch = async (k: number, loggedUser?: string, token?: str
   const responseJson = await response.json();
   return responseJson;
 };
+
+export const uploadImage = async (item: DataTransferItem) => {
+  const blob = item.getAsFile();
+  if (!blob) {
+    throw new Error("No file selected");
+  }
+  const data = new FormData();
+  data.append("file", blob);
+  const response = await fetch(`${backendServer}/upload`, {
+    method: "POST",
+    body: data,
+  });
+  const responseData = await response.json();
+  return responseData;
+}
