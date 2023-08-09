@@ -275,6 +275,7 @@ const Message: React.FC<{
                   remarkPlugins={[remarkGfm]}
                   children={content + ((content.length < props.message.content.length && context.isTypingMessage) ? "▌" : "")}
                   linkTarget="_blank"
+                  renderers={{image: <img {...props} style={{maxWidth: '100%'}} />}}
                   components={{
                     code({ node, inline, className, children, ...props }) {
                       return !inline ? (
