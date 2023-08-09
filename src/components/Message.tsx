@@ -303,7 +303,9 @@ const Message: React.FC<{
                     },
                     img({ node, className, children, ...props }) {
                       return (
-                        <img className={className} style={{maxWidth: "100%"}} />
+                        <img className={className} style={{maxWidth: "100%"}} {...props}>
+                          {children}
+                        </img>
                       )
                     }
                   }}
