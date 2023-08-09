@@ -301,9 +301,9 @@ const Message: React.FC<{
                         </blockquote>
                       )
                     },
-                    image({ node, className, children, ...props }) {
+                    img({ node, className, children, ...props }) {
                       return (
-                        <image className={className} style={{maxWidth: "100%"}} />
+                        <img className={className} style={{maxWidth: "100%"}} />
                       )
                     }
                   }}
