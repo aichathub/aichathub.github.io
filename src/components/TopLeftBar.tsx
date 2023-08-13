@@ -6,12 +6,12 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
-import GitHubIcon from "@mui/icons-material/GitHub";
 import HomeIcon from '@mui/icons-material/Home';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import LoginIcon from '@mui/icons-material/Login';
 import MenuIcon from "@mui/icons-material/Menu";
 import PersonIcon from '@mui/icons-material/Person';
+import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import SearchIcon from "@mui/icons-material/Search";
 import { Autocomplete, Box, CircularProgress, FilterOptionsState, TextField } from "@mui/material";
@@ -179,8 +179,8 @@ const TopLeftBar: React.FC<{
     context.setDarkMode(!context.darkMode);
     localStorage.setItem("darkMode", (!context.darkMode).toString());
   };
-  const handleGithubBtnClick = () => {
-    const url = "https://www.github.com/aichathub/aichathub.github.io";
+  const handleFAQBtnClick = () => {
+    const url = "https://aichathub.app/s/n1vd";
     window.open(url, "_blank");
   }
   const newPostForm = <NewPostDialog handleClose={handleNewPostFormClose} />
@@ -516,12 +516,12 @@ const TopLeftBar: React.FC<{
             <ListItemButton>
               <ListItemIcon>
                 {
-                  <GitHubIcon />
+                  <QuestionAnswerIcon />
                 }
               </ListItemIcon>
               <ListItemText
-                primary={"Source Code"}
-                onClick={handleGithubBtnClick}
+                primary={"FAQ"}
+                onClick={handleFAQBtnClick}
               />
             </ListItemButton>
           </ListItem>
