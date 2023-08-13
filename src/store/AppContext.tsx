@@ -1,8 +1,8 @@
 import ForkLeftIcon from '@mui/icons-material/ForkLeft';
-import { Box, Button, CircularProgress, createTheme, CssBaseline, ThemeProvider } from "@mui/material";
+import { Backdrop, Box, Button, CircularProgress, CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import Snackbar from '@mui/material/Snackbar';
 import { styled } from "@mui/material/styles";
-import React, { createContext, ReactNode, useCallback, useEffect, useState } from 'react';
+import React, { ReactNode, createContext, useCallback, useEffect, useState } from 'react';
 import { useMatch, useNavigate } from "react-router-dom";
 import Alert from "../components/Alert";
 import DrawerHeader from "../components/DrawerHeader";
@@ -58,7 +58,9 @@ type AppContextObj = {
   isYourmodelConnected: boolean;
   searchBoxAutoComplete: string[];
   isForking: boolean;
+  showLoadingBackdrop: boolean;
 
+  setShowLoadingBackdrop: (showLoadingBackdrop: boolean) => void;
   addLocalKeyword: (keyword: string) => void;
   pingYourmodel: () => Promise<boolean>;
   setIsYourmodelConnected: (isYourmodelConnected: boolean) => void;
@@ -143,7 +145,9 @@ export const AppContext = createContext<AppContextObj>({
   isYourmodelConnected: false,
   searchBoxAutoComplete: [],
   isForking: false,
+  showLoadingBackdrop: false,
 
+  setShowLoadingBackdrop: () => { },
   addLocalKeyword: () => { },
   pingYourmodel: () => Promise.resolve(false),
   setIsYourmodelConnected: () => { },
@@ -251,6 +255,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
   const [searchBoxAutoComplete, setSearchBoxAutoComplete] = useState<string[]>([]);
   const [isForking, setIsForking] = useState(false);
   const [snackAction, setSnackAction] = useState<ReactNode>(undefined);
+  const [showLoadingBackdrop, setShowLoadingBackdrop] = useState(false);
 
   const isOnPostPage = useMatch("/:username/:postid");
   const hasRightToSendMsg = isOnPostPage && curPost && curPost.username === loggedUser;
@@ -445,7 +450,9 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
     isYourmodelConnected: isYourmodelConnected,
     searchBoxAutoComplete: searchBoxAutoComplete,
     isForking: isForking,
+    showLoadingBackdrop: showLoadingBackdrop,
 
+    setShowLoadingBackdrop: setShowLoadingBackdrop,
     addLocalKeyword: addLocalKeyword,
     pingYourmodel: pingYourmodel,
     setIsYourmodelConnected: setIsYourmodelConnected,
@@ -719,6 +726,13 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
     </footer>
   </Box>;
 
+  const loadingBackdrop = <Backdrop
+    sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+    open={showLoadingBackdrop}
+  >
+    <CircularProgress color="inherit" />
+  </Backdrop>;
+
   return (
     <AppContext.Provider value={contextValue}>
       <ThemeProvider theme={theme}>
@@ -733,6 +747,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
         }
         {isInitializing && <MainLoading darkMode={darkMode} />}
         {mainBody}
+        {loadingBackdrop}
       </ThemeProvider>
     </AppContext.Provider>
   );

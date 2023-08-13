@@ -92,7 +92,9 @@ const Message: React.FC<{
     for (let i = 0; i < items.length; i++) {
       const item = items[i];
       if (item.kind === "file") {
+        context.setShowLoadingBackdrop(true);
         const response = await uploadImage(item);
+        context.setShowLoadingBackdrop(false);
         if (response.message !== "SUCCESS") {
           context.showSnack(response.message);
           return;
