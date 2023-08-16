@@ -1,11 +1,13 @@
 import { Box, Tooltip } from "@material-ui/core";
-import { Button, Grid, Skeleton, SxProps, TextField, Theme } from "@mui/material";
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import { Button, Grid, IconButton, Skeleton, SxProps, TextField, Theme } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import { deepOrange } from "@mui/material/colors";
 import { ThemeProvider, createTheme, styled } from "@mui/material/styles";
 import { useContext, useEffect, useState } from "react";
+import Collapsible from "react-collapsible";
 import ReactMarkdown from "react-markdown";
 import Timeago from "react-timeago";
 import remarkGfm from "remark-gfm";
@@ -279,13 +281,24 @@ const Message: React.FC<{
                   linkTarget="_blank"
                   components={{
                     code({ node, inline, className, children, ...props }) {
-                      return !inline ? (
+                      const match = /language-(\w+)/.exec(className || "");
+                      const isSecret = match !== null && match[0] === "language-secret";
+                      let content = !inline ? (
                         <CodeBlock content={String(children).replace(/\n\n/g, "\n").replace(/\n$/, '')} />
                       ) : (
                         <code className={className + ` ${classes["inline-code"]}`} {...props} >
                           `{children}`
                         </code>
                       )
+                      if (isSecret) {
+                        const triggerComponent = <IconButton aria-label="view more">
+                          <VisibilityIcon />
+                        </IconButton>;
+                        content = <Collapsible trigger={triggerComponent}>
+                          {content}
+                        </Collapsible>
+                      }
+                      return content
                     },
                     a({ node, className, children, ...props }) {
                       return (
@@ -305,7 +318,7 @@ const Message: React.FC<{
                     },
                     img({ node, className, children, ...props }) {
                       return (
-                        <img className={className} style={{maxWidth: "100%"}} {...props}>
+                        <img className={className} style={{ maxWidth: "100%" }} {...props}>
                           {children}
                         </img>
                       )
