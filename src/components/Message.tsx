@@ -1,6 +1,5 @@
 import { Box, Tooltip } from "@material-ui/core";
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import { Button, Grid, IconButton, Skeleton, SxProps, TextField, Theme } from "@mui/material";
+import { Button, Grid, Skeleton, SxProps, TextField, Theme } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
@@ -20,6 +19,7 @@ import LikeDislikePanel from "./LikeDislikePanel";
 import classes from "./Message.module.css";
 import MessageWrapper from "./MessageWrapper";
 import UserLink from "./UserLink";
+import VisibilityIconToggleButton from "./VisibilityIconToggleButton";
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -291,10 +291,7 @@ const Message: React.FC<{
                         </code>
                       )
                       if (isSecret) {
-                        const triggerComponent = <IconButton aria-label="view more">
-                          <VisibilityIcon />
-                        </IconButton>;
-                        content = <Collapsible trigger={triggerComponent}>
+                        content = <Collapsible trigger={<VisibilityIconToggleButton />}>
                           {content}
                         </Collapsible>
                       }
