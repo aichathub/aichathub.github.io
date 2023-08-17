@@ -25,7 +25,8 @@ const CopyButton: React.FC<{
           cursor: "pointer",
           position: "absolute",
           right: "0px",
-          background: "white",
+          background: "black",
+          opacity: copied ? "0.7" : "0.3"
         }}
         onClick={handleCopyBtnClick}
       >
@@ -33,8 +34,8 @@ const CopyButton: React.FC<{
           variant="contained"
           size="small"
           style={{
-            background: copied ? "black" : "white",
-            color: copied ? "white" : "black",
+            background: copied ? "white" : "black",
+            color: copied ? "black" : "white",
             borderRadius: "0px"
           }}
         >
