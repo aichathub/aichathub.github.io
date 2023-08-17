@@ -5,7 +5,7 @@ import { useState } from "react";
 
 const VisibilityIconToggleButton = () => {
   const [isOpen, setIsOpen] = useState(false);
-  return <Tooltip title={isOpen ? "Hide" : "Read More"} placement="top" arrow>
+  return <Tooltip title={isOpen ? "Hide" : "Read More"} placement="right" arrow>
     <IconButton aria-label="view more" onClick={() => { setIsOpen(prev => !prev) }}>
       {isOpen ? <VisibilityOffIcon /> : <VisibilityIcon />}
     </IconButton>
