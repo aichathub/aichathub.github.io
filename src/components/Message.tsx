@@ -6,20 +6,16 @@ import Typography from "@mui/material/Typography";
 import { deepOrange } from "@mui/material/colors";
 import { ThemeProvider, createTheme, styled } from "@mui/material/styles";
 import { useContext, useEffect, useState } from "react";
-import Collapsible from "react-collapsible";
-import ReactMarkdown from "react-markdown";
 import Timeago from "react-timeago";
-import remarkGfm from "remark-gfm";
 import { MessageModel } from "../models/MessageModel";
 import { AppContext } from "../store/AppContext";
 import { generateColor } from "../util/avatarColor";
 import { editMessage, uploadImage } from "../util/db";
 import CodeBlock from "./CodeBlock";
 import LikeDislikePanel from "./LikeDislikePanel";
-import classes from "./Message.module.css";
+import MarkdownComponent from "./MarkdownComponent";
 import MessageWrapper from "./MessageWrapper";
 import UserLink from "./UserLink";
-import VisibilityIconToggleButton from "./VisibilityIconToggleButton";
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -49,10 +45,6 @@ const Message: React.FC<{
     avatarName = props.message.authorusername.substring(0, 2).toUpperCase();
   }
   const context = useContext(AppContext);
-  const tooLong = props.message.content.length > 2000;
-  const messages = props.message.content.split("```");
-  const trimmedMsg = props.message.content.substring(0, 200).split("```");
-  const [showFullMsg, setShowFullMsg] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editedMsg, setEditedMsg] = useState(props.message.content);
   const justNow = (date: Date, seconds = 60) => {
@@ -275,53 +267,7 @@ const Message: React.FC<{
               }
             </> :
               <>
-                <ReactMarkdown
-                  remarkPlugins={[remarkGfm]}
-                  children={content + ((content.length < props.message.content.length && context.isTypingMessage) ? "▌" : "")}
-                  linkTarget="_blank"
-                  components={{
-                    code({ node, inline, className, children, ...props }) {
-                      const match = /language-(\w+)/.exec(className || "");
-                      const isSecret = match !== null && match[0] === "language-secret";
-                      let content = !inline ? (
-                        <CodeBlock content={String(children).replace(/\n\n/g, "\n").replace(/\n$/, '')} />
-                      ) : (
-                        <code className={className + ` ${classes["inline-code"]}`} {...props} >
-                          `{children}`
-                        </code>
-                      )
-                      if (isSecret) {
-                        content = <Collapsible trigger={<VisibilityIconToggleButton />}>
-                          {content}
-                        </Collapsible>
-                      }
-                      return content
-                    },
-                    a({ node, className, children, ...props }) {
-                      return (
-                        <span className={classes.mdlink}>
-                          <a className={className} {...props}>
-                            {children}
-                          </a>
-                        </span>
-                      )
-                    },
-                    blockquote({ node, className, children, ...props }) {
-                      return (
-                        <blockquote className={classes.blockquote}>
-                          {children}
-                        </blockquote>
-                      )
-                    },
-                    img({ node, className, children, ...props }) {
-                      return (
-                        <img className={className} style={{ maxWidth: "100%" }} {...props}>
-                          {children}
-                        </img>
-                      )
-                    }
-                  }}
-                />
+                <MarkdownComponent content={content} message={props.message} />
                 {props.message.editdate && <Typography variant="overline" color="common.grey" sx={{ fontStyle: 'italic' }}>(Edited)</Typography>}
               </>
           )
