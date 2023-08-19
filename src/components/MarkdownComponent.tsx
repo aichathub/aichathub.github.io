@@ -10,30 +10,36 @@ import VisibilityIconToggleButton from "./VisibilityIconToggleButton";
 
 const MarkdownComponent: React.FC<{
   content: string;
-  message: MessageModel;
+  message?: MessageModel;
 }> = (props) => {
   const context = useContext(AppContext);
   return <ReactMarkdown
     remarkPlugins={[remarkGfm]}
-    children={props.content + ((props.content.length < props.message.content.length && context.isTypingMessage) ? "▌" : "")}
+    children={props.content + ((props.message && props.content.length < props.message.content.length && context.isTypingMessage) ? "▌" : "")}
     linkTarget="_blank"
     components={{
       code({ node, inline, className, children, ...props }) {
         const match = /language-(\w+)/.exec(className || "");
         const isSecret = match !== null && match[0] === "language-secret";
+        const isCollapse = match !== null && match[0] === "language-collapse";
+        if (isCollapse) {
+          return <Collapsible trigger={<VisibilityIconToggleButton />}>
+            <MarkdownComponent content={children.toString()} />
+          </Collapsible>;
+        }
         let content = !inline ? (
           <CodeBlock content={String(children).replace(/\n\n/g, "\n").replace(/\n$/, '')} />
         ) : (
           <code className={className + ` ${classes["inline-code"]}`} {...props} >
             `{children}`
           </code>
-        )
+        );
         if (isSecret) {
           content = <Collapsible trigger={<VisibilityIconToggleButton />}>
             {content}
-          </Collapsible>
+          </Collapsible>;
         }
-        return content
+        return content;
       },
       a({ node, className, children, ...props }) {
         return (
