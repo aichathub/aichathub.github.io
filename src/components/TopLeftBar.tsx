@@ -278,7 +278,7 @@ const TopLeftBar: React.FC<{
     navigate(`/${context.loggedUser ? context.loggedUser : GUEST_USERNAME}/${response.result.pid}`);
   }
 
-  const redirect = (value: string) => {
+  const redirect = (value: unknown) => {
     if (!value || ((typeof value) !== "string")) return;
     const str = value as string;
     if (str.startsWith("!Ask: ")) {
