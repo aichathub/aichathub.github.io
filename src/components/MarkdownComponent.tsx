@@ -20,15 +20,16 @@ const MarkdownComponent: React.FC<{
     components={{
       code({ node, inline, className, children, ...props }) {
         const match = /language-(\w+)/.exec(className || "");
-        const isSecret = match !== null && match[0] === "language-secret";
+        const isSecret = match !== null && match[0].startsWith("language-secret");
         const isCollapse = match !== null && match[0] === "language-collapse";
+        const language = isSecret ? match[0].replace("language-secret", "") : (match === null ? "" : match[0].replace("language-", ""));
         if (isCollapse) {
           return <Collapsible trigger={<VisibilityIconToggleButton />}>
             <MarkdownComponent content={children.toString()} />
           </Collapsible>;
         }
         let content = !inline ? (
-          <CodeBlock content={String(children).replace(/\n\n/g, "\n").replace(/\n$/, '')} />
+          <CodeBlock content={String(children).replace(/\n\n/g, "\n").replace(/\n$/, '')} language={language}/>
         ) : (
           <code className={className + ` ${classes["inline-code"]}`} {...props} >
             `{children}`
