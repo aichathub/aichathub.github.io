@@ -19,7 +19,7 @@ const MarkdownComponent: React.FC<{
     linkTarget="_blank"
     components={{
       code({ node, inline, className, children, ...props }) {
-        const match = /language-(\w+)/.exec(className || "");
+        const match = /language-(.+)/.exec(className || "");
         const isSecret = match !== null && match[0].startsWith("language-secret");
         const isCollapse = match !== null && match[0] === "language-collapse";
         const language = isSecret ? match[0].replace(/language-secret-?/, "") : (match === null ? "" : match[0].replace("language-", ""));
@@ -29,7 +29,7 @@ const MarkdownComponent: React.FC<{
           </Collapsible>;
         }
         let content = !inline ? (
-          <CodeBlock content={String(children).replace(/\n\n/g, "\n").replace(/\n$/, '')} language={language === "" ? undefined : language}/>
+          <CodeBlock content={String(children).replace(/\n\n/g, "\n").replace(/\n$/, '')} language={language === "" ? undefined : language} />
         ) : (
           <code className={className + ` ${classes["inline-code"]}`} {...props} >
             `{children}`
