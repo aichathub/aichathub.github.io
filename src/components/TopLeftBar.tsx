@@ -278,9 +278,7 @@ const TopLeftBar: React.FC<{
     navigate(`/${context.loggedUser ? context.loggedUser : GUEST_USERNAME}/${response.result.pid}`);
   }
 
-  const redirect = (value: unknown) => {
-    if (!value || ((typeof value) !== "string")) return;
-    const str = value as string;
+  const redirectSearch = (str: string) => {
     if (str.startsWith("!Ask: ")) {
       const question = str.slice("!Ask: ".length);
       handleAskBtnClick(question);
@@ -337,7 +335,7 @@ const TopLeftBar: React.FC<{
                   const optionStr = option as string;
                   return (
                     <Box component="li" {...props} onClick={() => {
-                      redirect(optionStr);
+                      redirectSearch(optionStr);
                     }}>
                       {
                         optionStr.startsWith("@") ? <PersonIcon sx={{ marginRight: "5px" }} /> :
@@ -349,7 +347,8 @@ const TopLeftBar: React.FC<{
                   );
                 }}
                 onChange={(event, value) => {
-                  redirect(value);
+                  if (!value || ((typeof value) !== "string")) return;
+                  redirectSearch(value as string);
                 }}
                 renderInput={(params) => (
                   <TextField {...params}
