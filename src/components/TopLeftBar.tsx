@@ -123,6 +123,7 @@ const TopLeftBar: React.FC<{
   const [searchParams,] = useSearchParams();
   const [isAtTop, setIsAtTop] = useState(true);
   const [isAskingQuestion, setIsAskingQuestion] = useState(false);
+  const [isSearchAutocompleteOpen, setIsSearchAutocompleteOpen] = useState(false);
   let hint = "";
 
   const [searchBoxText, setSearchBoxText] = useState((isOnSearchPage && searchParams.get("q")) ? searchParams.get("q") : "");
@@ -325,6 +326,7 @@ const TopLeftBar: React.FC<{
           <Tooltip title={searchBoxText ? "" : searchBarShortcutHint}>
             <Search sx={{ flexGrow: 1, marginTop: "5px" }}>
               <Autocomplete
+                open={isSearchAutocompleteOpen}
                 id="free-solo-demo"
                 freeSolo
                 filterOptions={filterOptions}
@@ -335,7 +337,9 @@ const TopLeftBar: React.FC<{
                   const optionStr = option as string;
                   return (
                     <Box component="li" {...props} onClick={() => {
+                      setSearchBoxText(optionStr);
                       redirectSearch(optionStr);
+                      setIsSearchAutocompleteOpen(false);
                     }}>
                       {
                         optionStr.startsWith("@") ? <PersonIcon sx={{ marginRight: "5px" }} /> :
@@ -371,6 +375,9 @@ const TopLeftBar: React.FC<{
                     }}
                     onChange={(e) => {
                       setSearchBoxText(e.target.value);
+                    }}
+                    onFocusCapture={() => {
+                      setIsSearchAutocompleteOpen(true);
                     }}
                     onKeyPress={(e) => {
                       if (e.key === 'Enter') {
