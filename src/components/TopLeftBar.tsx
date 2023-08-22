@@ -278,6 +278,18 @@ const TopLeftBar: React.FC<{
     navigate(`/${context.loggedUser ? context.loggedUser : GUEST_USERNAME}/${response.result.pid}`);
   }
 
+  const redirect = (value: string) => {
+    if (!value || ((typeof value) !== "string")) return;
+    const str = value as string;
+    if (str.startsWith("!Ask: ")) {
+      const question = str.slice("!Ask: ".length);
+      handleAskBtnClick(question);
+    } else {
+      navigate(`/search?q=${str}`);
+      context.addLocalKeyword(str);
+    }
+  }
+
   return (
     <Grid className={`${shouldHide ? classes.hide : classes.show}`}>
       <AppBar
@@ -324,7 +336,9 @@ const TopLeftBar: React.FC<{
                 renderOption={(props, option) => {
                   const optionStr = option as string;
                   return (
-                    <Box component="li" {...props}>
+                    <Box component="li" {...props} onClick={() => {
+                      redirect(optionStr);
+                    }}>
                       {
                         optionStr.startsWith("@") ? <PersonIcon sx={{ marginRight: "5px" }} /> :
                           optionStr.startsWith("!Ask") ? <ChatBubbleOutlineIcon sx={{ marginRight: "5px" }} /> :
@@ -335,15 +349,7 @@ const TopLeftBar: React.FC<{
                   );
                 }}
                 onChange={(event, value) => {
-                  if (!value || ((typeof value) !== "string")) return;
-                  const str = value as string;
-                  if (str.startsWith("!Ask: ")) {
-                    const question = str.slice("!Ask: ".length);
-                    handleAskBtnClick(question);
-                  } else {
-                    navigate(`/search?q=${str}`);
-                    context.addLocalKeyword(str);
-                  }
+                  redirect(value);
                 }}
                 renderInput={(params) => (
                   <TextField {...params}
