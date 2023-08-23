@@ -400,6 +400,7 @@ const TopLeftBar: React.FC<{
         variant="persistent"
         anchor="left"
         open={props.open}
+        transitionDuration={0}
       >
         <DrawerHeader>
           <IconButton onClick={props.handleDrawerClose}>
