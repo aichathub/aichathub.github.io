@@ -421,7 +421,7 @@ const TopLeftBar: React.FC<{
         {
           context.auth.loggedEmail &&
           <>
-            <Typography variant="h6" noWrap sx={{ marginLeft: "10px", marginBottom: "15px" }}>
+            <Typography variant="h6" noWrap sx={{ marginLeft: "10px", marginBottom: "15px", minHeight: "25px" }}>
               Your Posts
               <RefreshIcon
                 onClick={() => { context.setLastPostsRefresh(new Date()); }}
