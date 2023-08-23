@@ -364,6 +364,7 @@ const TopLeftBar: React.FC<{
                     }}
                     onBlur={() => {
                       setSearchBarShortcutHint(hint);
+                      setIsSearchAutocompleteOpen(false);
                     }}
                     inputRef={inputRef}
                     placeholder={"Search/Ask anything…"}
@@ -384,6 +385,7 @@ const TopLeftBar: React.FC<{
                         if (!searchBoxText) return;
                         navigate(`/search?q=${searchBoxText}`);
                         context.addLocalKeyword(searchBoxText);
+                        setIsSearchAutocompleteOpen(true);
                       }
                     }}
                   />
