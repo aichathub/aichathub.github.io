@@ -50,19 +50,19 @@ const drawerWidth = 300;
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== "open",
 })<AppBarProps>(({ theme, open }) => ({
+  boxShadow: "none",
   transition: theme.transitions.create(["margin", "width"], {
     easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
+    duration: 0
   }),
-  boxShadow: "none",
   ...(open && {
     width: `calc(100% - ${drawerWidth}px)`,
     marginLeft: `${drawerWidth}px`,
     transition: theme.transitions.create(["margin", "width"], {
       easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  }),
+      duration: 0
+    })
+  })
 }));
 
 const Search = styled("div")(({ theme }) => ({
@@ -364,6 +364,7 @@ const TopLeftBar: React.FC<{
                     }}
                     onBlur={() => {
                       setSearchBarShortcutHint(hint);
+                      setIsSearchAutocompleteOpen(false);
                     }}
                     inputRef={inputRef}
                     placeholder={"Search/Ask anything…"}
@@ -384,6 +385,7 @@ const TopLeftBar: React.FC<{
                         if (!searchBoxText) return;
                         navigate(`/search?q=${searchBoxText}`);
                         context.addLocalKeyword(searchBoxText);
+                        setIsSearchAutocompleteOpen(true);
                       }
                     }}
                   />
@@ -406,6 +408,7 @@ const TopLeftBar: React.FC<{
         variant="persistent"
         anchor="left"
         open={props.open}
+        transitionDuration={0}
       >
         <DrawerHeader>
           <IconButton onClick={props.handleDrawerClose}>
@@ -419,7 +422,7 @@ const TopLeftBar: React.FC<{
         {
           context.auth.loggedEmail &&
           <>
-            <Typography variant="h6" noWrap sx={{ marginLeft: "10px", marginBottom: "15px" }}>
+            <Typography variant="h6" noWrap sx={{ marginLeft: "10px", marginBottom: "15px", minHeight: "25px" }}>
               Your Posts
               <RefreshIcon
                 onClick={() => { context.setLastPostsRefresh(new Date()); }}

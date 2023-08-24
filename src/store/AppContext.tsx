@@ -201,13 +201,13 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
   // padding: theme.spacing(3),
   transition: theme.transitions.create("margin", {
     easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
+    duration: 0,
   }),
   marginLeft: `-${drawerWidth}px`,
   ...(open && {
     transition: theme.transitions.create("margin", {
       easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
+      duration: 0,
     }),
     marginLeft: 0,
   }),
