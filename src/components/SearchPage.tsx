@@ -16,12 +16,6 @@ const SearchPage = () => {
   const [posts, setPosts] = useState<PostModel[]>([]);
   const [resultNotFound, setResultNotFound] = useState(false);
   const navigate = useNavigate();
-  const handleDrawerOpen = () => {
-    context.setTopLeftBarOpen(true);
-  };
-  const handleDrawerClose = () => {
-    context.setTopLeftBarOpen(false);
-  };
 
   useEffect(() => {
     if (searchQuery?.trim().length === 0) {
