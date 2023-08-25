@@ -1,5 +1,4 @@
 import { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { AppContext } from "../store/AppContext";
 import { findMidByKeyword } from "../util/db";
 import classes from "./PostLink.module.css";
@@ -10,7 +9,6 @@ const PostLink = (props: {
   searchQuery?: string;
 }) => {
   const context = useContext(AppContext);
-  const navigate = useNavigate();
   const [url, setUrl] = useState(`/${props.username}/${props.pid}`);
 
   const generateMidUrl = () => {
@@ -40,11 +38,7 @@ const PostLink = (props: {
       const isMiddleMouseClick = e.button === 1;
       if (isMiddleMouseClick) return;
       e.preventDefault();
-      context.setIsLoadingMessages(true);
-      context.setIsFirstLoad(true);
-      context.setMessages([]);
-      context.setLastMessagesRefresh(new Date());
-      navigate(url);
+      context.navigateToPost(url);
     }}
     href={url}
   >

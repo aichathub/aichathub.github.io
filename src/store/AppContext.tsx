@@ -104,6 +104,7 @@ type AppContextObj = {
   updatePost: (post: LocalPostModel) => void;
   showSnack: (message: string, action?: ReactNode) => void;
   setLoggedUser: (loggedUser: string) => void;
+  navigateToPost: (url: string) => void;
 };
 
 export const EMPTY_AUTH = {
@@ -191,6 +192,7 @@ export const AppContext = createContext<AppContextObj>({
   showSnack: () => { },
   toggleSendTriggerAIVoice: () => { },
   setLoggedUser: () => { },
+  navigateToPost: () => { },
 });
 const drawerWidth = 300;
 
@@ -417,6 +419,13 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
     }
     refreshKeywords(loggedUser, auth.token);
   }
+  const navigateToPost = (url: string) => {
+    setIsLoadingMessages(true);
+    setIsFirstLoad(true);
+    setMessages([]);
+    setLastMessagesRefresh(new Date());
+    navigate(url);
+  }
   const contextValue = {
     pagePostId: pagePostId,
     auth: auth,
@@ -495,6 +504,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
     updatePost: updatePost,
     showSnack: showSnack,
     setLoggedUser: setLoggedUser,
+    navigateToPost: navigateToPost,
   } as AppContextObj;
   const keyDownHandler = useCallback((event: KeyboardEvent) => {
     const { key } = event;
