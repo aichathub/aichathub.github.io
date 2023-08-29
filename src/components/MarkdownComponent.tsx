@@ -63,12 +63,12 @@ const MarkdownComponent: React.FC<{
               </div>
             </>
           }
-          const spotifyId = spotifyIdRetriever(props.href);
           const spotifyIdRetriever = (url) => {
             var regExp = /^.*((open.spotify.com\/)|(track\/))([^#&?]*).*/;
             var match = url.match(regExp);
             return (match && match[4].length > 0) ? match[4] : "";
           }
+          const spotifyId = spotifyIdRetriever(props.href);
           if (spotifyId > 0) {
             res = <>
               {res}
