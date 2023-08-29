@@ -59,7 +59,7 @@ const MarkdownComponent: React.FC<{
             res = <>
               {res}
               <div>
-                <iframe width="560" height="315" style={{ maxWidth: "85%", marginTop: "12px" }} src={"https://www.youtube.com/embed/" + youtubeId} />
+                <iframe width="560" height="315" style={{ maxWidth: "calc(100% - 12px)", marginTop: "12px" }} src={"https://www.youtube.com/embed/" + youtubeId} />
               </div>
             </>
           }
