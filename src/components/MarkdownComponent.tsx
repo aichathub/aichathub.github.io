@@ -46,7 +46,7 @@ const MarkdownComponent: React.FC<{
         const youtubeIdRetriever = (url: string) => {
           var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
           var match = url.match(regExp);
-          return (match && match[7].length == 11) ? match[7] : "";
+          return (match && match[7] && match[7].length === 11) ? match[7] : "";
         }
         let res = <span className={classes.mdlink}>
           <a className={className} {...props}>
@@ -58,23 +58,23 @@ const MarkdownComponent: React.FC<{
           if (youtubeId.length > 0) {
             res = <>
               {res}
-              <div>
-                <iframe width="560" height="315" style={{ maxWidth: "calc(100% - 12px)", marginTop: "12px" }} src={"https://www.youtube.com/embed/" + youtubeId} />
-              </div>
+              <p>
+                <iframe title={"youtube-" + youtubeId} width="560" height="315" style={{ maxWidth: "calc(100% - 12px)" }} src={"https://www.youtube.com/embed/" + youtubeId} />
+              </p>
             </>
           }
           const spotifyIdRetriever = (url: string) => {
-            var regExp = /^.*((open.spotify.com\/)|(track\/))([^#&?]*).*/;
-            var match = url.match(regExp);
-            return (match && match[4].length > 0) ? match[4] : "";
+            const regExp = /^.*((open.spotify.com\/))([^#&?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[3] && match[3].length > 0) ? match[3] : "";
           }
           const spotifyId = spotifyIdRetriever(props.href);
           if (spotifyId.length > 0) {
             res = <>
               {res}
-              <div>
-                <iframe style="border-radius:12px" src={`https://open.spotify.com/embed/track/${spotifyId}?utm_source=generator${context.darkMode ? "&theme=0" : ""}`} width="85%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-              </div>
+              <>
+                <iframe title={"spotifiy-" + spotifyId} style={{ borderRadius: "12px" }} src={`https://open.spotify.com/embed/${spotifyId}?utm_source=generator${context.darkMode ? "&theme=0" : ""}`} width="85%" height="152" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+              </>
             </>
           }
         }
