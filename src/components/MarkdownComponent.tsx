@@ -63,6 +63,20 @@ const MarkdownComponent: React.FC<{
               </div>
             </>
           }
+          const spotifyId = spotifyIdRetriever(props.href);
+          const spotifyIdRetriever = (url) => {
+            var regExp = /^.*((open.spotify.com\/)|(track\/))([^#&?]*).*/;
+            var match = url.match(regExp);
+            return (match && match[4].length > 0) ? match[4] : "";
+          }
+          if (spotifyId > 0) {
+            res = <>
+              {res}
+              <div>
+                <iframe style="border-radius:12px" src={`https://open.spotify.com/embed/track/${spotifyId}?utm_source=generator${context.darkMode ? "&theme=0" : ""}`} width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+              </div>
+            </>
+          }
         }
         return res;
       },
