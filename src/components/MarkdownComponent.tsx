@@ -26,7 +26,7 @@ const MarkdownComponent: React.FC<{
         const language = isSecret ? match[0].replace(/language-secret-?/, "") : (match === null ? "" : match[0].replace("language-", ""));
         const videoId = isYoutube ? match[0].replace(/language-youtube-?/, "") : (match === null ? "" : match[0].replace("language-", ""));
         if (isYoutube) {
-          return <iframe width="560" height="315" style="max-width: 100%" src={"https://www.youtube.com/embed/" + videoId} />
+          return <iframe width="560" height="315" style={{maxWidth: "100%"}} src={"https://www.youtube.com/embed/" + videoId} />
         }
         if (isCollapse) {
           return <Collapsible trigger={<VisibilityIconToggleButton />}>
