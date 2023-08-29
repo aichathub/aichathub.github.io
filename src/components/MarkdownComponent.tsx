@@ -69,7 +69,7 @@ const MarkdownComponent: React.FC<{
             return (match && match[4].length > 0) ? match[4] : "";
           }
           const spotifyId = spotifyIdRetriever(props.href);
-          if (spotifyId > 0) {
+          if (spotifyId.length > 0) {
             res = <>
               {res}
               <div>
