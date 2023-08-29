@@ -22,7 +22,12 @@ const MarkdownComponent: React.FC<{
         const match = /language-(.+)/.exec(className || "");
         const isSecret = match !== null && match[0].startsWith("language-secret");
         const isCollapse = match !== null && match[0] === "language-collapse";
+        const isYoutube = match !== null && match[0].startsWith("language-youtube");
         const language = isSecret ? match[0].replace(/language-secret-?/, "") : (match === null ? "" : match[0].replace("language-", ""));
+        const videoId = isYoutube ? match[0].replace(/language-youtube-?/, "") : (match === null ? "" : match[0].replace("language-", ""));
+        if (isYoutube) {
+          return <iframe width="560" height="315" src={"https://www.youtube.com/embed/" + videoId} />
+        }
         if (isCollapse) {
           return <Collapsible trigger={<VisibilityIconToggleButton />}>
             <MarkdownComponent content={children.toString()} />
