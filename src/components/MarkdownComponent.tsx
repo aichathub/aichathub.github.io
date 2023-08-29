@@ -63,7 +63,7 @@ const MarkdownComponent: React.FC<{
               </div>
             </>
           }
-          const spotifyIdRetriever = (url) => {
+          const spotifyIdRetriever = (url: string) => {
             var regExp = /^.*((open.spotify.com\/)|(track\/))([^#&?]*).*/;
             var match = url.match(regExp);
             return (match && match[4].length > 0) ? match[4] : "";
