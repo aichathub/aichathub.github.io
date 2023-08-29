@@ -22,12 +22,7 @@ const MarkdownComponent: React.FC<{
         const match = /language-(.+)/.exec(className || "");
         const isSecret = match !== null && match[0].startsWith("language-secret");
         const isCollapse = match !== null && match[0] === "language-collapse";
-        const isYoutube = match !== null && match[0].startsWith("language-youtube");
         const language = isSecret ? match[0].replace(/language-secret-?/, "") : (match === null ? "" : match[0].replace("language-", ""));
-        const videoId = isYoutube ? match[0].replace(/language-youtube-?/, "") : (match === null ? "" : match[0].replace("language-", ""));
-        if (isYoutube) {
-          return <iframe width="560" height="315" style={{maxWidth: "100%"}} src={"https://www.youtube.com/embed/" + videoId} />
-        }
         if (isCollapse) {
           return <Collapsible trigger={<VisibilityIconToggleButton />}>
             <MarkdownComponent content={children.toString()} />
@@ -48,13 +43,28 @@ const MarkdownComponent: React.FC<{
         return content;
       },
       a({ node, className, children, ...props }) {
-        return (
-          <span className={classes.mdlink}>
-            <a className={className} {...props}>
-              {children}
-            </a>
-          </span>
-        )
+        const youtubeIdRetriever = (url: string) => {
+          var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+          var match = url.match(regExp);
+          return (match && match[7].length == 11) ? match[7] : "";
+        }
+        let res = <span className={classes.mdlink}>
+          <a className={className} {...props}>
+            {children}
+          </a>
+        </span>;
+        if (props.href) {
+          const youtubeId = youtubeIdRetriever(props.href);
+          if (youtubeId.length > 0) {
+            res = <>
+              {res}
+              <div>
+                <iframe width="560" height="315" style={{ maxWidth: "100%", marginTop: "12px" }} src={"https://www.youtube.com/embed/" + youtubeId} />
+              </div>
+            </>
+          }
+        }
+        return res;
       },
       blockquote({ node, className, children, ...props }) {
         return (
