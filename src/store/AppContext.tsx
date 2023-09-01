@@ -424,6 +424,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
     setIsFirstLoad(true);
     setMessages([]);
     setLastMessagesRefresh(new Date());
+    setCurPost(undefined);
     navigate(url);
   }
   const contextValue = {
