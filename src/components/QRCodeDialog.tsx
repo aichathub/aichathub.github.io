@@ -32,7 +32,7 @@ const QRCodeDialog: React.FC<{
       generateShortUrl(props.url, window.location.origin).then((shortUrlResponse) => {
         if (shortUrlResponse.message === "SUCCESS") {
           const shortUrl = shortUrlResponse.result;
-          setDisplayUrl(shortUrl);
+          setDisplayUrl(shortUrl.replace(/http(s)?:\/\//, ""));
         }
         setIsGenerating(false);
       });
@@ -50,11 +50,11 @@ const QRCodeDialog: React.FC<{
         TransitionComponent={Transition}
       >
         <Tooltip title={props.url} arrow>
-          <>
+          <div style={{ marginBottom: "7px", transform: "translateY(5px)", marginLeft: "2px" }}>
             {isGenerating ? <Skeleton variant="text" width={200} /> :
-              displayUrl.substring(0, 25) + "..."
+              displayUrl
             }
-          </>
+          </div>
         </Tooltip>
         <QRCode value={displayUrl} />
         <CopyButton content={displayUrl} placement={"top"} />
