@@ -115,7 +115,19 @@ const ChatAppEdit = () => {
       document.title = `${response.result.title} · ${username}/${postid}`;
       context.setCurPost(response.result);
     });
-  }, [username, postid, context.auth.token, context.lastMessagesRefresh]);
+  }, [username, postid, context.auth.token]);
+
+  useEffect(() => {
+    reloadMessage();
+    const noAuth = !localStorage.getItem("auth");
+    if (!username || !postid || (!noAuth && !context.auth)) return;
+    getPostByUsernameAndPid(username, postid, context.auth.token).then(response => {
+      if (response.message !== "SUCCESS") {
+        return;
+      }
+      context.setCurPost(response.result);
+    });
+  }, [context.lastMessagesRefresh]);
 
   useEffect(() => {
     getPostByUsernameAndPid(username ? username : "", postid ? postid : "", context.auth.token).then(response => {
