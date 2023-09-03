@@ -115,7 +115,7 @@ const ChatAppEdit = () => {
       document.title = `${response.result.title} · ${username}/${postid}`;
       context.setCurPost(response.result);
     });
-  }, [username, postid, context.auth.token]);
+  }, [username, postid, context.auth.token, context.lastMessagesRefresh]);
 
   useEffect(() => {
     getPostByUsernameAndPid(username ? username : "", postid ? postid : "", context.auth.token).then(response => {
@@ -129,10 +129,6 @@ const ChatAppEdit = () => {
   useEffect(() => {
     reloadMessage();
   }, []);
-
-  useEffect(() => {
-    reloadMessage();
-  }, [context.lastMessagesRefresh]);
 
   let bodyContent = <></>;
 
