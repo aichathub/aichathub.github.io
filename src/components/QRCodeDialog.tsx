@@ -51,7 +51,7 @@ const QRCodeDialog: React.FC<{
       >
         <Tooltip title={props.url} arrow>
           <div style={{ marginBottom: "7px", transform: "translateY(5px)", marginLeft: "2px" }}>
-            {isGenerating ? <Skeleton variant="text" width={200} /> :
+            {isGenerating ? <Skeleton variant="text" width={175} /> :
               displayUrl.replace(/http(s)?:\/\//, "")
             }
           </div>
