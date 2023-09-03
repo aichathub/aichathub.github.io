@@ -44,9 +44,9 @@ const MarkdownComponent: React.FC<{
       },
       a({ node, className, children, ...props }) {
         const youtubeIdRetriever = (url: string) => {
-          var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+          var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(live\/)|(watch\?))\??v?=?([^#&?]*).*/;
           var match = url.match(regExp);
-          return (match && match[7] && match[7].length === 11) ? match[7] : "";
+          return (match && match[8] && match[8].length === 11) ? match[8] : "";
         }
         let res = <span className={classes.mdlink}>
           <a className={className} {...props}>
