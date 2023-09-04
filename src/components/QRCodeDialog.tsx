@@ -22,8 +22,9 @@ const QRCodeDialog: React.FC<{
   open: boolean;
   onClose: () => void;
   genShortUrl?: boolean;
+  hideUrl?: boolean;
 }> = (props) => {
-  const { url, open, onClose } = props;
+  const { url, open, onClose, hideUrl } = props;
   const [isGenerating, setIsGenerating] = React.useState(props.genShortUrl);
   const [displayUrl, setDisplayUrl] = React.useState(props.url);
   useEffect(() => {
@@ -38,6 +39,9 @@ const QRCodeDialog: React.FC<{
       });
     }
   }, [open])
+  useEffect(() => {
+    setDisplayUrl(url);
+  }, [url]);
   const handleClose = () => {
     onClose();
   }
@@ -49,15 +53,16 @@ const QRCodeDialog: React.FC<{
         onClose={handleClose}
         TransitionComponent={Transition}
       >
-        <Tooltip title={props.url} arrow>
-          <div style={{ marginBottom: "7px", transform: "translateY(5px)", marginLeft: "2px" }}>
-            {isGenerating ? <Skeleton variant="text" width={175} /> :
-              displayUrl.replace(/http(s)?:\/\//, "")
-            }
-          </div>
-        </Tooltip>
+        {!hideUrl &&
+          (<Tooltip title={props.url} arrow>
+            <div style={{ marginBottom: "7px", transform: "translateY(5px)", marginLeft: "2px" }}>
+              {isGenerating ? <Skeleton variant="text" width={175} /> :
+                displayUrl.replace(/http(s)?:\/\//, "")
+              }
+            </div>
+          </Tooltip>)}
         <QRCode value={displayUrl} />
-        <CopyButton content={displayUrl} placement={"top"} />
+        {!hideUrl && <CopyButton content={displayUrl} placement={"top"} />}
       </Dialog>
     </div>
   );
