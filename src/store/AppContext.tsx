@@ -2,8 +2,11 @@ import ForkLeftIcon from '@mui/icons-material/ForkLeft';
 import { Backdrop, Box, Button, CircularProgress, CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import Snackbar from '@mui/material/Snackbar';
 import { styled } from "@mui/material/styles";
+import { Result } from '@zxing/library';
 import React, { ReactNode, createContext, useCallback, useEffect, useState } from 'react';
+import { QrReader } from 'react-qr-reader';
 import { useMatch, useNavigate } from "react-router-dom";
+import { io } from "socket.io-client";
 import Alert from "../components/Alert";
 import DrawerHeader from "../components/DrawerHeader";
 import MainLoading from "../components/MainLoading";
@@ -14,6 +17,7 @@ import { LocalPostModel } from "../models/LocalPostModel";
 import { MessageModel } from "../models/MessageModel";
 import { PostModel } from "../models/PostModel";
 import { TagModel } from "../models/TagModel";
+import { backendServer } from "../util/constants";
 import { findTopKSearch, forkPost, getCustomModelName, getDailyAILimit, getTags, getTodayAIUsage, verify } from "../util/db";
 import useDidMountEffect from "../util/useDidMountEffect";
 
@@ -59,7 +63,9 @@ type AppContextObj = {
   searchBoxAutoComplete: string[];
   isForking: boolean;
   showLoadingBackdrop: boolean;
+  showQrReader: boolean;
 
+  setShowQrReader: (showQrReader: boolean) => void;
   setShowLoadingBackdrop: (showLoadingBackdrop: boolean) => void;
   addLocalKeyword: (keyword: string) => void;
   pingYourmodel: () => Promise<boolean>;
@@ -147,7 +153,9 @@ export const AppContext = createContext<AppContextObj>({
   searchBoxAutoComplete: [],
   isForking: false,
   showLoadingBackdrop: false,
+  showQrReader: false,
 
+  setShowQrReader: () => { },
   setShowLoadingBackdrop: () => { },
   addLocalKeyword: () => { },
   pingYourmodel: () => Promise.resolve(false),
@@ -215,6 +223,8 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
   }),
 }));
 
+const socket = io(backendServer);
+
 export const AppContextProvider: React.FC<{ children: ReactNode }> = (
   props
 ) => {
@@ -258,6 +268,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
   const [isForking, setIsForking] = useState(false);
   const [snackAction, setSnackAction] = useState<ReactNode>(undefined);
   const [showLoadingBackdrop, setShowLoadingBackdrop] = useState(false);
+  const [showQrReader, setShowQrReader] = useState(false);
 
   const isOnPostPage = useMatch("/:username/:postid");
   const hasRightToSendMsg = isOnPostPage && curPost && curPost.username === loggedUser;
@@ -461,7 +472,9 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
     searchBoxAutoComplete: searchBoxAutoComplete,
     isForking: isForking,
     showLoadingBackdrop: showLoadingBackdrop,
+    showQrReader: showQrReader,
 
+    setShowQrReader: setShowQrReader,
     setShowLoadingBackdrop: setShowLoadingBackdrop,
     addLocalKeyword: addLocalKeyword,
     pingYourmodel: pingYourmodel,
@@ -744,6 +757,49 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
     <CircularProgress color="inherit" />
   </Backdrop>;
 
+  const onQRReaderResult = (result?: Result | undefined | null) => {
+    if (result) {
+      showSnack("Detected QR Text... Trying to autorize...");
+      const url = result.getText();
+      const regExp = /^.*authorize\/(.*)/;
+      const match = url.match(regExp);
+      if (match && match.length > 1) {
+        const sessionid = match[1];
+        socket.emit("authorize", {
+          sessionid: sessionid,
+          token: auth.token,
+          loggedEmail: auth.loggedEmail
+        });
+        socket.on("authorize", (data) => {
+          showSnack(data.message);
+          setShowQrReader(false);
+        });
+      } else {
+        showSnack("ERROR: QR content is not valid");
+      }
+    }
+  };
+
+  const qrReader = <Backdrop
+    sx={{ color: '#fff' }}
+    open={showQrReader}
+    onClick={() => { setShowQrReader(false); }}
+  >
+    {showQrReader &&
+      <QrReader
+        constraints={{ facingMode: "environment" }}
+        onResult={onQRReaderResult}
+        containerStyle={{
+          width: "300px",
+          position: "absolute",
+          top: "calc(50% - 150px)",
+          left: "0",
+          right: "0",
+          marginLeft: "auto",
+          marginRight: "auto",
+        }}
+      />}</Backdrop>;
+
   return (
     <AppContext.Provider value={contextValue}>
       <ThemeProvider theme={theme}>
@@ -759,6 +815,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
         {isInitializing && <MainLoading darkMode={darkMode} />}
         {mainBody}
         {loadingBackdrop}
+        {qrReader}
       </ThemeProvider>
     </AppContext.Provider>
   );

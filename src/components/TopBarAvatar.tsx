@@ -4,14 +4,15 @@ import DataSaverOffIcon from '@mui/icons-material/DataSaverOff';
 import ErrorIcon from '@mui/icons-material/Error';
 import LoginIcon from "@mui/icons-material/Login";
 import PersonIcon from '@mui/icons-material/Person';
+import QrCode2Icon from '@mui/icons-material/QrCode2';
 import { ListItemIcon, ListItemText } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { AppContext, EMPTY_AUTH } from "../store/AppContext";
 import { generateColor } from "../util/avatarColor";
+
 
 const TopBarAvatar = () => {
   const context = useContext(AppContext);
@@ -30,9 +31,14 @@ const TopBarAvatar = () => {
     context.setLoggedUser("");
     handleClose();
     context.showSnack("Signed Out");
-  }
+  };
 
-  const navigate = useNavigate();
+  const handleSignInToOtherDevicesClick = () => {
+    context.setShowQrReader(true);
+    context.showSnack("Detecting... Please place the QR code in front of the camera.");
+    handleClose();
+  };
+
   if (context.auth.token === "") {
     return <Box sx={{ flexGrow: 0 }}>
       <IconButton onClick={handleMenu} >
@@ -105,6 +111,12 @@ const TopBarAvatar = () => {
           {context.dailyAILimit === context.dailyAIUsuage ? <ErrorIcon /> : <DataSaverOffIcon />}
         </ListItemIcon>
         <ListItemText>@AI 24-hr Limit: {context.dailyAIUsuage} / {context.dailyAILimit}</ListItemText>
+      </MenuItem>
+      <MenuItem onClick={handleSignInToOtherDevicesClick}>
+        <ListItemIcon>
+          <QrCode2Icon />
+        </ListItemIcon>
+        <ListItemText>Sign In To Other Devices</ListItemText>
       </MenuItem>
       <MenuItem onClick={handleSignOutClick}>
         <ListItemIcon>
