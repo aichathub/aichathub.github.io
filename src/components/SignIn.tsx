@@ -148,7 +148,7 @@ export default function SignIn() {
               onClick={() => {
                 window.location.href = `https://github.com/login/oauth/authorize?client_id=${GITHUB_LOGIN_CLIENT_ID}&scope=user`;
               }} text="Sign in with Github" />
-            <QRCodeLoginButton />
+            <QRCodeLoginButton redirectUrl={redirectUrl} />
             <Grid container justifyContent="flex-end">
               <Grid item>
                 <Link href="/signup" variant="body2">

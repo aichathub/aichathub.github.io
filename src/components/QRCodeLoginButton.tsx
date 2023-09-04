@@ -1,13 +1,17 @@
 import { Grid, Link } from "@mui/material";
 import { useContext, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { io } from "socket.io-client";
 import { AppContext } from "../store/AppContext";
 import { backendServer } from "../util/constants";
 import QRCodeDialog from "./QRCodeDialog";
 const socket = io(backendServer);
 
-const QRCodeLoginButton = () => {
+const QRCodeLoginButton: React.FC<{
+  redirectUrl: string | null;
+}> = (props) => {
   const context = useContext(AppContext);
+  const [searchParams] = useSearchParams();
   const [showQRCodeDialog, setShowQRCodeDialog] = useState(false);
   const [authorizeUrl, setAuthorizeUrl] = useState("");
   const handleSignInWithOtherDevicesClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent> | React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
@@ -15,9 +19,17 @@ const QRCodeLoginButton = () => {
     const sessionid = Math.random().toString(36).substring(2, 6);
     setAuthorizeUrl(`${window.location.origin}/authorize/${sessionid}`);
     socket.on(`requestLogin-${sessionid}`, (data) => {
-      const { message, loginUrl } = data;
+      const { message, loggedEmail, token } = data;
       if (message === "SUCCESS") {
-        window.location.href = loginUrl;
+        context.changeAuth({
+          loggedEmail: loggedEmail,
+          token: token
+        });
+        if (props.redirectUrl) {
+          window.location.href = props.redirectUrl;
+        } else {
+          window.location.href = "/";
+        }
       } else {
         context.showSnack(message);
       }
@@ -34,7 +46,7 @@ const QRCodeLoginButton = () => {
         Sign In With Other Devices
       </Link>
     </Grid>
-    <QRCodeDialog url={authorizeUrl} onClose={handleQRClose} open={showQRCodeDialog} hideUrl={true}/>
+    <QRCodeDialog url={authorizeUrl} onClose={handleQRClose} open={showQRCodeDialog} hideUrl={true} />
   </Grid>
 }
 export default QRCodeLoginButton;
