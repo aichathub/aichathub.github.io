@@ -1,4 +1,4 @@
-import { Avatar, Box, Grid } from "@material-ui/core";
+import { Avatar, Box } from "@material-ui/core";
 import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
 import DataSaverOffIcon from '@mui/icons-material/DataSaverOff';
 import ErrorIcon from '@mui/icons-material/Error';
@@ -8,7 +8,6 @@ import { ListItemIcon, ListItemText } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import Typography from "@mui/material/Typography";
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppContext, EMPTY_AUTH } from "../store/AppContext";
@@ -62,7 +61,7 @@ const TopBarAvatar = () => {
           <ListItemIcon>
             <LoginIcon />
           </ListItemIcon>
-          <ListItemText>Sign in</ListItemText>
+          <ListItemText>Sign In</ListItemText>
         </MenuItem>
         <MenuItem onClick={() => {
           window.location.href = "/signup?redirect=" + window.location.href;
@@ -70,7 +69,7 @@ const TopBarAvatar = () => {
           <ListItemIcon>
             <AppRegistrationIcon />
           </ListItemIcon>
-          <ListItemText>Sign up</ListItemText>
+          <ListItemText>Sign Up</ListItemText>
         </MenuItem>
       </Menu>
     </Box>;
@@ -102,24 +101,16 @@ const TopBarAvatar = () => {
       onClose={handleClose}
     >
       <MenuItem>
-        <Grid container>
-          <Grid item xs={4}>
-            {context.dailyAILimit === context.dailyAIUsuage ? <ErrorIcon /> : <DataSaverOffIcon />}
-          </Grid>
-          <Grid item xs={12}>
-            <Typography> @AI (CHATGPT) Daily Limit: {context.dailyAIUsuage} / {context.dailyAILimit} </Typography>
-          </Grid>
-        </Grid>
+        <ListItemIcon>
+          {context.dailyAILimit === context.dailyAIUsuage ? <ErrorIcon /> : <DataSaverOffIcon />}
+        </ListItemIcon>
+        <ListItemText>@AI 24-hr Limit: {context.dailyAIUsuage} / {context.dailyAILimit}</ListItemText>
       </MenuItem>
       <MenuItem onClick={handleSignOutClick}>
-        <Grid container>
-          <Grid item xs={4}>
-            <LoginIcon />
-          </Grid>
-          <Grid item xs={12}>
-            <Typography> Sign Out </Typography>
-          </Grid>
-        </Grid>
+        <ListItemIcon>
+          <LoginIcon />
+        </ListItemIcon>
+        <ListItemText>Sign Out</ListItemText>
       </MenuItem>
     </Menu>
   </Box>
