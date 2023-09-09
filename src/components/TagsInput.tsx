@@ -30,7 +30,7 @@ const TagsInput: React.FC<{
       value={props.value}
       className={classes.textField}
       onChange={(event, newValue) => {
-        props.setValue(newValue);
+        props.setValue([...newValue]);
         // setValue([
         //   ...newValue.filter((option) => tags.indexOf(option) === -1),
         // ]);
