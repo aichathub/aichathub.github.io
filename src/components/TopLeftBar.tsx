@@ -374,9 +374,6 @@ const TopLeftBar: React.FC<{
                         isAskingQuestion ? <CircularProgress size={20} color="inherit" /> : <SearchIcon sx={{ marginRight: "5px" }} />
                       )
                     }}
-                    onChange={(e) => {
-                      setSearchBoxText(e.target.value);
-                    }}
                     onFocusCapture={() => {
                       setIsSearchAutocompleteOpen(true);
                     }}
