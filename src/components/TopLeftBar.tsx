@@ -224,7 +224,7 @@ const TopLeftBar: React.FC<{
   const filterOptions = (options: unknown[], state: FilterOptionsState<unknown>) => {
     const { inputValue } = state;
     const result = defaultFilterOptions(options, state).slice(0, OPTIONS_LIMIT);
-    if (inputValue.trim() !== "" && options.length === 0) {
+    if (inputValue.trim() !== "") {
       result.push(inputValue);
     }
     if (inputValue.trim() !== "" && !inputValue.trim().startsWith("@") && !inputValue.trim().startsWith("!")) {
@@ -378,11 +378,11 @@ const TopLeftBar: React.FC<{
                       setIsSearchAutocompleteOpen(true);
                     }}
                     onKeyPress={(e) => {
+                      setIsSearchAutocompleteOpen(true);
                       if (e.key === 'Enter') {
                         if (!searchBoxText) return;
                         navigate(`/search?q=${searchBoxText}`);
                         context.addLocalKeyword(searchBoxText);
-                        setIsSearchAutocompleteOpen(true);
                       }
                     }}
                   />
