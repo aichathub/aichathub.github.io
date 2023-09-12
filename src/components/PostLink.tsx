@@ -3,11 +3,11 @@ import { AppContext } from "../store/AppContext";
 import { findMidByKeyword } from "../util/db";
 import classes from "./PostLink.module.css";
 
-const PostLink = (props: {
+const PostLink: React.FC<{
   username: string;
   pid: string;
   searchQuery?: string;
-}) => {
+}> = (props) => {
   const context = useContext(AppContext);
   const [url, setUrl] = useState(`/${props.username}/${props.pid}`);
 
