@@ -113,7 +113,6 @@ const ChatAppEdit = () => {
       }
       context.setCurPost(response.result);
       document.title = `${response.result.title} · ${username}/${postid}`;
-      context.setCurPost(response.result);
     });
   }, [username, postid, context.auth.token]);
 
@@ -140,6 +139,13 @@ const ChatAppEdit = () => {
 
   useEffect(() => {
     reloadMessage();
+    getPostByUsernameAndPid(username, postid, context.auth.token).then(response => {
+      if (response.message !== "SUCCESS") {
+        return;
+      }
+      context.setCurPost(response.result);
+      document.title = `${response.result.title} · ${username}/${postid}`;
+    });
   }, []);
 
   let bodyContent = <></>;
