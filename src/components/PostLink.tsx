@@ -33,6 +33,10 @@ const PostLink: React.FC<{
     generateMidUrl();
   }, []);
 
+  useEffect(() => {
+    setUrl(`/${props.username}/${props.pid}`);
+  }, [props.username, props.pid]);
+
   return <span className={classes.postlink}> <a
     onClick={(e) => {
       const isMiddleMouseClick = e.button === 1;
