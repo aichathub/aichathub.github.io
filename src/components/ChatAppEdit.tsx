@@ -139,6 +139,8 @@ const ChatAppEdit = () => {
 
   useEffect(() => {
     reloadMessage();
+    const noAuth = !localStorage.getItem("auth");
+    if (!username || !postid || (!noAuth && !context.auth)) return;
     getPostByUsernameAndPid(username, postid, context.auth.token).then(response => {
       if (response.message !== "SUCCESS") {
         return;
