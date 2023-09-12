@@ -11,7 +11,6 @@ import { MessageModel } from "../models/MessageModel";
 import { AppContext } from "../store/AppContext";
 import { generateColor } from "../util/avatarColor";
 import { editMessage, uploadImage } from "../util/db";
-import CodeBlock from "./CodeBlock";
 import LikeDislikePanel from "./LikeDislikePanel";
 import MarkdownComponent from "./MarkdownComponent";
 import MessageWrapper from "./MessageWrapper";
@@ -55,27 +54,7 @@ const Message: React.FC<{
   };
   const shouldAnimate = isAI && props.message.justSent;
   const [content, setContent] = useState(shouldAnimate ? "" : props.message.content.replaceAll("\n", "\n\n"));
-  const toMessageView = (messages: string[]) => {
-    const body = messages.map((content, index) =>
-      index % 2 === 0 ? (
-        content.split("\n").map((line, lineIdx) => {
-          return <Typography
-            key={index + "," + lineIdx}
-            paragraph
-            style={{ paddingTop: "2px" }}
-          >
-            {line}
-          </Typography>
-        }
-        )
-      ) : (
-        <CodeBlock key={index} content={content} />
-      )
-    );
-    return <Grid style={{ paddingLeft: 5 }}>
-      {body}
-    </Grid>;
-  };
+
   let timeText = <Timeago date={props.message.time} title="" />;
   // if under one minute, just show Now
   if (justNow(props.message.time)) {
