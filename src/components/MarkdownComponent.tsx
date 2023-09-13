@@ -42,7 +42,6 @@ const MarkdownComponent: React.FC<{
             const formula = String(children).replaceAll("&nbsp;\n\n", "\n\n").replaceAll("\\\\ \\\\", "\\\\ \\ \\\\");
             content = <MathJax.Node inline formula={formula} />
           } else {
-            console.log(String(children));
             content = <CodeBlock content={String(children).replaceAll("&nbsp;\n", "\n").replace(/\n\n/g, "\n").replace(/\n$/, '')} language={language === "" ? undefined : language} />
           }
           if (isSecret) {
@@ -106,7 +105,7 @@ const MarkdownComponent: React.FC<{
         },
         p({ node, className, children, ...props }) {
           return (
-            <p className={className} style={{ margin: "0" }} {...props}>
+            <p className={className} style={{ margin: "2" }} {...props}>
               {children}
             </p>
           )
