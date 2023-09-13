@@ -103,6 +103,13 @@ const MarkdownComponent: React.FC<{
               {children}
             </img>
           )
+        },
+        p({ node, className, children, ...props }) {
+          return (
+            <p className={className} style={{ margin: "0" }} {...props}>
+              {children}
+            </p>
+          )
         }
       }}
     />
