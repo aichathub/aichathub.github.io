@@ -14,8 +14,8 @@ const MarkdownComponent: React.FC<{
   message?: MessageModel;
 }> = (props) => {
   const context = useContext(AppContext);
-  // Replace empty lines with empty lines with an empty space
-  const content = props.content.replaceAll("\n\n", "&nbsp;\n\n");
+  // Replace empty lines with empty lines with an empty space, except for code block
+  const content = props.content.replace(/\n\n/gi, "&nbsp;\n\n").replace(/```(.*)&nbsp;/gi, "```$1");
   return <MathJax.Provider>
     <ReactMarkdown
       remarkPlugins={[remarkGfm]}
@@ -39,10 +39,11 @@ const MarkdownComponent: React.FC<{
             </code>;
           } else if (language === "latex") {
             // Replace empty lines with empty lines with a space
-            const formula = String(children).replaceAll("\\\\ \\\\", "\\\\ \\ \\\\").replaceAll("&nbsp;", "");
+            const formula = String(children).replaceAll("&nbsp;\n\n", "\n\n").replaceAll("\\\\ \\\\", "\\\\ \\ \\\\");
             content = <MathJax.Node inline formula={formula} />
           } else {
-            content = <CodeBlock content={String(children).replace(/\n\n/g, "\n").replace(/\n$/, '').replaceAll("&nbsp;", "")} language={language === "" ? undefined : language} />
+            console.log(String(children));
+            content = <CodeBlock content={String(children).replaceAll("&nbsp;\n", "\n").replace(/\n\n/g, "\n").replace(/\n$/, '')} language={language === "" ? undefined : language} />
           }
           if (isSecret) {
             content = <Collapsible trigger={<VisibilityIconToggleButton />}>
