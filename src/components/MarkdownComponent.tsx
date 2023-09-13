@@ -105,7 +105,7 @@ const MarkdownComponent: React.FC<{
         },
         p({ node, className, children, ...props }) {
           return (
-            <p className={className} style={{ margin: "2" }} {...props}>
+            <p className={className} style={{ margin: "2px" }} {...props}>
               {children}
             </p>
           )
