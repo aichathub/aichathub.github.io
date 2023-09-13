@@ -36,7 +36,9 @@ const MarkdownComponent: React.FC<{
               `{children}`
             </code>;
           } else if (language === "latex") {
-            content = <MathJax.Node inline formula={String(children)} />
+            // Replace empty lines with empty lines with a space
+            const formula = String(children).replaceAll("\\\\ \\\\", "\\\\ \\ \\\\");
+            content = <MathJax.Node inline formula={formula} />
           } else {
             content = <CodeBlock content={String(children).replace(/\n\n/g, "\n").replace(/\n$/, '')} language={language === "" ? undefined : language} />
           }
