@@ -14,10 +14,12 @@ const MarkdownComponent: React.FC<{
   message?: MessageModel;
 }> = (props) => {
   const context = useContext(AppContext);
+  // Replace empty lines with empty lines with an empty space
+  const content = props.content.replaceAll("\n\n", "&nbsp;\n\n");
   return <MathJax.Provider>
     <ReactMarkdown
       remarkPlugins={[remarkGfm]}
-      children={props.content + ((props.message && props.content.length < props.message.content.length && context.isTypingMessage) ? "▌" : "")}
+      children={content + ((props.message && props.content.length < props.message.content.length && context.isTypingMessage) ? "▌" : "")}
       linkTarget="_blank"
       components={{
         code({ node, inline, className, children, ...props }) {
@@ -40,7 +42,7 @@ const MarkdownComponent: React.FC<{
             const formula = String(children).replaceAll("\\\\ \\\\", "\\\\ \\ \\\\");
             content = <MathJax.Node inline formula={formula} />
           } else {
-            content = <CodeBlock content={String(children).replace(/\n\n/g, "\n").replace(/\n$/, '')} language={language === "" ? undefined : language} />
+            content = <CodeBlock content={String(children).replace(/\n\n/g, "\n").replace(/\n$/, '').replaceAll("&nbsp;", "")} language={language === "" ? undefined : language} />
           }
           if (isSecret) {
             content = <Collapsible trigger={<VisibilityIconToggleButton />}>
