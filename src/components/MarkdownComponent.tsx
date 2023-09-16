@@ -87,9 +87,11 @@ const MarkdownComponent: React.FC<{
               </>
             }
             const isIFrame = children === "!iframe";
+            console.log(children);
+            console.log(props);
             if (isIFrame) {
               res = <>
-                <iframe title={"youtube-" + youtubeId} width="560" height="315" style={{ maxWidth: "calc(100% - 12px)" }} src={props.href} />
+                <iframe title={"iframe"} width="560" height="315" style={{ maxWidth: "calc(100% - 12px)" }} src={props.href} />
               </>
             }
           }
