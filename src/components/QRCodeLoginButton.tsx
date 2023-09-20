@@ -46,7 +46,7 @@ const QRCodeLoginButton: React.FC<{
         Sign In With Other Devices
       </Link>
     </Grid>
-    <QRCodeDialog url={authorizeUrl} onClose={handleQRClose} open={showQRCodeDialog} customDisplayText={authorizeUrl.slice(-4)} />
+    <QRCodeDialog url={authorizeUrl} onClose={handleQRClose} open={showQRCodeDialog} customDisplayText={authorizeUrl.slice(-4).toUpperCase()} />
   </Grid>
 }
 export default QRCodeLoginButton;

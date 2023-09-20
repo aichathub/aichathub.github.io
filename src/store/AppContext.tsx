@@ -761,6 +761,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
 
 
   const authorize = (sessionid: string) => {
+    sessionid = sessionid.toLowerCase();
     socket.emit("authorize", {
       sessionid: sessionid,
       token: auth.token,

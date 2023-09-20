@@ -11,16 +11,17 @@ const AuthInput: React.FC<{
   const codeLength = 4;
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, index: number) => {
     const { value } = e.target;
+    const val = value.toUpperCase();
     setCode((prevCode) => {
       const newCode = [...prevCode];
-      newCode[index] = value.slice(0, 1);
+      newCode[index] = val.slice(0, 1);
       return newCode;
     });
     if (value !== "" && index + 1 < codeLength) {
       refs.current[index + 1].focus();
       refs.current[index + 1].select();
     } else if (value !== "" && index === codeLength - 1) {
-      props.callback(code.join("") + value.slice(0, 1));
+      props.callback(code.join("") + val.slice(0, 1));
     }
   };
   const handlePaste = (e: React.ClipboardEvent<HTMLDivElement>) => {
@@ -31,7 +32,7 @@ const AuthInput: React.FC<{
       const newCode = [...prevCode];
       formattedText.forEach((char, index) => {
         if (newCode[index] !== undefined) {
-          newCode[index] = char;
+          newCode[index] = char.toUpperCase();
         }
       });
       return newCode;
