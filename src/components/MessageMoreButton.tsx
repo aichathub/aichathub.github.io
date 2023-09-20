@@ -55,7 +55,7 @@ const MessageMoreButton: React.FC<{
   };
   const handleCopyClick = () => {
     context.showSnack("Copied to clipboard!");
-    navigator.clipboard.writeText(props.message.content);
+    navigator.clipboard.writeText(props.message.content.replaceAll("\n\n", "\n")); // Remove double \n
     handleClose();
   }
   const handleEditClick = () => {
