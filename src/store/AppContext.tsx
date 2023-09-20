@@ -771,6 +771,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
       showSnack(data.message);
       if (data.message === "SUCCESS") {
         setShowQrReader(false);
+        setDetectedSessionid("");
       }
     });
   }
