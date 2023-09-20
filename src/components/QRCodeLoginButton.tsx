@@ -35,7 +35,7 @@ const QRCodeLoginButton: React.FC<{
       }
     });
     setShowQRCodeDialog(true);
-    context.showSnack("Scan the QR code to sign in with other logged devices");
+    context.showSnack("Copy the login code or scan the QR code from other logged devices");
   };
   const handleQRClose = () => {
     setShowQRCodeDialog(false);
@@ -46,7 +46,7 @@ const QRCodeLoginButton: React.FC<{
         Sign In With Other Devices
       </Link>
     </Grid>
-    <QRCodeDialog url={authorizeUrl} onClose={handleQRClose} open={showQRCodeDialog} hideUrl={true} />
+    <QRCodeDialog url={authorizeUrl} onClose={handleQRClose} open={showQRCodeDialog} customDisplayText={authorizeUrl.slice(-4)} />
   </Grid>
 }
 export default QRCodeLoginButton;

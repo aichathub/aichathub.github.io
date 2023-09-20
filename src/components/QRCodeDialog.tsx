@@ -23,6 +23,7 @@ const QRCodeDialog: React.FC<{
   onClose: () => void;
   genShortUrl?: boolean;
   hideUrl?: boolean;
+  customDisplayText?: string;
 }> = (props) => {
   const { url, open, onClose, hideUrl } = props;
   const [isGenerating, setIsGenerating] = React.useState(props.genShortUrl);
@@ -57,12 +58,13 @@ const QRCodeDialog: React.FC<{
           (<Tooltip title={props.url} arrow>
             <div style={{ marginBottom: "7px", transform: "translateY(5px)", marginLeft: "2px" }}>
               {isGenerating ? <Skeleton variant="text" width={175} /> :
-                displayUrl.replace(/http(s)?:\/\//, "")
+                props.customDisplayText ? props.customDisplayText :
+                  displayUrl.replace(/http(s)?:\/\//, "")
               }
             </div>
           </Tooltip>)}
         <QRCode value={displayUrl} />
-        {!hideUrl && <CopyButton content={displayUrl} placement={"top"} />}
+        {!hideUrl && <CopyButton content={props.customDisplayText ? props.customDisplayText : displayUrl} placement={"top"} />}
       </Dialog>
     </div>
   );

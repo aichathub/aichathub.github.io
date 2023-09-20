@@ -8,6 +8,7 @@ import { QrReader } from 'react-qr-reader';
 import { useMatch, useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 import Alert from "../components/Alert";
+import AuthInput from '../components/AuthInput';
 import DrawerHeader from "../components/DrawerHeader";
 import MainLoading from "../components/MainLoading";
 import { MessageInput } from "../components/MessageInput";
@@ -269,6 +270,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
   const [snackAction, setSnackAction] = useState<ReactNode>(undefined);
   const [showLoadingBackdrop, setShowLoadingBackdrop] = useState(false);
   const [showQrReader, setShowQrReader] = useState(false);
+  const [detectedSessionid, setDetectedSessionid] = useState("");
 
   const isOnPostPage = useMatch("/:username/:postid");
   const hasRightToSendMsg = isOnPostPage && curPost && curPost.username === loggedUser;
@@ -757,6 +759,21 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
     <CircularProgress color="inherit" />
   </Backdrop>;
 
+
+  const authorize = (sessionid: string) => {
+    socket.emit("authorize", {
+      sessionid: sessionid,
+      token: auth.token,
+      loggedEmail: auth.loggedEmail
+    });
+    socket.on("authorize", (data) => {
+      showSnack(data.message);
+      if (data.message === "SUCCESS") {
+        setShowQrReader(false);
+      }
+    });
+  }
+
   const onQRReaderResult = (result?: Result | undefined | null) => {
     if (result) {
       showSnack("Detected QR Text... Trying to autorize...");
@@ -764,16 +781,8 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
       const regExp = /^.*authorize\/(.*)/;
       const match = url.match(regExp);
       if (match && match.length > 1) {
-        const sessionid = match[1];
-        socket.emit("authorize", {
-          sessionid: sessionid,
-          token: auth.token,
-          loggedEmail: auth.loggedEmail
-        });
-        socket.on("authorize", (data) => {
-          showSnack(data.message);
-          setShowQrReader(false);
-        });
+        setDetectedSessionid(match[1]);
+        authorize(match[1]);
       } else {
         showSnack("ERROR: QR content is not valid");
       }
@@ -786,19 +795,29 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
     onClick={() => { setShowQrReader(false); }}
   >
     {showQrReader &&
-      <QrReader
-        constraints={{ facingMode: "environment" }}
-        onResult={onQRReaderResult}
-        containerStyle={{
-          width: "300px",
-          position: "absolute",
-          top: "calc(50% - 150px)",
-          left: "0",
-          right: "0",
-          marginLeft: "auto",
-          marginRight: "auto",
-        }}
-      />}</Backdrop>;
+      <>
+        <QrReader
+          constraints={{ facingMode: "environment" }}
+          onResult={onQRReaderResult}
+          containerStyle={{
+            width: "300px",
+            position: "absolute",
+            top: "calc(50% - 150px)",
+            left: "0",
+            right: "0",
+            marginLeft: "auto",
+            marginRight: "auto",
+          }}
+        />
+        <AuthInput
+          style={{ position: "absolute", top: "calc(50% + 150px)", background: (darkMode ? "black" : "white") }}
+          callback={(sessionid) => {
+            authorize(sessionid);
+          }}
+          initialCode={detectedSessionid}
+        />
+      </>
+    }</Backdrop>;
 
   return (
     <AppContext.Provider value={contextValue}>
