@@ -8,6 +8,7 @@ import { AppContext } from "../store/AppContext";
 import CodeBlock from "./CodeBlock";
 import classes from "./Message.module.css";
 import VisibilityIconToggleButton from "./VisibilityIconToggleButton";
+import classes from "./MarkdownComponent.module.css";
 
 const MarkdownComponent: React.FC<{
   content: string;
@@ -28,7 +29,7 @@ const MarkdownComponent: React.FC<{
           const isCollapse = match !== null && match[0] === "language-collapse";
           const language = isSecret ? match[0].replace(/language-secret-?/, "") : (match === null ? "" : match[0].replace("language-", ""));
           if (isCollapse) {
-            return <div style={{overflowX: "scroll"}}>
+            return <div className={classes.mycollapse}>
               <Collapsible trigger={<VisibilityIconToggleButton />}>
                 <MarkdownComponent content={String(children).replace(/\n\n/g, "\n")} />
               </Collapsible>
