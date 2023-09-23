@@ -233,6 +233,7 @@ export const MessageInput: React.FC<{
   }
   const [shouldHide, setShouldHide] = useState(!context.isAutoScrolling && document.activeElement !== inputRef.current && !isAtBottom);
   const [isTogglingOpen, setIsTogglingOpen] = useState(false);
+  const [isHoveringInput, setIsHoveringInput] = useState(false);
   const keyDownHandler = useCallback((event: KeyboardEvent) => {
     const { key } = event;
     const isCtrlKey = event.ctrlKey || event.metaKey;
@@ -249,6 +250,16 @@ export const MessageInput: React.FC<{
       event.preventDefault();
     }
   }, [shouldHide, isAtBottom, inputRef]);
+  const platform = (navigator?.platform || 'unknown').toLowerCase();
+  let shortcutHint = "";
+  // If the client is windows, hint is "CTRL+J"
+  if (platform.indexOf("win") > -1) {
+    shortcutHint = "CTRL+J";
+  }
+  // If the client is mac, hint is "CMD+J"
+  if (platform.indexOf("mac") > -1) {
+    shortcutHint = "CMD+J";
+  }
   useEffect(() => {
     if (!shouldHide && isTogglingOpen) {
       inputRef.current?.focus();
@@ -270,31 +281,35 @@ export const MessageInput: React.FC<{
           display: shouldHide ? "none" : "flex",
         }}
       >
-        <TextField
-          id="standard-text"
-          label={`Your Message, current agent: ${agent} ${(context.agent === "yourmodel" && !context.isYourmodelConnected) ? " (disconnected)" : ""}`}
-          className={classes.wrapText}
-          // inputProps={{ style: { color: context.darkMode ? "white" : "black" } }}
-          //margin="normal"
-          inputRef={inputRef}
-          value={inputText}
-          onChange={(e: any) => setInputText(e.target.value)}
-          multiline
-          onKeyDownCapture={handleInputOnKeyDown}
-          onKeyUpCapture={handleInputOnKeyUp}
-          onPaste={handlePaste}
-          InputProps={{
-            endAdornment: (
-              <IconButton
-                sx={{ visibility: inputText ? "visible" : "hidden" }}
-                onClick={handleClearClick}
-                size="small"
-              >
-                <ClearIcon />
-              </IconButton>
-            ),
-          }}
-        />
+        <Tooltip title={shortcutHint} open={isHoveringInput}>
+          <TextField
+            id="standard-text"
+            label={`Your Message, current agent: ${agent} ${(context.agent === "yourmodel" && !context.isYourmodelConnected) ? " (disconnected)" : ""}`}
+            className={classes.wrapText}
+            // inputProps={{ style: { color: context.darkMode ? "white" : "black" } }}
+            //margin="normal"
+            inputRef={inputRef}
+            onMouseEnter={() => setIsHoveringInput(true)}
+            onMouseLeave={() => setIsHoveringInput(false)}
+            value={inputText}
+            onChange={(e: any) => setInputText(e.target.value)}
+            multiline
+            onKeyDownCapture={handleInputOnKeyDown}
+            onKeyUpCapture={handleInputOnKeyUp}
+            onPaste={handlePaste}
+            InputProps={{
+              endAdornment: (
+                <IconButton
+                  sx={{ visibility: inputText ? "visible" : "hidden" }}
+                  onClick={handleClearClick}
+                  size="small"
+                >
+                  <ClearIcon />
+                </IconButton>
+              ),
+            }}
+          />
+        </Tooltip>
         {/* <MessageInputUpload setInputText={setInputText} /> */}
         <MessageInputSettings inputText={inputText} setInputText={setInputText} inputRef={inputRef} />
         {sendBtn}
