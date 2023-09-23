@@ -241,6 +241,8 @@ export const MessageInput: React.FC<{
       if (shouldHide) {
         setIsTogglingOpen(true);
         setShouldHide(false);
+      } else if (document.activeElement !== inputRef.current) {
+        inputRef.current?.focus();
       } else {
         setShouldHide(true);
       }
