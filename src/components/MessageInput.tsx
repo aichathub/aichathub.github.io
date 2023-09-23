@@ -4,7 +4,7 @@ import SendIcon from "@material-ui/icons/Send";
 import ClearIcon from '@mui/icons-material/Clear';
 import StopIcon from '@mui/icons-material/Stop';
 import { IconButton, TextField } from "@mui/material";
-import React, { KeyboardEvent, useContext, useEffect, useRef, useState } from "react";
+import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { MessageModel } from "../models/MessageModel";
 import { AppContext } from "../store/AppContext";
 import { chatgptReply, customModelReply, insertMessage, pythonReply, uploadImage } from "../util/db";
@@ -160,13 +160,13 @@ export const MessageInput: React.FC<{
       }
     }
   };
-  const handleInputOnKeyUp = (event: KeyboardEvent) => {
+  const handleInputOnKeyUp = (event: React.KeyboardEvent) => {
     event.preventDefault();
     if (!event.shiftKey && event.key === "Enter") {
       handleSend();
     }
   };
-  const handleInputOnKeyDown = (event: KeyboardEvent) => {
+  const handleInputOnKeyDown = (event: React.KeyboardEvent) => {
     if (event.key === "Enter" && !event.shiftKey) {
       event.preventDefault();
     }
@@ -231,12 +231,41 @@ export const MessageInput: React.FC<{
     setInputText("");
     inputRef.current?.focus();
   }
+  const [shouldHide, setShouldHide] = useState(!context.isAutoScrolling && document.activeElement !== inputRef.current && !isAtBottom);
+  const [isTogglingOpen, setIsTogglingOpen] = useState(false);
+  const keyDownHandler = useCallback((event: KeyboardEvent) => {
+    const { key } = event;
+    const isCtrlKey = event.ctrlKey || event.metaKey;
+    const isJ = key.toLowerCase() === "j";
+    if (isCtrlKey && isJ) {
+      if (shouldHide) {
+        setIsTogglingOpen(true);
+        setShouldHide(false);
+      } else {
+        setShouldHide(true);
+      }
+      event.preventDefault();
+    }
+  }, [shouldHide, isAtBottom, inputRef]);
+  useEffect(() => {
+    if (!shouldHide && isTogglingOpen) {
+      inputRef.current?.focus();
+      setIsTogglingOpen(false);
+    }
+  }, [shouldHide, isTogglingOpen]);
+  useEffect(() => {
+    window.addEventListener("keydown", keyDownHandler);
+    return () => window.removeEventListener("keydown", keyDownHandler);
+  }, [keyDownHandler]);
+  useEffect(() => {
+    setShouldHide(!context.isAutoScrolling && document.activeElement !== inputRef.current && !isAtBottom);
+  }, [context.isAutoScrolling, isAtBottom, inputRef]);
   return (
     <>
       <div className={classes.wrapForm}
         style={{
           background: context.darkMode ? "rgb(39,39,39)" : "white",
-          display: (!context.isAutoScrolling && document.activeElement !== inputRef.current && !isAtBottom) ? "none" : "flex",
+          display: shouldHide ? "none" : "flex",
         }}
       >
         <TextField
