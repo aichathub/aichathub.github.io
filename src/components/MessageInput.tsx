@@ -291,6 +291,7 @@ export const MessageInput: React.FC<{
             inputRef={inputRef}
             onMouseEnter={() => setIsHoveringInput(true)}
             onMouseLeave={() => setIsHoveringInput(false)}
+            onFocus={() => setIsHoveringInput(false)}
             value={inputText}
             onChange={(e: any) => setInputText(e.target.value)}
             multiline
