@@ -234,6 +234,7 @@ export const MessageInput: React.FC<{
   const [shouldHide, setShouldHide] = useState(!context.isAutoScrolling && document.activeElement !== inputRef.current && !isAtBottom);
   const [isTogglingOpen, setIsTogglingOpen] = useState(false);
   const [isHoveringInput, setIsHoveringInput] = useState(false);
+  const [isFocusing, setIsFocusing] = useState(false);
   const keyDownHandler = useCallback((event: KeyboardEvent) => {
     const { key } = event;
     const isCtrlKey = event.ctrlKey || event.metaKey;
@@ -281,7 +282,7 @@ export const MessageInput: React.FC<{
           display: shouldHide ? "none" : "flex",
         }}
       >
-        <Tooltip title={shortcutHint} open={isHoveringInput}>
+        <Tooltip title={shortcutHint} open={isHoveringInput && !isFocusing}>
           <TextField
             id="standard-text"
             label={`Your Message, current agent: ${agent} ${(context.agent === "yourmodel" && !context.isYourmodelConnected) ? " (disconnected)" : ""}`}
@@ -291,7 +292,8 @@ export const MessageInput: React.FC<{
             inputRef={inputRef}
             onMouseEnter={() => setIsHoveringInput(true)}
             onMouseLeave={() => setIsHoveringInput(false)}
-            onFocus={() => setIsHoveringInput(false)}
+            onFocus={() => setIsFocusing(true)}
+            onBlur={() => setIsFocusing(false)}
             value={inputText}
             onChange={(e: any) => setInputText(e.target.value)}
             multiline
