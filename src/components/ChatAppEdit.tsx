@@ -133,7 +133,9 @@ const ChatAppEdit = () => {
       if (response.message !== "SUCCESS") {
         return;
       }
-      context.setCurPost(response.result);
+      const samePost = JSON.stringify(response.result) === JSON.stringify(context.curPost);
+      if (!samePost)
+        context.setCurPost(response.result);
     });
   }, [context.lastPostsRefresh]);
 
