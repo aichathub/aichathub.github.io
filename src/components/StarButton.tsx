@@ -47,6 +47,7 @@ const StarButton: React.FC<{
   useEffect(() => {
     // alert(props.post.username + " " + props.post.pid);
     if (!props.post.username || !props.post.pid || props.post.pid.trim() === "") return;
+    if (JSON.stringify(props.post) === JSON.stringify(context.curPost) && isReady) return;
     setIsReady(false);
     getStarCount(props.post.username!, props.post.pid).then((response2) => {
       const isLoggedIn = context.loggedUser && context.loggedUser.trim() !== "";
