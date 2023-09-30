@@ -309,12 +309,15 @@ const TopLeftBar: React.FC<{
             </IconButton>
           </Tooltip>
           <Tooltip title={"Home page"} arrow>
-            <Button
-              variant="text"
-              color="secondary"
-              startIcon={<Avatar src={logo} className={(context.isLoadingMessages || context.isLeftBarPostLoading) ? classes.rotate : ""} />}
+            <IconButton
+              onClick={() => {
+                context.setCurPost(DummyPostModel);
+                navigate("/");
+                document.title = "AIChatHub";
+              }}              
             >
-            </Button>
+              <Avatar src={logo} className={(context.isLoadingMessages || context.isLeftBarPostLoading) ? classes.rotate : ""} />
+            </IconButton>
           </Tooltip>
           <Tooltip title={searchBoxText ? "" : searchBarShortcutHint}>
             <Search sx={{ flexGrow: 1, marginTop: "5px" }}>
