@@ -6,7 +6,6 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
-import HomeIcon from '@mui/icons-material/Home';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import LoginIcon from '@mui/icons-material/Login';
 import MenuIcon from "@mui/icons-material/Menu";
@@ -14,7 +13,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import SearchIcon from "@mui/icons-material/Search";
-import { Autocomplete, Box, CircularProgress, FilterOptionsState, TextField } from "@mui/material";
+import { Autocomplete, Avatar, Box, Button, CircularProgress, FilterOptionsState, TextField } from "@mui/material";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import { createFilterOptions } from '@mui/material/Autocomplete';
 import Divider from "@mui/material/Divider";
@@ -31,6 +30,7 @@ import Typography from "@mui/material/Typography";
 import { alpha, styled, useTheme } from "@mui/material/styles";
 import { useContext, useEffect, useRef, useState } from "react";
 import { useMatch, useNavigate, useParams, useSearchParams } from "react-router-dom";
+import logo from "../images/logo.png";
 import { DummyPostModel } from "../models/DummyPostModel";
 import { PostModel } from "../models/PostModel";
 import { AppContext } from "../store/AppContext";
@@ -309,19 +309,12 @@ const TopLeftBar: React.FC<{
             </IconButton>
           </Tooltip>
           <Tooltip title={"Home page"} arrow>
-            <IconButton
-              color="inherit"
-              // onClick={() => { window.location.href = "/"; }}
-              onClick={() => {
-                context.setCurPost(DummyPostModel);
-                navigate("/");
-                document.title = "AIChatHub";
-              }}
-              edge="start"
-              sx={{ mr: 2, ...(props.open && { display: "none" }) }}
+            <Button
+              variant="text"
+              color="secondary"
+              startIcon={<Avatar src={logo} className={(context.isLoadingMessages || context.isLeftBarPostLoading) ? classes.rotate : ""} />}
             >
-              <HomeIcon />
-            </IconButton>
+            </Button>
           </Tooltip>
           <Tooltip title={searchBoxText ? "" : searchBarShortcutHint}>
             <Search sx={{ flexGrow: 1, marginTop: "5px" }}>
