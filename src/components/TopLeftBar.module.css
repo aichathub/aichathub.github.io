@@ -8,11 +8,11 @@
 }
 
 .rotate {
-  animation: rotation 0.7s infinite linear;
+  animation: rotation 2s infinite linear;
 }
 
 .rotate-slow {
-  animation: rotation 70s infinite linear;
+  animation: rotation 27s infinite linear;
 }
 
 @keyframes rotation {
