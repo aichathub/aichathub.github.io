@@ -13,7 +13,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import SearchIcon from "@mui/icons-material/Search";
-import { Autocomplete, Avatar, Box, Button, CircularProgress, FilterOptionsState, TextField } from "@mui/material";
+import { Autocomplete, Avatar, Box, CircularProgress, FilterOptionsState, TextField } from "@mui/material";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import { createFilterOptions } from '@mui/material/Autocomplete';
 import Divider from "@mui/material/Divider";
@@ -314,9 +314,9 @@ const TopLeftBar: React.FC<{
                 context.setCurPost(DummyPostModel);
                 navigate("/");
                 document.title = "AIChatHub";
-              }}              
+              }}
             >
-              <Avatar src={logo} className={(context.isLoadingMessages || context.isLeftBarPostLoading) ? classes.rotate : ""} />
+              <Avatar src={logo} className={(context.isLoadingMessages || context.isLeftBarPostLoading) ? classes.rotate : classes['rotate-slow']} />
             </IconButton>
           </Tooltip>
           <Tooltip title={searchBoxText ? "" : searchBarShortcutHint}>
