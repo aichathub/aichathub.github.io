@@ -27,7 +27,7 @@ type AuthObj = {
   token: string;
 }
 
-export type Agent = "gpt3.5" | "gpt4" | "python" | "yourmodel" | "none";
+export type Agent = "gpt3.5" | "gpt4" | "python" | "yourmodel" | "none" | "llama70b";
 
 type AppContextObj = {
   pagePostId: string;

@@ -1,7 +1,7 @@
 import { MessageModel } from "../models/MessageModel";
 import { PostModel } from "../models/PostModel";
 import { TagModel } from "../models/TagModel";
-import { backendServer } from "../util/constants";
+import { LLAMA_70B_API, backendServer } from "../util/constants";
 
 export const verify = async (authObj: object) => {
   const response = await fetch(`${backendServer}/verify/`, {
@@ -569,24 +569,45 @@ export const chatgptReply = async (pid: string, username: string, token: string,
   return responseJson;
 }
 
+const formPrompt = (messages: MessageModel[], content: string, user = "### Human", assistant = "### Assistant") => {
+  messages = messages.filter((m) => m.mid !== -1);
+  let result = "";
+  for (let i = 0; i < messages.length; i++) {
+    const msg = messages[i];
+    const isAI = msg.authorusername === "undefined";
+    if (isAI) {
+      result += `${assistant}: ${msg.content}\n`;
+    } else {
+      result += `${user}: ${msg.content}\n`;
+    }
+  }
+  result += `### Human: ${content}\n`;
+  result += `### Assistant:`;
+  return result;
+}
+
+export const llama70BReply = async (content: string, messages: MessageModel[]) => {
+  const response = await fetch(LLAMA_70B_API, {
+    method: "POST",
+    mode: "cors",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      "content": formPrompt(messages, content, "User", "Assistant")
+    }),
+  });
+  const res = await response.json();
+  let answer = res.content;
+  const stopping_string = "</s>";
+  if (answer.indexOf(stopping_string) !== -1) {
+    answer = answer.substring(0, answer.indexOf(stopping_string));
+  }
+  return answer;
+}
+
 export const customModelReply = async (content: string, api: string, messages: MessageModel[]) => {
   const url = `${api}/v1/generate`;
-  const formPrompt = (messages: MessageModel[], content: string) => {
-    messages = messages.filter((m) => m.mid !== -1);
-    let result = "";
-    for (let i = 0; i < messages.length; i++) {
-      const msg = messages[i];
-      const isAI = msg.authorusername === "undefined";
-      if (isAI) {
-        result += `### Assistant: ${msg.content}\n`;
-      } else {
-        result += `### Human: ${msg.content}\n`;
-      }
-    }
-    result += `### Human: ${content}\n`;
-    result += `### Assistant:`;
-    return result;
-  }
   const response = await fetch(url, {
     method: "POST",
     mode: "cors",

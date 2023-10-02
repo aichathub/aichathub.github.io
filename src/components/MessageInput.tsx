@@ -7,7 +7,7 @@ import { IconButton, TextField } from "@mui/material";
 import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { MessageModel } from "../models/MessageModel";
 import { AppContext } from "../store/AppContext";
-import { chatgptReply, customModelReply, insertMessage, pythonReply, uploadImage } from "../util/db";
+import { chatgptReply, customModelReply, insertMessage, llama70BReply, pythonReply, uploadImage } from "../util/db";
 import MessageInputSettings from "./MessageInputSettings";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -155,6 +155,28 @@ export const MessageInput: React.FC<{
           authoremail: context.auth.loggedEmail,
           triggerUserModel: true,
           sendernickname: modelName
+        });
+        props.reloadMessage();
+      }
+
+      const triggerLLaMA70B = context.agent === "llama70b";
+      if (triggerLLaMA70B) {
+        context.setIsSendingMessage(true);
+        setTimeout(() => {
+          window.scroll({
+            top: document.body.offsetHeight,
+          });
+        }, 500);
+        const aiResponse = await llama70BReply(content, context.messages);
+        await insertMessage({
+          username: props.username,
+          pid: props.postid,
+          content: aiResponse,
+          token: context.auth.token,
+          triggerAI: false,
+          authoremail: context.auth.loggedEmail,
+          triggerUserModel: true,
+          sendernickname: "LLaMA-2 70B"
         });
         props.reloadMessage();
       }
