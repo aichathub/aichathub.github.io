@@ -18,8 +18,9 @@ const MessageInputSettings: React.FC<{
   const open = Boolean(anchorEl);
   const hasVoice = window.speechSynthesis.getVoices().length > 0;
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
+    // setAnchorEl(event.currentTarget);
     context.pingYourmodel();
+    handleAgentBtnClick();
   };
   const handleClose = () => {
     setAnchorEl(null);
@@ -56,7 +57,7 @@ const MessageInputSettings: React.FC<{
     agent = context.yourmodelName;
   }
   return <>
-    <Tooltip title="Settings" arrow placement="left-start">
+    <Tooltip title="Change Agent" arrow placement="left-start">
       <IconButton
         component="label"
         style={{ borderRadius: 0, borderLeft: '0.1em solid lightgrey' }}
