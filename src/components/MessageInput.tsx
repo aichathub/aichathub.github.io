@@ -7,7 +7,7 @@ import { IconButton, TextField } from "@mui/material";
 import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { MessageModel } from "../models/MessageModel";
 import { AppContext } from "../store/AppContext";
-import { chatgptReply, customModelReply, insertMessage, llama70BReply, pythonReply, uploadImage } from "../util/db";
+import { chatgptReply, customModelReply, insertMessage, llama70BReply, pythonRuntimeReply, uploadImage } from "../util/db";
 import MessageInputSettings from "./MessageInputSettings";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -61,7 +61,7 @@ export const MessageInput: React.FC<{
     }
     const ref = inputRef.current!;
     if (ref.value.toLowerCase().replaceAll("@ai", "").trim().length !== 0) {
-      const content = ref.value;
+      let content = ref.value;
       // const triggerAI = content.toLowerCase().indexOf("@ai") !== -1;
       // const triggerPython = content.toLowerCase().indexOf("@python") !== -1;
       const triggerAI = context.agent === "gpt3.5" || context.agent === "gpt4";
@@ -92,6 +92,11 @@ export const MessageInput: React.FC<{
         optionalSocketId = localStorage.getItem("socketId")!;
       }
       let response = "";
+      if (triggerPython) {
+        if (!content.startsWith("```")) {
+          content = "```python\n" + content + "\n```";
+        }
+      }
 
       props.addMessage({
         mid: -1,
@@ -126,7 +131,23 @@ export const MessageInput: React.FC<{
           }
           props.reloadMessage();
         } else if (triggerPython) {
-          await pythonReply(props.postid, props.username, context.auth.token, content);
+          context.setIsSendingMessage(true);
+          setTimeout(() => {
+            window.scroll({
+              top: document.body.offsetHeight,
+            });
+          }, 500);
+          const pythonReply = await pythonRuntimeReply(content);
+          await insertMessage({
+            username: props.username,
+            pid: props.postid,
+            content: "```plaintext\n" + pythonReply + "\n```",
+            token: context.auth.token,
+            triggerAI: false,
+            authoremail: context.auth.loggedEmail,
+            triggerUserModel: true,
+            sendernickname: "Python Runtime"
+          });
           props.reloadMessage();
         }
       } else {

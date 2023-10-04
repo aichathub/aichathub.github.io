@@ -1,7 +1,7 @@
 import { MessageModel } from "../models/MessageModel";
 import { PostModel } from "../models/PostModel";
 import { TagModel } from "../models/TagModel";
-import { LLAMA_70B_API, backendServer } from "../util/constants";
+import { LLAMA_70B_API, PYTHON_RUNTIME_API, backendServer } from "../util/constants";
 
 export const verify = async (authObj: object) => {
   const response = await fetch(`${backendServer}/verify/`, {
@@ -609,11 +609,33 @@ export const llama70BReply = async (content: string, messages: MessageModel[]) =
     }),
   });
   const res = await response.json();
-  let answer = res.content;
+  let answer = res.content as string;
   const stopping_string = "</s>";
   if (answer.indexOf(stopping_string) !== -1) {
     answer = answer.substring(0, answer.indexOf(stopping_string));
   }
+  return answer;
+}
+
+export const pythonRuntimeReply = async (content: string) => {
+  if (content.startsWith("```python")) {
+    content = content.slice("```python".length)
+  }
+  if (content.endsWith("```")) {
+    content = content.slice(0, -("```".length))
+  }
+  const response = await fetch(PYTHON_RUNTIME_API, {
+    method: "POST",
+    mode: "cors",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      "code": content
+    }),
+  });
+  const res = await response.json();
+  const answer = res.result as string;
   return answer;
 }
 
