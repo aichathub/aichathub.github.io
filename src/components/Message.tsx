@@ -10,7 +10,7 @@ import Timeago from "react-timeago";
 import { MessageModel } from "../models/MessageModel";
 import { AppContext } from "../store/AppContext";
 import { generateColor } from "../util/avatarColor";
-import { editMessage, uploadImage } from "../util/db";
+import { editMessage, pythonRuntimeReply, uploadImage } from "../util/db";
 import LikeDislikePanel from "./LikeDislikePanel";
 import MarkdownComponent from "./MarkdownComponent";
 import MessageWrapper from "./MessageWrapper";
@@ -100,6 +100,29 @@ const Message: React.FC<{
       setContent(newContent);
       props.message.editdate = new Date();
       props.message.content = newContent;
+      let nextMsg: MessageModel | undefined = undefined;
+      for (let i = 0; i < context.messages.length; i++) {
+        if (context.messages[i].mid === props.message.mid) {
+          if (i + 1 < context.messages.length) {
+            nextMsg = context.messages[i + 1];
+          }
+        }
+      }
+      if (nextMsg && nextMsg.sendernickname?.toUpperCase() === "PYTHON RUNTIME") {
+        context.setMessages(context.messages.map(x => x.mid !== nextMsg?.mid ? x : {
+          ...x,
+          content: "Loading..."
+        }));
+        pythonRuntimeReply(newContent).then(result => {
+          const displayResult = "```plaintext\n" + result + "\n```";
+          context.setMessages(context.messages.map(x => x.mid !== nextMsg?.mid ? x : {
+            ...x,
+            content: displayResult,
+            editdate: new Date()
+          }));
+          editMessage(nextMsg!.mid, context.auth.loggedEmail, context.auth.token, displayResult);
+        });
+      }
       editMessage(props.message.mid, context.auth.loggedEmail, context.auth.token, editedMsg).then(res => {
         context.showSnack(res.message);
       });
@@ -176,6 +199,9 @@ const Message: React.FC<{
     }, 50);
     return () => clearInterval(interval);
   }, [context.shouldStopTypingMessage]);
+  useEffect(() => {
+    setContent(props.message.content);
+  }, [props.message]);
   return (
     <StyledPaper
       sx={sx}
