@@ -200,7 +200,9 @@ const Message: React.FC<{
     return () => clearInterval(interval);
   }, [context.shouldStopTypingMessage]);
   useEffect(() => {
-    setContent(props.message.content);
+    if (props.message.sendernickname?.toUpperCase() === "PYTHON RUNTIME") {
+      setContent(props.message.content);
+    }
   }, [props.message]);
   return (
     <StyledPaper
