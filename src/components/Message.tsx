@@ -268,9 +268,9 @@ const Message: React.FC<{
             </Grid>
           </MessageWrapper>
           {!isEditing && (
-            (isLoading || props.message.isLoading) ? <>
+            (isLoading || props.message.isLoading || content === "Loading...") ? <>
               {
-                (props.message.isLoading ? [30, 50] : [30, 50, 80, 40]).map((width, i) => <Skeleton sx={{ marginTop: "5px" }} key={i} variant="text" width={`${width}%`} />)
+                ((props.message.isLoading || content === "Loading...") ? [30, 50] : [30, 50, 80, 40]).map((width, i) => <Skeleton sx={{ marginTop: "5px" }} key={i} variant="text" width={`${width}%`} />)
               }
             </> :
               <>
