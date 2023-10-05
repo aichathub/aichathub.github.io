@@ -614,6 +614,7 @@ export const llama70BReply = async (content: string, messages: MessageModel[]) =
   if (answer.indexOf(stopping_string) !== -1) {
     answer = answer.substring(0, answer.indexOf(stopping_string));
   }
+  if (answer.startsWith("Assistant: ")) answer.replace("Assistant: ", "")
   return answer;
 }
 
