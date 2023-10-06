@@ -27,7 +27,7 @@ const AgentDialog: React.FC<{
   const [agent, setAgent] = React.useState(context.agent);
   const [yourmodelUrl, setYourmodelUrl] = React.useState(context.yourmodelUrl);
 
-  const handleClose = () => {
+  const handleClose = (shouldFocusInput = false) => {
     onClose();
     setYourmodelUrl(context.yourmodelUrl);
 
@@ -35,8 +35,15 @@ const AgentDialog: React.FC<{
       window.scroll({
         top: document.body.offsetHeight,
       });
-      props.inputRef.current?.focus();
-    }, 500);
+      if (shouldFocusInput) {
+        props.inputRef.current?.focus();
+        setTimeout(() => {
+          window.scroll({
+            top: document.body.offsetHeight,
+          });
+        }, 200);
+      }
+    }, 250);
   }
 
   const handleSaveYourModel = async () => {
@@ -68,7 +75,7 @@ const AgentDialog: React.FC<{
     <div>
       <Dialog
         open={open}
-        onClose={onClose}
+        onClose={() => handleClose()}
         TransitionComponent={Transition}
         fullWidth
       >
@@ -84,7 +91,7 @@ const AgentDialog: React.FC<{
             setAgent(changedAgent);
             if (changedAgent !== "yourmodel") {
               context.setAgent(changedAgent);
-              handleClose();
+              handleClose(true);
             }
           }}
         >
