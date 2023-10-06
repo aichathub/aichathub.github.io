@@ -131,7 +131,7 @@ const MessageInputSettings: React.FC<{
         </Grow>
       )}
     </Popper>
-    <AgentDialog onClose={handleAgentDialogClose} open={showAgentDialog} />
+    <AgentDialog onClose={handleAgentDialogClose} open={showAgentDialog} inputRef={props.inputRef} />
   </>;
 };
 

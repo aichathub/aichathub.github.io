@@ -20,6 +20,7 @@ const Transition = React.forwardRef(function Transition(
 const AgentDialog: React.FC<{
   open: boolean;
   onClose: () => void;
+  inputRef: React.RefObject<HTMLInputElement>;
 }> = (props) => {
   const { open, onClose } = props;
   const context = React.useContext(AppContext);
@@ -34,10 +35,11 @@ const AgentDialog: React.FC<{
       window.scroll({
         top: document.body.offsetHeight,
       });
+      props.inputRef.current?.focus();
     }, 500);
   }
 
-  const handleSave = async () => {
+  const handleSaveYourModel = async () => {
     if (agent === "yourmodel") {
       try {
         const modelName = await getCustomModelName(yourmodelUrl);
@@ -51,9 +53,6 @@ const AgentDialog: React.FC<{
       } catch (err) {
         context.showSnack("Failed to get model name. Please check your url.");
       }
-    } else {
-      context.setAgent(agent as Agent);
-      handleClose();
     }
   }
 
@@ -69,7 +68,7 @@ const AgentDialog: React.FC<{
     <div>
       <Dialog
         open={open}
-        onClose={handleClose}
+        onClose={onClose}
         TransitionComponent={Transition}
         fullWidth
       >
@@ -81,7 +80,12 @@ const AgentDialog: React.FC<{
           defaultValue={"gpt3.5"}
           value={agent}
           onChange={(event) => {
-            setAgent(event.target.value as Agent);
+            const changedAgent = event.target.value as Agent;
+            setAgent(changedAgent);
+            if (changedAgent !== "yourmodel") {
+              context.setAgent(changedAgent);
+              handleClose();
+            }
           }}
         >
           <MenuItem value={"none"}>None</MenuItem>
@@ -109,7 +113,7 @@ const AgentDialog: React.FC<{
           }}
         />}
         {agent === "yourmodel" && <div className={linkClasses.link}><a target="_blank" href="https://colab.research.google.com/drive/1teDosN4zxuTuqRq5rIzidgrqf0P9XmKJ?usp=sharing">How to generate one?</a></div>}
-        <Button variant="text" onClick={handleSave}>Save</Button>
+        {agent === "yourmodel" && <Button variant="text" onClick={handleSaveYourModel}>Save</Button>}
       </Dialog>
     </div>
   );
