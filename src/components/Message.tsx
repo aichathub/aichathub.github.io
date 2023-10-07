@@ -148,7 +148,7 @@ const Message: React.FC<{
           content: "Loading..."
         }));
         pythonRuntimeReply(newContent).then(result => {
-          const displayResult = "```plaintext\n" + result + "\n```";
+          const displayResult = "#### *Execution Result*\n```plaintext\n" + result + "\n```";
           context.setMessages(context.messages.map(x => x.mid !== nextMsg?.mid ? x : {
             ...x,
             content: displayResult,
