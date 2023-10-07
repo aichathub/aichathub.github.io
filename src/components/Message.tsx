@@ -102,6 +102,7 @@ const Message: React.FC<{
       }
     }
   }
+  const fullHeight = window.innerHeight;
   const editor = <>
     {
       !props.isPythonRuntime && <TextField multiline
@@ -116,7 +117,7 @@ const Message: React.FC<{
     }
     {
       props.isPythonRuntime && <Editor
-        height={(Math.max(100, numOfLines * 12)) + "px"}
+        height={(Math.max(100, Math.min(fullHeight * 0.7, numOfLines * 12))) + "px"}
         language="python"
         theme={context.darkMode ? "vs-dark" : "vs-light"}
         onChange={val => { if (val) setPythonEditorText(val); }}
