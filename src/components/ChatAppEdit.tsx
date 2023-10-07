@@ -69,7 +69,7 @@ const ChatAppEdit = () => {
       if (msgs.length > context.messages.length || context.messages[context.messages.length - 1].mid === -1) {
         context.setShouldStopTypingMessage(false);
         context.setMessages(msgmodels);
-        console.log("loaded messages, justForked: ", justForked);
+        console.log("loaded messages, justForked: ", context.justForked);
         if (context.justForked) {
           setTimeout(() => {
             window.scroll({
