@@ -1,4 +1,5 @@
 import { Box, Tooltip } from "@material-ui/core";
+import Editor from "@monaco-editor/react";
 import { Button, Grid, Skeleton, SxProps, TextField, Theme } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import Paper from "@mui/material/Paper";
@@ -34,7 +35,20 @@ const Message: React.FC<{
   message: MessageModel;
   typeEffect?: boolean;
   isLoading?: boolean;
+  isPythonRuntime?: boolean;
 }> = (props) => {
+  const markdownPythonToCode = (input: string) => {
+    if (input.startsWith("```python\n")) {
+      input = input.replace("```python\n", "");
+    }
+    if (input.endsWith("\n```")) {
+      input = input.slice(0, -4);
+    }
+    return input;
+  };
+  const pythonCodeToMarkdown = (input: string) => {
+    return "```python\n" + input + "\n```";
+  }
   let avatarName = "You";
   const isAI = props.message.authorusername === undefined;
   const avatarColor = isAI ? deepOrange[500] : generateColor(props.message.authorusername);
@@ -46,6 +60,8 @@ const Message: React.FC<{
   const context = useContext(AppContext);
   const [isEditing, setIsEditing] = useState(false);
   const [editedMsg, setEditedMsg] = useState(props.message.content);
+  const [pythonEditorText, setPythonEditorText] = useState(markdownPythonToCode(props.message.content));
+
   const justNow = (date: Date, seconds = 60) => {
     if (date === undefined) return false;
     const now = new Date();
@@ -86,29 +102,42 @@ const Message: React.FC<{
     }
   }
   const editor = <>
-    <TextField multiline
-      autoFocus
-      value={editedMsg}
-      style={{ width: "100%" }}
-      onChange={(e) => {
-        setEditedMsg(e.target.value);
-      }}
-      onPaste={handleEditOnPaste}
-    />
+    {
+      !props.isPythonRuntime && <TextField multiline
+        autoFocus
+        value={editedMsg}
+        style={{ width: "100%" }}
+        onChange={(e) => {
+          setEditedMsg(e.target.value);
+        }}
+        onPaste={handleEditOnPaste}
+      />
+    }
+    {
+      props.isPythonRuntime && <Editor
+        height="120px"
+        language="python"
+        theme={context.darkMode ? "vs-dark" : "vs-light"}
+        onChange={val => { if (val) setPythonEditorText(val); }}
+        defaultValue={markdownPythonToCode(props.message.content)}
+      // value={}
+      />
+    }
     <Button variant="text" onClick={() => {
-      const newContent = editedMsg.replaceAll("\n", "\n\n");
+      const newContent = props.isPythonRuntime ? pythonCodeToMarkdown(pythonEditorText) : editedMsg.replaceAll("\n", "\n\n");
       setContent(newContent);
       props.message.editdate = new Date();
       props.message.content = newContent;
-      let nextMsg: MessageModel | undefined = undefined;
-      for (let i = 0; i < context.messages.length; i++) {
-        if (context.messages[i].mid === props.message.mid) {
-          if (i + 1 < context.messages.length) {
-            nextMsg = context.messages[i + 1];
+
+      if (props.isPythonRuntime) {
+        let nextMsg: MessageModel | undefined = undefined;
+        for (let i = 0; i < context.messages.length; i++) {
+          if (context.messages[i].mid === props.message.mid) {
+            if (i + 1 < context.messages.length) {
+              nextMsg = context.messages[i + 1];
+            }
           }
         }
-      }
-      if (nextMsg && nextMsg.sendernickname?.toUpperCase() === "PYTHON RUNTIME") {
         context.setMessages(context.messages.map(x => x.mid !== nextMsg?.mid ? x : {
           ...x,
           content: "Loading..."
@@ -123,11 +152,11 @@ const Message: React.FC<{
           editMessage(nextMsg!.mid, context.auth.loggedEmail, context.auth.token, displayResult);
         });
       }
-      editMessage(props.message.mid, context.auth.loggedEmail, context.auth.token, editedMsg).then(res => {
+      editMessage(props.message.mid, context.auth.loggedEmail, context.auth.token, props.isPythonRuntime ? newContent : editedMsg).then(res => {
         context.showSnack(res.message);
       });
       setIsEditing(false);
-    }}>Save</Button>
+    }}>{props.isPythonRuntime ? "Run" : "Save"}</Button>
     <Button variant="text" onClick={() => {
       setIsEditing(false);
     }}>Cancel</Button>

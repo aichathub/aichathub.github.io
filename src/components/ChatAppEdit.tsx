@@ -182,7 +182,12 @@ const ChatAppEdit = () => {
     bodyContent = (
       <Grid container style={{ marginBottom: "27px" }} >
         {context.messages.map((x, index) => (
-          <Message key={x.mid} message={x} typeEffect={index === context.messages.length - 1 && x.sender === 'ai'} />
+          <Message
+            key={x.mid}
+            message={x}
+            typeEffect={index === context.messages.length - 1 && x.sender === 'ai'}
+            isPythonRuntime={index + 1 < context.messages.length && context.messages[index + 1].sendernickname?.toUpperCase() === "PYTHON RUNTIME"}
+          />
         ))}
         {context.isSendingMessage && <Message message={DummyMessageModel} typeEffect={false} isLoading={true} />}
       </Grid>
