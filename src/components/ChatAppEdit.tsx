@@ -126,7 +126,7 @@ const ChatAppEdit = () => {
       if (!samePost)
         context.setCurPost(response.result);
     });
-  }, [context.lastPostsRefresh]);
+  }, [context.lastPostsRefresh, context.justForked]);
 
   useEffect(() => {
     reloadMessage();
