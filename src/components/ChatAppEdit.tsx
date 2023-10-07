@@ -6,7 +6,7 @@ import ForkLeftIcon from '@mui/icons-material/ForkLeft';
 import LockIcon from '@mui/icons-material/Lock';
 import { Skeleton } from "@mui/material";
 import Box from "@mui/material/Box";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { DummyMessageModel } from "../models/DummyMessageModel";
 import { MessageModel } from "../models/MessageModel";
@@ -69,13 +69,12 @@ const ChatAppEdit = () => {
       if (msgs.length > context.messages.length || context.messages[context.messages.length - 1].mid === -1) {
         context.setShouldStopTypingMessage(false);
         context.setMessages(msgmodels);
-        console.log("loaded messages, justForked: ", context.justForked);
         if (context.justForked) {
           setTimeout(() => {
             window.scroll({
               top: document.body.offsetHeight,
             });
-          }, 1000);
+          }, 300);
           context.setJustForked(false);
         }
       }

@@ -126,6 +126,7 @@ const MessageMoreButton: React.FC<{
       context.showSnack("FORKED: " + response.message);
       if (response.message === "SUCCESS") {
         const result = response.result as PostModel;
+        context.setJustForked(true);
         context.setMessages([]);
         navigate(`/${context.loggedUser}/${result.pid}`);
       }

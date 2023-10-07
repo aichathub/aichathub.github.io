@@ -721,6 +721,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
       if (response.message === "SUCCESS") {
         const result = response.result as PostModel;
         setMessages([]);
+        setJustForked(true);
         navigate(`/${loggedUser}/${result.pid}`);
       }
       setIsForking(false);
