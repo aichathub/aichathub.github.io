@@ -141,7 +141,7 @@ export const MessageInput: React.FC<{
           await insertMessage({
             username: props.username,
             pid: props.postid,
-            content: "```plaintext\n" + pythonReply + "\n```",
+            content: "#### *Execution Result*\n```plaintext\n" + pythonReply + "\n```",
             token: context.auth.token,
             triggerAI: false,
             authoremail: context.auth.loggedEmail,
