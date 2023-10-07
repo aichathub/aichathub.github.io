@@ -619,11 +619,11 @@ export const llama70BReply = async (content: string, messages: MessageModel[]) =
 }
 
 export const pythonRuntimeReply = async (content: string) => {
-  if (content.startsWith("```python")) {
-    content = content.slice("```python".length)
+  if (content.startsWith("```python\n")) {
+    content = content.slice("```python\n".length)
   }
-  if (content.endsWith("```")) {
-    content = content.slice(0, -("```".length))
+  if (content.endsWith("\n```")) {
+    content = content.slice(0, -("\n```".length))
   }
   const response = await fetch(PYTHON_RUNTIME_API, {
     method: "POST",
