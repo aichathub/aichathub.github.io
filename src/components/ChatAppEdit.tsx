@@ -63,20 +63,20 @@ const ChatAppEdit = () => {
           });
         }, 300);
       }
-      if (context.justForked && msgs.length > oldMsgLength) {
-        setTimeout(() => {
-          window.scroll({
-            top: document.body.offsetHeight,
-          });
-        }, 300);
-        context.setJustForked(false);
-      }
       if (!context.isFirstLoad && msgs.length > oldMsgLength && msgmodels[msgmodels.length - 1].authorusername === undefined && context.sendTriggerAIVoice) {
         msgmodels[msgmodels.length - 1].shouldSpeak = true;
       }
       if (msgs.length > context.messages.length || context.messages[context.messages.length - 1].mid === -1) {
         context.setShouldStopTypingMessage(false);
         context.setMessages(msgmodels);
+        if (context.justForked) {
+          setTimeout(() => {
+            window.scroll({
+              top: document.body.offsetHeight,
+            });
+          }, 1000);
+          context.setJustForked(false);
+        }
       }
       if (context.isSendingMessage) {
         const aiReplied = msgs.length > oldMsgLength && !msgs[msgs.length - 1].authoremail;
