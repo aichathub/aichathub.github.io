@@ -61,6 +61,7 @@ const Message: React.FC<{
   const [isEditing, setIsEditing] = useState(false);
   const [editedMsg, setEditedMsg] = useState(props.message.content);
   const [pythonEditorText, setPythonEditorText] = useState(markdownPythonToCode(props.message.content));
+  const numOfLines = props.message.content.split("\n").length;
 
   const justNow = (date: Date, seconds = 60) => {
     if (date === undefined) return false;
@@ -115,12 +116,15 @@ const Message: React.FC<{
     }
     {
       props.isPythonRuntime && <Editor
-        height="120px"
+        height={(Math.max(100, numOfLines * 12)) + "px"}
         language="python"
         theme={context.darkMode ? "vs-dark" : "vs-light"}
         onChange={val => { if (val) setPythonEditorText(val); }}
         defaultValue={markdownPythonToCode(props.message.content)}
-      // value={}
+        options={{
+          minimap: { enabled: false },
+          scrollBeyondLastLine: false
+        }}
       />
     }
     <Button variant="text" onClick={() => {
