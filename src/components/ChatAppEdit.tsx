@@ -23,7 +23,6 @@ const ChatAppEdit = () => {
   const pagePostId = context.pagePostId;
   const post = context.getPostById(pagePostId);
   const { username, postid } = useParams();
-  const [reloadInterval, setReloadInterval] = useState<NodeJS.Timeout | undefined>(undefined);
 
   const reloadMessage = () => {
     if (context.messages.length === 0) {
@@ -89,25 +88,6 @@ const ChatAppEdit = () => {
       context.setIsFirstLoad(false);
       context.setIsInitializing(false);
     });
-  };
-
-  const addMessage = (newMsg: MessageModel) => {
-    context.addMessage(newMsg);
-    setTimeout(() => {
-      window.scroll({
-        top: document.body.offsetHeight,
-        behavior: "smooth",
-      });
-    }, 300);
-  };
-
-  const [open, setOpen] = useState(false);
-  const handleDrawerOpen = () => {
-    context.setTopLeftBarOpen(true);
-  };
-
-  const handleDrawerClose = () => {
-    context.setTopLeftBarOpen(false);
   };
 
   useEffect(() => {
