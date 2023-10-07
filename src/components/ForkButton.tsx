@@ -24,6 +24,7 @@ const ForkButton: React.FC<{
         const result = response.result as PostModel;
         context.setMessages([]);
         context.setLastPostsRefresh(new Date());
+        context.setJustForked(true);
         navigate(`/${context.loggedUser}/${result.pid}`);
       }
       setIsForking(false);

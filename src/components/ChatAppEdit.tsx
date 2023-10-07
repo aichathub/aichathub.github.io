@@ -64,6 +64,14 @@ const ChatAppEdit = () => {
           });
         }, 300);
       }
+      if (context.justForked && msgs.length > oldMsgLength) {
+        setTimeout(() => {
+          window.scroll({
+            top: document.body.offsetHeight,
+          });
+        }, 300);
+        context.setJustForked(false);
+      }
       if (!context.isFirstLoad && msgs.length > oldMsgLength && msgmodels[msgmodels.length - 1].authorusername === undefined && context.sendTriggerAIVoice) {
         msgmodels[msgmodels.length - 1].shouldSpeak = true;
       }

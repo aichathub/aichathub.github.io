@@ -65,7 +65,9 @@ type AppContextObj = {
   isForking: boolean;
   showLoadingBackdrop: boolean;
   showQrReader: boolean;
+  justForked: boolean;
 
+  setJustForked: (justForked: boolean) => void;
   setShowQrReader: (showQrReader: boolean) => void;
   setShowLoadingBackdrop: (showLoadingBackdrop: boolean) => void;
   addLocalKeyword: (keyword: string) => void;
@@ -155,7 +157,9 @@ export const AppContext = createContext<AppContextObj>({
   isForking: false,
   showLoadingBackdrop: false,
   showQrReader: false,
+  justForked: false,
 
+  setJustForked: () => { },
   setShowQrReader: () => { },
   setShowLoadingBackdrop: () => { },
   addLocalKeyword: () => { },
@@ -272,6 +276,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
   const [showQrReader, setShowQrReader] = useState(false);
   const [detectedSessionid, setDetectedSessionid] = useState("");
   const [isAtBottom, setIsAtBottom] = useState(false);
+  const [justForked, setJustForked] = useState(false);
 
   const isOnPostPage = useMatch("/:username/:postid");
   const hasRightToSendMsg = isOnPostPage && curPost && curPost.username === loggedUser;
@@ -476,7 +481,9 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
     isForking: isForking,
     showLoadingBackdrop: showLoadingBackdrop,
     showQrReader: showQrReader,
+    justForked: justForked,
 
+    setJustForked: setJustForked,
     setShowQrReader: setShowQrReader,
     setShowLoadingBackdrop: setShowLoadingBackdrop,
     addLocalKeyword: addLocalKeyword,
