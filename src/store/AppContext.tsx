@@ -18,7 +18,7 @@ import { LocalPostModel } from "../models/LocalPostModel";
 import { MessageModel } from "../models/MessageModel";
 import { PostModel } from "../models/PostModel";
 import { TagModel } from "../models/TagModel";
-import { backendServer } from "../util/constants";
+import { GUEST_USERNAME, backendServer } from "../util/constants";
 import { findTopKSearch, forkPost, getCustomModelName, getDailyAILimit, getTags, getTodayAIUsage, verify } from "../util/db";
 import useDidMountEffect from "../util/useDidMountEffect";
 
@@ -279,7 +279,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
   const [justForked, setJustForked] = useState(false);
 
   const isOnPostPage = useMatch("/:username/:postid");
-  const hasRightToSendMsg = isOnPostPage && curPost && curPost.username === loggedUser;
+  const hasRightToSendMsg = isOnPostPage && curPost && ((curPost.username === GUEST_USERNAME && !loggedUser) || curPost.username === loggedUser);
   const isPostStarred = (authoremail: string, postId: string) => {
     // return starredPosts.filter(x => x.authoremail === authoremail && x.pid === postId).length > 0;
     return false;
