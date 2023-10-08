@@ -105,7 +105,7 @@ const AgentDialog: React.FC<{
         {agent === "yourmodel" && <TextField id="standard-basic"
           label="Your model api url"
           variant="standard"
-          placeholder="https://detected-move-folders-legends.trycloudflare.com/api"
+          placeholder="Example: https://detected-move-folders-legends.trycloudflare.com/api"
           value={yourmodelUrl}
           onChange={onUrlChange}
           InputProps={{
