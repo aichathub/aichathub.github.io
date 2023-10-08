@@ -7,6 +7,7 @@ import { IconButton, TextField } from "@mui/material";
 import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { MessageModel } from "../models/MessageModel";
 import { AppContext } from "../store/AppContext";
+import { GUEST_EMAIL } from "../util/constants";
 import { chatgptReply, customModelReply, insertMessage, llama70BReply, pythonRuntimeReply, uploadImage } from "../util/db";
 import MessageInputSettings from "./MessageInputSettings";
 
@@ -62,11 +63,10 @@ export const MessageInput: React.FC<{
     const ref = inputRef.current!;
     if (ref.value.toLowerCase().replaceAll("@ai", "").trim().length !== 0) {
       let content = ref.value;
-      // const triggerAI = content.toLowerCase().indexOf("@ai") !== -1;
-      // const triggerPython = content.toLowerCase().indexOf("@python") !== -1;
       const triggerAI = context.agent === "gpt3.5" || context.agent === "gpt4";
       const triggerPython = context.agent === "python";
-      if (triggerAI && +context.dailyAIUsuage + 1 > +context.dailyAILimit) {
+      const isGuest = !context.loggedUser;
+      if (!isGuest && triggerAI && +context.dailyAIUsuage + 1 > +context.dailyAILimit) {
         context.showSnack("Opps, Seems you have reached your daily @AI limit! Let's continue tomorrow!");
         return;
       }
@@ -111,7 +111,7 @@ export const MessageInput: React.FC<{
         content: content,
         token: context.auth.token,
         triggerAI: triggerAI,
-        authoremail: context.auth.loggedEmail,
+        authoremail: !context.loggedUser ? GUEST_EMAIL : context.auth.loggedEmail,
         socketId: optionalSocketId,
         triggerPython: false
       });
@@ -356,7 +356,6 @@ export const MessageInput: React.FC<{
             }}
           />
         </Tooltip>
-        {/* <MessageInputUpload setInputText={setInputText} /> */}
         <MessageInputSettings inputText={inputText} setInputText={setInputText} inputRef={inputRef} />
         {sendBtn}
       </div>
