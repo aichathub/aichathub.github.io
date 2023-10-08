@@ -514,7 +514,7 @@ const TopLeftBar: React.FC<{
                 }
               </ListItemIcon>
               <ListItemText
-                primary={context.darkMode ? "Light Theme" : "Dark Theme (Beta)"}
+                primary={context.darkMode ? "Light Theme" : "Dark Theme"}
                 onClick={handleThemeBtnClick}
               />
             </ListItemButton>
