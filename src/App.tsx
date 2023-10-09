@@ -1,6 +1,5 @@
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import Authorize from "./components/Authorize";
 import ChatAppEdit from "./components/ChatAppEdit";
 import ExplorePage from "./components/ExplorePage";
 import ForgetPassword from "./components/ForgetPassword";
@@ -30,7 +29,6 @@ const App = () => {
             <Route path="/" element={<ExplorePage />} />
             <Route path="/signin/t/:token" element={<SignInByToken />} />
             <Route path="/signin/github" element={<SignInByGithub />} />
-            <Route path="/authorize/:sessionid/" element={<Authorize />} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </AppContextProvider>
