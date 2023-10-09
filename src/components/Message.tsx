@@ -117,7 +117,7 @@ const Message: React.FC<{
     }
     {
       props.isPythonRuntime && <Editor
-        height={(Math.max(100, Math.min(fullHeight * 0.7, numOfLines * 12))) + "px"}
+        height={(Math.max(fullHeight * 0.2, Math.min(fullHeight * 0.7, numOfLines * 12))) + "px"}
         language="python"
         theme={context.darkMode ? "vs-dark" : "vs-light"}
         onChange={val => { if (val) setPythonEditorText(val); }}
@@ -143,6 +143,12 @@ const Message: React.FC<{
             }
           }
         }
+        setTimeout(() => {
+          const msgEl = document.getElementById("m" + nextMsg?.mid);
+          if (msgEl) {
+            msgEl.scrollIntoView();
+          }
+        }, 500);
         context.setMessages(context.messages.map(x => x.mid !== nextMsg?.mid ? x : {
           ...x,
           content: "Loading..."
