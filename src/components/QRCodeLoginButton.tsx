@@ -5,7 +5,6 @@ import { io } from "socket.io-client";
 import { AppContext } from "../store/AppContext";
 import { backendServer } from "../util/constants";
 import QRCodeDialog from "./QRCodeDialog";
-const socket = io(backendServer);
 
 const QRCodeLoginButton: React.FC<{
   redirectUrl: string | null;
@@ -18,6 +17,7 @@ const QRCodeLoginButton: React.FC<{
     e.preventDefault();
     const sessionid = Math.random().toString(36).substring(2, 6);
     setAuthorizeUrl(`${window.location.origin}/authorize/${sessionid}`);
+    const socket = io(backendServer);
     socket.on(`requestLogin-${sessionid}`, (data) => {
       const { message, loggedEmail, token } = data;
       if (message === "SUCCESS") {
