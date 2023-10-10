@@ -571,7 +571,7 @@ export const chatgptReply = async (pid: string, username: string, token: string,
 
 const formPrompt = (messages: MessageModel[], content: string, user = "### Human", assistant = "### Assistant") => {
   messages = messages.filter((m) => m.mid !== -1);
-  const MAX_WORD_LIMIT = 2000;
+  const MAX_WORD_LIMIT = 1200;
   const countWords = () => {
     let ans = 0;
     for (const msg of messages) {
