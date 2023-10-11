@@ -119,7 +119,6 @@ export const insertPostByUsernameAndTitle = async (username: string, title: stri
   if (title.length > postTitleLengthLimit) {
     title = title.substring(0, postTitleLengthLimit) + "...";
   }
-  console.log(title, postTitleLengthLimit, title.length);
   const response = await fetch(`${backendServer}/api/insert/post/`, {
     method: "POST",
     headers: {

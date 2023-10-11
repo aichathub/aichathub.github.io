@@ -81,7 +81,7 @@ const LeftBarPostItem: React.FC<{ post: PostModel; removePost: (post: PostModel)
           }
           <Tooltip title={isLoading ? "" : `${post.username}/${post.pid}`} placement="right">
             {isLoading ? <Skeleton variant="rounded" height={"30px"} width={"80%"} sx={{ marginLeft: "5px" }} /> :
-              <ListItemText primary={post.title} style={{ marginLeft: "10px" }} />
+              <ListItemText primary={post.title} style={{ marginLeft: "10px", overflowWrap: "break-word" }} />
             }
           </Tooltip>
         </ListItemButton>
