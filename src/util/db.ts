@@ -115,10 +115,11 @@ export const deleteMessageByMid = async (mid: number, token: string, username: s
 }
 
 export const insertPostByUsernameAndTitle = async (username: string, title: string, token: string, tags: TagModel[], isprivate: boolean) => {
-  const postTitleLengthLimit = 100;
+  const postTitleLengthLimit = 50;
   if (title.length > postTitleLengthLimit) {
     title = title.substring(0, postTitleLengthLimit) + "...";
   }
+  console.log(title, postTitleLengthLimit, title.length);
   const response = await fetch(`${backendServer}/api/insert/post/`, {
     method: "POST",
     headers: {
