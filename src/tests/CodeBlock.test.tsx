@@ -3,6 +3,9 @@ import userEvent from "@testing-library/user-event";
 import { act } from "react-dom/test-utils";
 import CodeBlock from "../components/CodeBlock";
 
+// @ts-ignore
+window.setImmediate = window.setTimeout;
+
 describe("CodeBlock", () => {
   const content = "const x = 5;";
   const language = "javascript";
