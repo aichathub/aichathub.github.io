@@ -1,0 +1,66 @@
+/* Source: https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-light.min.css */
+.onelight .hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 0.5em;
+  color: #383a42;
+  background: #fafafa;
+}
+.onelight .hljs-comment,
+.onelight .hljs-quote {
+  color: #a0a1a7;
+  font-style: italic;
+}
+.onelight .hljs-doctag,
+.onelight .hljs-keyword,
+.onelight .hljs-formula {
+  color: #a626a4;
+}
+.onelight .hljs-section,
+.onelight .hljs-name,
+.onelight .hljs-selector-tag,
+.onelight .hljs-deletion,
+.onelight .hljs-subst {
+  color: #e45649;
+}
+.onelight .hljs-literal {
+  color: #0184bb;
+}
+.onelight .hljs-string,
+.onelight .hljs-regexp,
+.onelight .hljs-addition,
+.onelight .hljs-attribute,
+.onelight .hljs-meta-string {
+  color: #50a14f;
+}
+.onelight .hljs-built_in,
+.onelight .hljs-class .hljs-title {
+  color: #c18401;
+}
+.onelight .hljs-attr,
+.onelight .hljs-variable,
+.onelight .hljs-template-variable,
+.onelight .hljs-type,
+.onelight .hljs-selector-class,
+.onelight .hljs-selector-attr,
+.onelight .hljs-selector-pseudo,
+.onelight .hljs-number {
+  color: #986801;
+}
+.onelight .hljs-symbol,
+.onelight .hljs-bullet,
+.onelight .hljs-link,
+.onelight .hljs-meta,
+.onelight .hljs-selector-id,
+.onelight .hljs-title {
+  color: #4078f2;
+}
+.onelight .hljs-emphasis {
+  font-style: italic;
+}
+.onelight .hljs-strong {
+  font-weight: bold;
+}
+.onelight .hljs-link {
+  text-decoration: underline;
+}

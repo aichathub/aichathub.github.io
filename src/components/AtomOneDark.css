@@ -1,0 +1,66 @@
+/* Source: https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-dark.min.css */
+.onedark .hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 0.5em;
+  color: #abb2bf;
+  background: #282c34;
+}
+.onedark .hljs-comment,
+.onedark .hljs-quote {
+  color: #5c6370;
+  font-style: italic;
+}
+.onedark .hljs-doctag,
+.onedark .hljs-keyword,
+.onedark .hljs-formula {
+  color: #c678dd;
+}
+.onedark .hljs-section,
+.onedark .hljs-name,
+.onedark .hljs-selector-tag,
+.onedark .hljs-deletion,
+.onedark .hljs-subst {
+  color: #e06c75;
+}
+.onedark .hljs-literal {
+  color: #56b6c2;
+}
+.onedark .hljs-string,
+.onedark .hljs-regexp,
+.onedark .hljs-addition,
+.onedark .hljs-attribute,
+.onedark .hljs-meta-string {
+  color: #98c379;
+}
+.onedark .hljs-built_in,
+.onedark .hljs-class .hljs-title {
+  color: #e6c07b;
+}
+.onedark .hljs-attr,
+.onedark .hljs-variable,
+.onedark .hljs-template-variable,
+.onedark .hljs-type,
+.onedark .hljs-selector-class,
+.onedark .hljs-selector-attr,
+.onedark .hljs-selector-pseudo,
+.onedark .hljs-number {
+  color: #d19a66;
+}
+.onedark .hljs-symbol,
+.onedark .hljs-bullet,
+.onedark .hljs-link,
+.onedark .hljs-meta,
+.onedark .hljs-selector-id,
+.onedark .hljs-title {
+  color: #61aeee;
+}
+.onedark .hljs-emphasis {
+  font-style: italic;
+}
+.onedark .hljs-strong {
+  font-weight: bold;
+}
+.onedark .hljs-link {
+  text-decoration: underline;
+}
