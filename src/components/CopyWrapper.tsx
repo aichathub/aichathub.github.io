@@ -1,5 +1,6 @@
 import { Grid } from "@mui/material";
 import CopyButton from "./CopyButton";
+import classes from "./CopyWrapper.module.css";
 import EditButton from "./EditButton";
 const CopyWrapper: React.FC<{
   content: string;
@@ -10,7 +11,7 @@ const CopyWrapper: React.FC<{
 }> = (props) => {
   return (
     <>
-      <Grid style={{ position: "relative", overflow: "scroll" }}>
+      <Grid style={{ position: "relative" }} className={classes['horizontal-scroll']}>
         <CopyButton content={props.content} />
         {
           props.hasRightToEdit && !props.isEditing && props.setIsEditing && <EditButton setIsEditing={props.setIsEditing} />
