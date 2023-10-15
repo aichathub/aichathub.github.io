@@ -10,7 +10,7 @@ const CopyWrapper: React.FC<{
 }> = (props) => {
   return (
     <>
-      <Grid style={{ position: "relative" }}>
+      <Grid style={{ position: "relative", overflow: "scroll" }}>
         <CopyButton content={props.content} />
         {
           props.hasRightToEdit && !props.isEditing && props.setIsEditing && <EditButton setIsEditing={props.setIsEditing} />
