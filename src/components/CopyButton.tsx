@@ -1,13 +1,16 @@
 import { Button } from "@material-ui/core";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { Tooltip } from "@mui/material";
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { AppContext } from "../store/AppContext";
 
 const CopyButton: React.FC<{
   content: string;
   placement?: "top" | "bottom" | "left" | "right";
 }> = (props) => {
   const [copied, setCopied] = useState(false);
+  const context = useContext(AppContext);
+  const showWhiteBgCopy = context.darkMode ? copied : !copied;
   const handleCopyBtnClick = async () => {
     if (copied) return;
     await navigator.clipboard.writeText(props.content.trim());
@@ -25,7 +28,6 @@ const CopyButton: React.FC<{
           cursor: "pointer",
           position: "absolute",
           right: "0px",
-          background: "black",
           opacity: copied ? "0.7" : "0.3"
         }}
         onClick={handleCopyBtnClick}
@@ -34,8 +36,8 @@ const CopyButton: React.FC<{
           variant="contained"
           size="small"
           style={{
-            background: copied ? "white" : "black",
-            color: copied ? "black" : "white",
+            background: showWhiteBgCopy ? "white" : "black",
+            color: showWhiteBgCopy ? "black" : "white",
             borderRadius: "0px"
           }}
         >
