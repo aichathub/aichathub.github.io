@@ -21,7 +21,6 @@ const useStyles = makeStyles((theme: Theme) =>
       position: "sticky",
       bottom: "0px",
       padding: "10px",
-      borderTop: "1px #DDD solid;",
     },
     wrapText: {
       width: "100%",
