@@ -1,6 +1,12 @@
 .horizontal-scroll pre {
   overflow: auto;
-  border-style: ridge;
-  border-width: thin;
-  padding: 10px;
+  padding: 12px;
+}
+
+.horizontal-scroll.light pre {
+  background-color: hsl(0,0%,97%);
+}
+
+.horizontal-scroll.dark pre {
+  background-color: hsl(0,0%,7%);
 }
