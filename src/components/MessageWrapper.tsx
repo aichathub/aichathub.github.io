@@ -8,11 +8,12 @@ const MessageWrapper: React.FC<{
   isEditing: boolean;
   setIsEditing: (isEditing: boolean) => void;
   isLoading?: boolean;
+  isPythonRuntime?: boolean;
 }> = (props) => {
   return (
     <>
       <Grid style={{ position: "relative" }}>
-        {!props.isLoading && <MessageMoreButton message={props.message} isEditing={props.isEditing} setIsEditing={props.setIsEditing} />}
+        {!props.isLoading && <MessageMoreButton message={props.message} isEditing={props.isEditing} setIsEditing={props.setIsEditing} isPythonRuntime={props.isPythonRuntime} />}
         {props.children}
       </Grid>
     </>

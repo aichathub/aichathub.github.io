@@ -14,11 +14,13 @@ import { PostModel } from "../models/PostModel";
 import { AppContext } from "../store/AppContext";
 import { deleteMessageByMid, forkPost } from "../util/db";
 import QRCodeDialog from "./QRCodeDialog";
+import CodeIcon from '@mui/icons-material/Code';
 
 const MessageMoreButton: React.FC<{
   message: MessageModel;
   isEditing: boolean;
   setIsEditing: (isEditing: boolean) => void;
+  isPythonRuntime?: boolean;
 }> = (props) => {
   const context = useContext(AppContext);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -178,9 +180,9 @@ const MessageMoreButton: React.FC<{
                       onClick={handleEditClick}
                     >
                       <ListItemIcon>
-                        <EditIcon fontSize="small" />
+                        {props.isPythonRuntime ? <CodeIcon fontSize="small" /> : <EditIcon fontSize="small" />}
                       </ListItemIcon>
-                      <ListItemText>Edit</ListItemText>
+                      <ListItemText>{props.isPythonRuntime ? "IDE" : "Edit"}</ListItemText>
                     </MenuItem>
                   )
                   }
