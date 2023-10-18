@@ -320,7 +320,7 @@ export const MessageInput: React.FC<{
     <>
       <div className={classes.wrapForm}
         style={{
-          background: context.darkMode ? "rgb(39,39,39)" : "white",
+          background: context.darkMode ? "rgb(37, 43, 51)" : "white",
           display: shouldHide ? "none" : "flex",
         }}
       >
