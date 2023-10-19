@@ -276,7 +276,6 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
   const [showLoadingBackdrop, setShowLoadingBackdrop] = useState(false);
   const [showQrReader, setShowQrReader] = useState(false);
   const [detectedSessionid, setDetectedSessionid] = useState("");
-  const [isAtBottom, setIsAtBottom] = useState(false);
   const [justForked, setJustForked] = useState(false);
 
   const isOnPostPage = useMatch("/:username/:postid");
@@ -670,16 +669,6 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
     refreshKeywords(loggedUser, auth.token);
   }, [loggedUser, auth.token]);
 
-  useEffect(() => {
-    const onScroll = () => {
-      const tolerance = 50;
-      setIsAtBottom(window.innerHeight + window.scrollY + tolerance >= document.documentElement.scrollHeight);
-    }
-    window.removeEventListener("scroll", onScroll);
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
   const getSeverity = (message: string) => {
     if (message.toLowerCase().indexOf("error") !== -1) return "error";
     if (message.toLowerCase().indexOf("success") !== -1) return "success";
@@ -737,7 +726,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
   });
 
   const showInputMessage = hasRightToSendMsg && !isLoadingMessages;
-  const showAskFollowupButton = !showInputMessage && isOnPostPage && curPost && isAtBottom;
+  const showAskFollowupButton = !showInputMessage && isOnPostPage && curPost;
 
   const mainBody = <Box sx={{ display: isInitializing ? "none" : "flex", marginBottom: "30px" }}>
     <CssBaseline />
@@ -762,12 +751,12 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
     >
       {!showAskFollowupButton && <ScrollButton />}
       {showInputMessage && <MessageInput username={isOnPostPage.params.username!} postid={isOnPostPage.params.postid!} addMessage={addMessage} reloadMessage={() => {
-        setLastMessagesRefresh(new Date());
+        setLastMessagesRefresh(new Date())
       }} />}
       {showAskFollowupButton && <Box textAlign="center" style={{ marginBottom: "5px" }}>
-        {isForking ? <CircularProgress size={20} color="inherit" style={{ marginBottom: "-2px" }} /> : <ForkLeftIcon fontSize="small" style={{ marginBottom: "-2px" }} />}
-        <Button variant="text" color="error" onClick={handleAskFollowupClick}>
-          Ask follow-up questions
+        <Button variant="contained" color="error" onClick={handleAskFollowupClick}>
+          {isForking ? <CircularProgress size={20} color="inherit" style={{ marginBottom: "-2px", marginRight: "2px" }} /> : <ForkLeftIcon fontSize="small" style={{ marginBottom: "-2px" }} />}
+          Ask Private follow-up questions
         </Button>
       </Box>}
     </footer>
