@@ -52,7 +52,7 @@ const MarkdownComponent: React.FC<{
               {content}
             </Collapsible>;
           }
-          return content;
+          return <React.Fragment key={Math.random()}>content</React.Fragment>;
         },
         a({ node, className, children, ...props }) {
           const youtubeIdRetriever = (url: string) => {
@@ -96,7 +96,7 @@ const MarkdownComponent: React.FC<{
               </>
             }
           }
-          return res;
+          return <React.Fragment key={Math.random()}>res</React.Fragment>;
         },
         blockquote({ node, className, children, ...props }) {
           return (
