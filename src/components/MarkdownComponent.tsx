@@ -16,17 +16,6 @@ const MarkdownComponent: React.FC<{
   message?: MessageModel;
 }> = (props) => {
   const context = useContext(AppContext);
-  const hashCode = (s: string) => {
-    var hash = 0,
-      i, chr;
-    if (s.length === 0) return hash;
-    for (i = 0; i < s.length; i++) {
-      chr = s.charCodeAt(i);
-      hash = ((hash << 5) - hash) + chr;
-      hash |= 0; // Convert to 32bit integer
-    }
-    return hash;
-  }
   // Replace empty lines with empty lines with an empty space, except for code block
   const content = props.content.replace(/\n\n/gi, "&nbsp;\n\n").replace(/```(.*)&nbsp;/gi, "```$1");
   return <MathJax.Provider>
@@ -64,7 +53,7 @@ const MarkdownComponent: React.FC<{
               {content}
             </Collapsible>;
           }
-          return <React.Fragment key={hashCode(content.toString())}>{content}</React.Fragment>;
+          return content;
         },
         a({ node, className, children, ...props }) {
           const youtubeIdRetriever = (url: string) => {
@@ -108,7 +97,7 @@ const MarkdownComponent: React.FC<{
               </>
             }
           }
-          return <React.Fragment key={hashCode(res.toString())}>{res}</React.Fragment>;
+          return res;
         },
         blockquote({ node, className, children, ...props }) {
           return (
