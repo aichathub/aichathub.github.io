@@ -63,7 +63,7 @@ const MarkdownComponent: React.FC<{
               {content}
             </Collapsible>;
           }
-          return <React.Fragment key={hashCode(content.toString())}>content</React.Fragment>;
+          return <React.Fragment key={hashCode(content.toString())}>{content}</React.Fragment>;
         },
         a({ node, className, children, ...props }) {
           const youtubeIdRetriever = (url: string) => {
@@ -107,7 +107,7 @@ const MarkdownComponent: React.FC<{
               </>
             }
           }
-          return <React.Fragment key={hashCode(res.toString())}>res</React.Fragment>;
+          return <React.Fragment key={hashCode(res.toString())}>{res}</React.Fragment>;
         },
         blockquote({ node, className, children, ...props }) {
           return (
