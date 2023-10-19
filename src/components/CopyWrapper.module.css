@@ -1,6 +1,7 @@
 .horizontal-scroll pre {
   overflow: auto;
   padding: 12px;
+  max-height: 67vh;
 }
 
 .horizontal-scroll.light pre {
