@@ -9,6 +9,7 @@ import CodeBlock from "./CodeBlock";
 import classes from "./Message.module.css";
 import VisibilityIconToggleButton from "./VisibilityIconToggleButton";
 import markDownClasses from "./MarkdownComponent.module.css";
+import { memo } from 'react';
 
 const MarkdownComponent: React.FC<{
   content: string;
@@ -134,4 +135,4 @@ const MarkdownComponent: React.FC<{
     />
   </MathJax.Provider>
 };
-export default MarkdownComponent;
+export default memo(MarkdownComponent);
