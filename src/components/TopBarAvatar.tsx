@@ -1,3 +1,4 @@
+import { Tooltip } from "@mui/material";
 import { Avatar, Box } from "@material-ui/core";
 import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
 import DataSaverOffIcon from '@mui/icons-material/DataSaverOff';
@@ -107,10 +108,12 @@ const TopBarAvatar = () => {
       onClose={handleClose}
     >
       <MenuItem>
-        <ListItemIcon>
-          {context.dailyAILimit === context.dailyAIUsuage ? <ErrorIcon /> : <DataSaverOffIcon />}
-        </ListItemIcon>
-        <ListItemText>@AI 24-hr Limit: {context.dailyAIUsuage} / {context.dailyAILimit}</ListItemText>
+        <Tooltip title="The limit only aplies to GPT-3.5 and GPT-4 models">
+          <ListItemIcon>
+            {context.dailyAILimit === context.dailyAIUsuage ? <ErrorIcon /> : <DataSaverOffIcon />}
+          </ListItemIcon>
+          <ListItemText>@AI 24-hr Limit: {context.dailyAIUsuage} / {context.dailyAILimit}</ListItemText>
+        </Tooltip>
       </MenuItem>
       <MenuItem onClick={handleSignInToOtherDevicesClick}>
         <ListItemIcon>
