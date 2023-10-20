@@ -519,7 +519,7 @@ const TopLeftBar: React.FC<{
               />
             </ListItemButton>
           </ListItem>
-          <ListItem disablePadding>
+          {/* <ListItem disablePadding>
             <ListItemButton>
               <ListItemIcon>
                 {
@@ -531,7 +531,7 @@ const TopLeftBar: React.FC<{
                 onClick={handleFAQBtnClick}
               />
             </ListItemButton>
-          </ListItem>
+          </ListItem> */}
         </List>
       </Drawer>
       {openNewPostForm && newPostForm}
