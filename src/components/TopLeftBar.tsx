@@ -316,7 +316,7 @@ const TopLeftBar: React.FC<{
                 document.title = "AIChatHub";
               }}
             >
-              <Avatar src={logo} className={(context.isLoadingMessages || context.isLeftBarPostLoading) ? classes.rotate : classes['rotate-slow']} />
+              <Avatar src={logo} className={(context.isLoadingMessages || (context.loggedUser && context.isLeftBarPostLoading)) ? classes.rotate : classes['rotate-slow']} />
             </IconButton>
           </Tooltip>
           <Tooltip title={searchBoxText ? "" : searchBarShortcutHint}>
