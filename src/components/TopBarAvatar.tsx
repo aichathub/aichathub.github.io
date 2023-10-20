@@ -108,11 +108,13 @@ const TopBarAvatar = () => {
       onClose={handleClose}
     >
       <MenuItem>
-        <Tooltip title="The limit only aplies to GPT-3.5 and GPT-4 models">
-          <ListItemIcon>
-            {context.dailyAILimit === context.dailyAIUsuage ? <ErrorIcon /> : <DataSaverOffIcon />}
-          </ListItemIcon>
-          <ListItemText>@AI 24-hr Limit: {context.dailyAIUsuage} / {context.dailyAILimit}</ListItemText>
+          <Tooltip title="The limit only aplies to GPT-3.5 and GPT-4 models">
+          <>
+            <ListItemIcon>
+              {context.dailyAILimit === context.dailyAIUsuage ? <ErrorIcon /> : <DataSaverOffIcon />}
+            </ListItemIcon>
+            <ListItemText>@AI 24-hr Limit: {context.dailyAIUsuage} / {context.dailyAILimit}</ListItemText>
+          </>
         </Tooltip>
       </MenuItem>
       <MenuItem onClick={handleSignInToOtherDevicesClick}>
