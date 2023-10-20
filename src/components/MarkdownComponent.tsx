@@ -61,7 +61,7 @@ const MarkdownComponent: React.FC<{
             var match = url.match(regExp);
             return (match && match[8] && match[8].length === 11) ? match[8] : "";
           }
-          let res = <span className={classes.mdlink}>
+          let res = <span className={classes.mdlink} style={{overflowWrap: "break-word"}}>
             <a className={className} {...props}>
               {children}
             </a>
