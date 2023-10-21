@@ -182,7 +182,7 @@ const MessageMoreButton: React.FC<{
                       <ListItemIcon>
                         {props.isPythonRuntime ? <CodeIcon fontSize="small" /> : <EditIcon fontSize="small" />}
                       </ListItemIcon>
-                      <ListItemText>{props.isPythonRuntime ? "IDE" : "Edit"}</ListItemText>
+                      <ListItemText>Edit</ListItemText>
                     </MenuItem>
                   )
                   }
