@@ -66,7 +66,7 @@ const ChatAppEdit = () => {
       if (!context.isFirstLoad && msgs.length > oldMsgLength && msgmodels[msgmodels.length - 1].authorusername === undefined && context.sendTriggerAIVoice) {
         msgmodels[msgmodels.length - 1].shouldSpeak = true;
       }
-      if (msgs.length > context.messages.length || context.messages[context.messages.length - 1].mid === -1) {
+      if (msgs.length > context.messages.length || (context.messages.length && context.messages[context.messages.length - 1].mid === -1)) {
         context.setShouldStopTypingMessage(false);
         context.setMessages(msgmodels);
         if (context.justForked) {

@@ -589,15 +589,15 @@ const formPrompt = (messages: MessageModel[], content: string, user = "### Human
   let result = "";
   for (let i = 0; i < messages.length; i++) {
     const msg = messages[i];
-    const isAI = msg.authorusername === "undefined";
+    const isAI = !msg.authorusername || msg.authorusername === "undefined";
     if (isAI) {
       result += `${assistant}: ${msg.content}\n`;
     } else {
       result += `${user}: ${msg.content}\n`;
     }
   }
-  result += `### Human: ${content}\n`;
-  result += `### Assistant:`;
+  result += `${user}: ${content}\n`;
+  result += `${assistant}: `;
   return result;
 }
 
@@ -618,7 +618,14 @@ export const llama70BReply = async (content: string, messages: MessageModel[]) =
   if (answer.indexOf(stopping_string) !== -1) {
     answer = answer.substring(0, answer.indexOf(stopping_string));
   }
-  if (answer.startsWith("Assistant: ")) answer = answer.replace("Assistant: ", "")
+  answer = answer.trim();
+  while (answer.startsWith("Assistant:") || answer.startsWith("User:")) {
+    if (answer.startsWith("Assistant: ")) {
+      answer = answer.replace("Assistant:", "").trim();
+    } else {
+      answer = answer.replace("User:", "").trim();
+    }
+  }
   return answer;
 }
 
