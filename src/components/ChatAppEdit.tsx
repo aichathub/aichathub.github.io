@@ -100,7 +100,6 @@ const ChatAppEdit = () => {
         return;
       }
       context.setCurPost(response.result);
-      context.setIsSendingMessage(false);
       document.title = `${response.result.title} · ${username}/${postid}`;
     });
   }, [username, postid, context.auth.token]);
@@ -114,7 +113,6 @@ const ChatAppEdit = () => {
         return;
       }
       context.setCurPost(response.result);
-      context.setIsSendingMessage(false);
     });
   }, [context.lastMessagesRefresh]);
 
@@ -124,9 +122,10 @@ const ChatAppEdit = () => {
         return;
       }
       const samePost = JSON.stringify(response.result) === JSON.stringify(context.curPost);
-      if (!samePost)
+      if (!samePost) {
         context.setCurPost(response.result);
         context.setIsSendingMessage(false);
+      }
     });
   }, [context.lastPostsRefresh, context.justForked]);
 
@@ -139,7 +138,6 @@ const ChatAppEdit = () => {
         return;
       }
       context.setCurPost(response.result);
-      context.setIsSendingMessage(false);
       document.title = `${response.result.title} · ${username}/${postid}`;
     });
   }, []);
