@@ -239,14 +239,16 @@ export const MessageInput: React.FC<{
   }
   const sendBtn = <Tooltip title={context.isSendingMessage ? "Loading" :
     context.isTypingMessage ? "Stop" : "Send"} arrow>
-    <IconButton
-      onClick={context.isTypingMessage ? handleStop : handleSend}
-      style={{ borderRadius: 0, borderLeft: '0.1em solid lightgrey', padding: '0.5em' }}
-      disabled={context.isSendingMessage}
-    >
-      {context.isSendingMessage ? <CircularProgress color="inherit" size="24px" /> :
-        context.isTypingMessage ? <StopIcon /> : <SendIcon />}
-    </IconButton>
+    <>
+      <IconButton
+        onClick={context.isTypingMessage ? handleStop : handleSend}
+        style={{ borderRadius: 0, borderLeft: '0.1em solid lightgrey', padding: '0.5em' }}
+        disabled={context.isSendingMessage}
+      >
+        {context.isSendingMessage ? <CircularProgress color="inherit" size="24px" /> :
+          context.isTypingMessage ? <StopIcon /> : <SendIcon />}
+      </IconButton>
+    </>
   </Tooltip>;
   useEffect(() => {
     const onScroll = () => {
