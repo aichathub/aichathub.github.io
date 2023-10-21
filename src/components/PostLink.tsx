@@ -43,6 +43,8 @@ const PostLink: React.FC<{
       if (isMiddleMouseClick) return;
       e.preventDefault();
       context.navigateToPost(url);
+      context.setIsSendingMessage(false);
+
     }}
     href={url}
   >
