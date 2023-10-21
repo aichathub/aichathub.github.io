@@ -1,4 +1,5 @@
 import { ContentCopy } from "@mui/icons-material";
+import CodeIcon from '@mui/icons-material/Code';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import ForkLeftIcon from '@mui/icons-material/ForkLeft';
@@ -14,7 +15,6 @@ import { PostModel } from "../models/PostModel";
 import { AppContext } from "../store/AppContext";
 import { deleteMessageByMid, forkPost } from "../util/db";
 import QRCodeDialog from "./QRCodeDialog";
-import CodeIcon from '@mui/icons-material/Code';
 
 const MessageMoreButton: React.FC<{
   message: MessageModel;
@@ -25,7 +25,7 @@ const MessageMoreButton: React.FC<{
   const context = useContext(AppContext);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const hasRightToEdit = props.message.authorusername === context.loggedUser;
+  const hasRightToEdit = context.curPost?.username === context.loggedUser;
   const hasRightToDelete = context.auth && context.curPost && context.curPost.username === context.loggedUser;
   const utterance = new SpeechSynthesisUtterance(props.message.content.replaceAll("@ai", "").replaceAll("@AI", ""));
   const [isSpeaking, setIsSpeaking] = useState(false);
