@@ -9,23 +9,24 @@ window.setImmediate = window.setTimeout;
 describe("CodeBlock", () => {
   const content = "const x = 5;";
   const language = "javascript";
-  global.URL.createObjectURL = jest.fn();
+  window.URL.createObjectURL = jest.fn();
+
+  afterEach(() => {
+    window.URL.createObjectURL.mockReset();
+  });
 
   it("renders the code content", () => {
-    global.URL.createObjectURL = jest.fn(() => 'dummy');
     const { container } = render(<CodeBlock content={content} language={language} />);
     expect(container.querySelector("code")).toBeTruthy();
     expect(container.innerHTML).toMatch(/const.*x.*.*=.*5/);
   });
 
   it("renders the code language", () => {
-    global.URL.createObjectURL = jest.fn(() => 'dummy');
     const { container } = render(<CodeBlock content={content} language={language} />);
     expect(container.innerHTML).toContain(language);
   });
 
   it("copies the code content when clicked", async () => {
-    global.URL.createObjectURL = jest.fn(() => 'dummy');
     const writeText = jest.fn();
     Object.assign(navigator, {
       clipboard: {
@@ -33,7 +34,6 @@ describe("CodeBlock", () => {
       },
     });
     act(() => {
-      global.URL.createObjectURL = jest.fn(() => 'dummy');
       const { container } = render(<CodeBlock content={content} language={language} />);
       const copyButton = container.querySelector(".MuiButtonBase-root");
       if (copyButton) {
