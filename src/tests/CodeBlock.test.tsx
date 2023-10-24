@@ -9,6 +9,7 @@ window.setImmediate = window.setTimeout;
 describe("CodeBlock", () => {
   const content = "const x = 5;";
   const language = "javascript";
+  global.URL.createObjectURL = jest.fn();
 
   it("renders the code content", () => {
     const { container } = render(<CodeBlock content={content} language={language} />);
