@@ -142,6 +142,18 @@ const ChatAppEdit = () => {
     });
   }, []);
 
+  useEffect(() => {
+    // Cancel autoScroll if user scrolled up
+    window.addEventListener("scroll", () => {
+      const tolerate = 50;
+      if (window.scrollY + tolerate >= document.body.offsetHeight - window.innerHeight) {
+        context.setIsAutoScrolling(false);
+      } else if (context.isTypingMessage && !context.isAutoScrolling) {
+        context.setIsAutoScrolling(true);
+      }
+    });
+  }, []);
+
   let bodyContent = <></>;
 
   if (context.isLoadingMessages) {

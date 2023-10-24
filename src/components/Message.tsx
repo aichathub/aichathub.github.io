@@ -11,6 +11,7 @@ import Timeago from "react-timeago";
 import { MessageModel } from "../models/MessageModel";
 import { AppContext } from "../store/AppContext";
 import { generateColor } from "../util/avatarColor";
+import { chatStreamWorker } from "../util/chatStreamWorker";
 import { editMessage, pythonRuntimeReply, uploadImage } from "../util/db";
 import LikeDislikePanel from "./LikeDislikePanel";
 import MarkdownComponent from "./MarkdownComponent";
@@ -62,6 +63,7 @@ const Message: React.FC<{
   const [editedMsg, setEditedMsg] = useState(props.message.content);
   const [pythonEditorText, setPythonEditorText] = useState(markdownPythonToCode(props.message.content));
   const numOfLines = props.message.content.split("\n").length;
+  const [worker, setWorker] = useState(new Worker(chatStreamWorker));
 
   const justNow = (date: Date, seconds = 60) => {
     if (date === undefined) return false;
@@ -199,45 +201,31 @@ const Message: React.FC<{
     }
   }
   const isLoading = props.isLoading;
+
   useEffect(() => {
-    if (!shouldAnimate || context.shouldStopTypingMessage) return;
-    context.setIsTypingMessage(true);
-    let autoScroll = true;
-    let autoScrollStarted = false;
-    context.setIsAutoScrolling(true);
-    // Cancel autoScroll if user scrolled up
-    window.addEventListener("scroll", () => {
-      if (window.scrollY < document.body.offsetHeight - window.innerHeight) {
-        autoScroll = false;
-        context.setIsAutoScrolling(false);
-      }
-    });
-    const interval = setInterval(() => {
+    worker.onmessage = ({ data: { newWord } }) => {
       setContent(prev => {
-        const curLen = prev.length;
-        if (curLen > 10 && !autoScrollStarted) {
-          autoScroll = true;
-          autoScrollStarted = true;
-          context.setIsAutoScrolling(true);
-        }
-        if (context.shouldStopTypingMessage || curLen >= props.message.content.length) {
-          clearInterval(interval);
+        const newContent = prev + " " + newWord;
+        if (newContent.length >= props.message.content.length) {
           context.setIsTypingMessage(false);
-          return prev;
+          worker.postMessage({ turn: "off" });
         }
-        if (autoScroll) {
+        if (context.isAutoScrolling) {
           window.scroll({
             top: document.body.offsetHeight,
           });
         }
-        let nextStart = curLen + 1;
-        while (nextStart + 1 < props.message.content.length && props.message.content[nextStart] != ' ') {
-          nextStart++;
-        }
-        return props.message.content.substring(0, nextStart);
-      })
-    }, 50);
-    return () => clearInterval(interval);
+        return prev + " " + newWord
+      });
+    };
+    worker.postMessage({ preContent: props.message.content });
+  }, []);
+  useEffect(() => {
+    if (!shouldAnimate || context.shouldStopTypingMessage) return;
+    context.setIsTypingMessage(true);
+    context.setIsAutoScrolling(true);
+    worker.postMessage({ turn: "on" });
+    context.setCurStreamWorker(worker);
   }, [context.shouldStopTypingMessage]);
   useEffect(() => {
     if (props.message.sendernickname?.toUpperCase() === "PYTHON RUNTIME") {
