@@ -18,7 +18,6 @@ import { LocalPostModel } from "../models/LocalPostModel";
 import { MessageModel } from "../models/MessageModel";
 import { PostModel } from "../models/PostModel";
 import { TagModel } from "../models/TagModel";
-import { chatStreamWorker } from '../util/chatStreamWorker';
 import { GUEST_POST_LIMIT, GUEST_USERNAME, backendServer } from "../util/constants";
 import { findTopKSearch, forkPost, getCustomModelName, getDailyAILimit, getTags, getTodayAIUsage, verify } from "../util/db";
 import useDidMountEffect from "../util/useDidMountEffect";
@@ -68,9 +67,7 @@ type AppContextObj = {
   showLoadingBackdrop: boolean;
   showQrReader: boolean;
   justForked: boolean;
-  curStreamWorker: Worker;
 
-  setCurStreamWorker: (streamWorker: Worker) => void;
   setJustForked: (justForked: boolean) => void;
   setShowQrReader: (showQrReader: boolean) => void;
   setShowLoadingBackdrop: (showLoadingBackdrop: boolean) => void;
@@ -162,9 +159,7 @@ export const AppContext = createContext<AppContextObj>({
   showLoadingBackdrop: false,
   showQrReader: false,
   justForked: false,
-  curStreamWorker: new Worker(chatStreamWorker),
 
-  setCurStreamWorker: () => { },
   setJustForked: () => { },
   setShowQrReader: () => { },
   setShowLoadingBackdrop: () => { },
@@ -282,7 +277,6 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
   const [showQrReader, setShowQrReader] = useState(false);
   const [detectedSessionid, setDetectedSessionid] = useState("");
   const [justForked, setJustForked] = useState(false);
-  const [curStreamWorker, setCurStreamWorker] = useState(new Worker(chatStreamWorker));
 
   const isOnPostPage = useMatch("/:username/:postid");
   const isPostFresh = curPost && dateDiffInDays(new Date(curPost.createdate), new Date()) <= 1 && messages.length < GUEST_POST_LIMIT;
@@ -489,9 +483,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
     showLoadingBackdrop: showLoadingBackdrop,
     showQrReader: showQrReader,
     justForked: justForked,
-    curStreamWorker: curStreamWorker,
 
-    setCurStreamWorker: setCurStreamWorker,
     setJustForked: setJustForked,
     setShowQrReader: setShowQrReader,
     setShowLoadingBackdrop: setShowLoadingBackdrop,

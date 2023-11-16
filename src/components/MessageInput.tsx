@@ -46,10 +46,8 @@ export const MessageInput: React.FC<{
   const [isAtBottom, setIsAtBottom] = useState(false);
 
   const handleStop = () => {
-    context.curStreamWorker.postMessage({ turn: "off" });
     context.setShouldStopTypingMessage(true);
     context.setIsTypingMessage(false);
-    context.setIsAutoScrolling(false);
   };
   const handleSend = async () => {
     if (!inputRef.current) return;
