@@ -30,9 +30,11 @@ const MarkdownComponent: React.FC<{
           const isCollapse = match !== null && match[0] === "language-collapse";
           const language = isSecret ? match[0].replace(/language-secret-?/, "") : (match === null ? "" : match[0].replace("language-", ""));
           if (isCollapse) {
-            return <div className={markDownClasses.mycollapse} style={{ padding: "22px" }}>
+            return <div className={markDownClasses.mycollapse}>
               <Collapsible trigger={<VisibilityIconToggleButton />}>
-                <MarkdownComponent content={String(children).replace(/\n\n/g, "\n")} />
+                <div style={{ padding: "22px" }}>
+                  <MarkdownComponent content={String(children).replace(/\n\n/g, "\n")} />
+                </div>
               </Collapsible>
             </div>;
           }
