@@ -1,3 +1,3 @@
 .mycollapse p {
-  overflow-x: scroll;
+  overflow-x: auto;
 }
