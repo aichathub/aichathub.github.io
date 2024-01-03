@@ -115,7 +115,7 @@ const MarkdownComponent: React.FC<{
         },
         p({ node, className, children, ...props }) {
           return (
-            <p className={className} style={{ margin: "3.5px", overflowWrap: "break-word", overflow: "auto", opacity: 0.7 }} {...props}>
+            <p className={className} style={{ margin: "3.5px", overflowWrap: "break-word", overflow: "auto", padding: "22px" }} {...props}>
               {children}
             </p>
           )
