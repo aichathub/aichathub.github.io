@@ -32,7 +32,7 @@ const MarkdownComponent: React.FC<{
           if (isCollapse) {
             return <div className={markDownClasses.mycollapse}>
               <Collapsible trigger={<VisibilityIconToggleButton />}>
-                <div style={{ padding: "22px" }}>
+                <div style={{ padding: "10px", borderRadius: "5px", border: "0.2em solid grey;" }}>
                   <MarkdownComponent content={String(children).replace(/\n\n/g, "\n")} />
                 </div>
               </Collapsible>
