@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { memo, useContext } from "react";
 import Collapsible from "react-collapsible";
 import ReactMarkdown from "react-markdown";
 import MathJax from "react-mathjax";
@@ -6,10 +6,9 @@ import remarkGfm from "remark-gfm";
 import { MessageModel } from "../models/MessageModel";
 import { AppContext } from "../store/AppContext";
 import CodeBlock from "./CodeBlock";
+import markDownClasses from "./MarkdownComponent.module.css";
 import classes from "./Message.module.css";
 import VisibilityIconToggleButton from "./VisibilityIconToggleButton";
-import markDownClasses from "./MarkdownComponent.module.css";
-import { memo } from 'react';
 
 const MarkdownComponent: React.FC<{
   content: string;
@@ -32,7 +31,7 @@ const MarkdownComponent: React.FC<{
           if (isCollapse) {
             return <div className={markDownClasses.mycollapse}>
               <Collapsible trigger={<VisibilityIconToggleButton />}>
-                <div style={{ padding: "10px", borderRadius: "5px", border: "0.2em solid grey;" }}>
+                <div className={markDownClasses['collapse-container']}>
                   <MarkdownComponent content={String(children).replace(/\n\n/g, "\n")} />
                 </div>
               </Collapsible>
@@ -63,7 +62,7 @@ const MarkdownComponent: React.FC<{
             var match = url.match(regExp);
             return (match && match[8] && match[8].length === 11) ? match[8] : "";
           }
-          let res = <span className={classes.mdlink} style={{overflowWrap: "break-word"}}>
+          let res = <span className={classes.mdlink} style={{ overflowWrap: "break-word" }}>
             <a className={className} {...props}>
               {children}
             </a>
