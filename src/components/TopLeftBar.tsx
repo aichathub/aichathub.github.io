@@ -27,13 +27,13 @@ import ListItemText from "@mui/material/ListItemText";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { alpha, styled, useTheme } from "@mui/material/styles";
-import { set } from 'idb-keyval';
 import { useContext, useEffect, useRef, useState } from "react";
 import { useMatch, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import logo from "../images/logo.png";
 import { DummyPostModel } from "../models/DummyPostModel";
 import { PostModel } from "../models/PostModel";
 import { AppContext } from "../store/AppContext";
+import { removePostsFromCache } from "../util/cache";
 import { GUEST_EMAIL, GUEST_USERNAME } from "../util/constants";
 import { chatgptReply, findPostsByAuthoremail, getPostByUsernameAndPid, insertMessage, insertPostByUsernameAndTitle } from "../util/db";
 import DrawerHeader from "./DrawerHeader";
@@ -290,7 +290,7 @@ const TopLeftBar: React.FC<{
   }
 
   const handleHardRefresh = async () => {
-    await set(`posts-${context.auth.loggedEmail}`, null);
+    await removePostsFromCache(context.auth.loggedEmail);
     context.setLastPostsRefresh(new Date());
   }
 

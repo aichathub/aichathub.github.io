@@ -12,12 +12,12 @@ import Slide from '@mui/material/Slide';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { TransitionProps } from '@mui/material/transitions';
-import { set } from 'idb-keyval';
 import * as React from 'react';
 import { useContext, useRef, useState } from 'react';
 import { PostModel } from '../models/PostModel';
 import { TagModel } from '../models/TagModel';
 import { AppContext } from '../store/AppContext';
+import { removePostsFromCache } from '../util/cache';
 import { updatePost } from '../util/db';
 import TagsInput from './TagsInput';
 
@@ -64,7 +64,7 @@ const EditPostDialog: React.FC<{
   };
 
   const handleHardRefresh = async () => {
-    await set(`posts-${context.auth.loggedEmail}`, null);
+    await removePostsFromCache(context.auth.loggedEmail);
     context.setLastPostsRefresh(new Date());
   }
 

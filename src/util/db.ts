@@ -1,4 +1,4 @@
-import { get, set } from "idb-keyval";
+import { set } from "idb-keyval";
 import { MessageModel } from "../models/MessageModel";
 import { PostModel } from "../models/PostModel";
 import { TagModel } from "../models/TagModel";
@@ -7,6 +7,7 @@ import {
   PYTHON_RUNTIME_API,
   backendServer,
 } from "../util/constants";
+import { getPostsFromCache, setPostsToCache } from "./cache";
 
 export const verify = async (authObj: object) => {
   const response = await fetch(`${backendServer}/verify/`, {
@@ -117,7 +118,8 @@ export const insertMessage = async (insertMsgObj: {
 export const findPostsByAuthoremail = async (authoremail: string) => {
   console.log("findPostsByAuthoremail");
   // Check if the result is cached in indexedDB
-  const cachedResult = await get(`posts-${authoremail}`);
+  const cachedResult = await getPostsFromCache(authoremail);
+
   if (cachedResult) {
     return { message: "SUCCESS", result: cachedResult };
   }
@@ -135,7 +137,7 @@ export const findPostsByAuthoremail = async (authoremail: string) => {
   };
   // Cache the result to indexedDB
   if (responseJson.message === "SUCCESS") {
-    await set(`posts-${authoremail}`, responseJson.result);
+    await setPostsToCache(authoremail, responseJson.result);
   }
 
   return responseJson;
