@@ -10,7 +10,6 @@ import LightModeIcon from '@mui/icons-material/LightMode';
 import LoginIcon from '@mui/icons-material/Login';
 import MenuIcon from "@mui/icons-material/Menu";
 import PersonIcon from '@mui/icons-material/Person';
-import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import SearchIcon from "@mui/icons-material/Search";
 import { Autocomplete, Avatar, Box, CircularProgress, FilterOptionsState, TextField } from "@mui/material";
@@ -28,6 +27,7 @@ import ListItemText from "@mui/material/ListItemText";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { alpha, styled, useTheme } from "@mui/material/styles";
+import { set } from 'idb-keyval';
 import { useContext, useEffect, useRef, useState } from "react";
 import { useMatch, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import logo from "../images/logo.png";
@@ -289,6 +289,11 @@ const TopLeftBar: React.FC<{
     }
   }
 
+  const handleHardRefresh = async () => {
+    await set(`posts-${context.auth.loggedEmail}`, null);
+    context.setLastPostsRefresh(new Date());
+  }
+
   return (
     <Grid className={`${shouldHide ? classes.hide : classes.show}`}>
       <AppBar
@@ -416,10 +421,12 @@ const TopLeftBar: React.FC<{
           <>
             <Typography variant="h6" noWrap sx={{ marginLeft: "10px", marginBottom: "15px", minHeight: "25px" }}>
               Your Posts
-              <RefreshIcon
-                onClick={() => { context.setLastPostsRefresh(new Date()); }}
-                style={{ marginLeft: "10px", cursor: "pointer", transform: "translateY(5px)" }}
-              />
+              <Tooltip title="Hard Refresh">
+                <RefreshIcon
+                  onClick={handleHardRefresh}
+                  style={{ marginLeft: "10px", cursor: "pointer", transform: "translateY(5px)" }}
+                />
+              </Tooltip>
             </Typography>
             <Divider />
           </>

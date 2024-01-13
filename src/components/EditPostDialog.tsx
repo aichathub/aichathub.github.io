@@ -12,6 +12,7 @@ import Slide from '@mui/material/Slide';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { TransitionProps } from '@mui/material/transitions';
+import { set } from 'idb-keyval';
 import * as React from 'react';
 import { useContext, useRef, useState } from 'react';
 import { PostModel } from '../models/PostModel';
@@ -62,12 +63,17 @@ const EditPostDialog: React.FC<{
     setOpen(false);
   };
 
+  const handleHardRefresh = async () => {
+    await set(`posts-${context.auth.loggedEmail}`, null);
+    context.setLastPostsRefresh(new Date());
+  }
+
   const handleSave = async () => {
     handleClose();
     const result = await updatePost({ ...props.post, title: titleRef.current?.value!, tags: selectedTags, isprivate: isprivate }, context.auth.token);
     context.showSnack("Post Edited: " + result.message);
     if (result.message === "SUCCESS") {
-      context.setLastPostsRefresh(new Date());
+      handleHardRefresh();
     }
   };
 
