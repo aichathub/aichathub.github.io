@@ -420,7 +420,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
       } else {
         response.forEach(x => {
           if (!keywords.find(y => y.keyword === x.title)) {
-            keywords.push({ keyword: x.keyword, from: "server" });
+            keywords.push({ keyword: x.title, from: "server" });
           }
         });
       }
