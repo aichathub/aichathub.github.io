@@ -37,7 +37,8 @@ export const setPostsToCache = async (
   await set(cacheKey, postsEncrypted);
 };
 
-export const getPostsFromCache = async (authoremail: string) => {
+export const getPostsFromCache = async (authoremail?: string) => {
+  if (!authoremail) return null;
   const cacheKey = `posts-${authoremail}`;
   const postsEncrypted = await get(cacheKey);
   if (postsEncrypted) {

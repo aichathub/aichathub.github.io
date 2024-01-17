@@ -22,6 +22,7 @@ import { GUEST_POST_LIMIT, GUEST_USERNAME, backendServer } from "../util/constan
 import { findTopKSearch, forkPost, getCustomModelName, getDailyAILimit, getTags, getTodayAIUsage, verify } from "../util/db";
 import useDidMountEffect from "../util/useDidMountEffect";
 import { dateDiffInDays } from '../util/util';
+import { getPostsFromCache } from "../util/cache" 
 
 type AuthObj = {
   loggedEmail: string;
@@ -399,14 +400,9 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
       return false;
     }
   }
-  const refreshKeywords = (loggedUser?: string, token?: string) => {
-    findTopKSearch(100, loggedUser, token).then(response => {
-      if (response.message !== "SUCCESS") {
-        showSnack(response.message);
-        return;
-      }
+  const refreshKeywords = (loggedEmail?: string) => {
+    getPostsFromCache(loggedEmail).then(response => {
       const keywords: { keyword: string, from: "server" | "local" }[] = [];
-
       const localKeywords = localStorage.getItem("keywords");
       if (localKeywords) {
         const localKeywordsObj = JSON.parse(localKeywords) as string[];
@@ -419,14 +415,46 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
         });
       }
       keywords.reverse();
-      response.result.forEach((x: any) => {
-        if (!keywords.find(y => y.keyword === x.keyword)) {
-          keywords.push({ keyword: x.keyword, from: "server" });
-        }
-      });
+      if (!response) {
+        console.warn("Couldn't load cached posts for keywords");
+      } else {
+        response.forEach(x => {
+          if (!keywords.find(y => y.keyword === x.title)) {
+            keywords.push({ keyword: x.keyword, from: "server" });
+          }
+        });
+      }
       setSearchBoxAutoComplete(keywords.map(x => x.keyword));
     });
   }
+  // const refreshKeywords = (loggedUser?: string, token?: string) => {
+    // findTopKSearch(100, loggedUser, token).then(response => {
+    //   if (response.message !== "SUCCESS") {
+    //     showSnack(response.message);
+    //     return;
+    //   }
+    //   const keywords: { keyword: string, from: "server" | "local" }[] = [];
+
+    //   const localKeywords = localStorage.getItem("keywords");
+    //   if (localKeywords) {
+    //     const localKeywordsObj = JSON.parse(localKeywords) as string[];
+    //     // Only care about the latest 3 local keywords
+    //     const localKeywordsObjLatest = localKeywordsObj.slice(Math.max(localKeywordsObj.length - 3, 0));
+    //     localKeywordsObjLatest.forEach(x => {
+    //       if (!keywords.find(y => y.keyword === x)) {
+    //         keywords.push({ keyword: x, from: "local" });
+    //       }
+    //     });
+    //   }
+    //   keywords.reverse();
+    //   response.result.forEach((x: any) => {
+    //     if (!keywords.find(y => y.keyword === x.keyword)) {
+    //       keywords.push({ keyword: x.keyword, from: "server" });
+    //     }
+    //   });
+    //   setSearchBoxAutoComplete(keywords.map(x => x.keyword));
+    // });
+  // }
   const addLocalKeyword = (keyword: string) => {
     if (keyword.startsWith("!")) return;
     const localKeywords = localStorage.getItem("keywords");
@@ -437,7 +465,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
     } else {
       localStorage.setItem("keywords", JSON.stringify([keyword]));
     }
-    refreshKeywords(loggedUser, auth.token);
+    refreshKeywords(auth.loggedEmail);
   }
   const navigateToPost = (url: string) => {
     setIsLoadingMessages(true);
@@ -666,7 +694,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
   }, []);
 
   useEffect(() => {
-    refreshKeywords(loggedUser, auth.token);
+    refreshKeywords(auth.loggedEmail);
   }, [loggedUser, auth.token]);
 
   const getSeverity = (message: string) => {
