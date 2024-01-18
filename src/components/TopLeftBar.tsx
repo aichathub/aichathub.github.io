@@ -7,6 +7,7 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 import LightModeIcon from '@mui/icons-material/LightMode';
+import LockIcon from '@mui/icons-material/Lock';
 import LoginIcon from '@mui/icons-material/Login';
 import MenuIcon from "@mui/icons-material/Menu";
 import PersonIcon from '@mui/icons-material/Person';
@@ -343,7 +344,7 @@ const TopLeftBar: React.FC<{
                   }
                   return (
                     <Box component="li" {...props} onClick={() => {
-                      if (item.type === "post") {
+                      if (item.type === "post" || item.type === "post-private") {
                         context.setIsFirstLoad(true);
                         context.setMessages([]);
                         context.setIsLoadingMessages(true);
@@ -356,6 +357,7 @@ const TopLeftBar: React.FC<{
                     }}>
                       {
                         item.type === "post" ? <ChatBubbleOutlineIcon sx={{ marginRight: "5px" }} /> :
+                        item.type === "post-private" ? <LockIcon sx={{ marginRight: "5px" }} /> :
                           item.keyword.startsWith("@") ? <PersonIcon sx={{ marginRight: "5px" }} /> :
                             item.keyword.startsWith("!Ask") ? <QuestionAnswerIcon sx={{ marginRight: "5px" }} /> :
                               <SearchIcon sx={{ marginRight: "5px" }} />

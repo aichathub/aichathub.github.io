@@ -31,7 +31,7 @@ type AuthObj = {
 
 export type AutocompleteItem = {
   keyword: string;
-  type: "post" | "plaintext";
+  type: "post" | "plaintext" | "post-private";
   pid?: string;
   username?: string;
 }
@@ -415,7 +415,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
       } else {
         response.forEach(x => {
           if (!autocompleteItems.find(y => y.keyword === x.title)) {
-            autocompleteItems.push({ keyword: x.title, type: "post", pid: x.pid, username: x.username });
+            autocompleteItems.push({ keyword: x.title, type: x.isprivate ? "post-private" : "post", pid: x.pid, username: x.username });
           }
         });
       }
