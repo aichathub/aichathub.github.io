@@ -668,13 +668,22 @@ export const signupWithGoogle = async (idToken: string, username: string) => {
 };
 
 export const getCustomModelName = async (api: string) => {
-  const url = `${api}/v1/model`;
+  const url = `${api}/v1/chat/completions`;
   const response = await fetch(url, {
-    method: "GET",
+    method: "POST",
     mode: "cors",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      messages: [{
+        role: "user",
+        content: "Hello"
+      }],
+    }),
   });
-  const responseJson = await response.json();
-  return responseJson.result as string;
+  const res = await response.json();
+  return res.model
 };
 
 export const pythonReply = async (
@@ -814,7 +823,7 @@ export const customModelReply = async (
   api: string,
   messages: MessageModel[]
 ) => {
-  const url = `${api}/v1/generate`;
+  const url = `${api}/v1/chat/completions`;
   const response = await fetch(url, {
     method: "POST",
     mode: "cors",
@@ -822,17 +831,44 @@ export const customModelReply = async (
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      prompt: formPrompt(messages, content),
+      messages: [...messages.map(msg => ({
+        role: (!msg.authorusername || msg.authorusername === "undefined") ? "assistant" : "user",
+        content: msg.content
+      })), {
+        role: "user",
+        content: content
+      }],
     }),
   });
   const res = await response.json();
-  let answer = res.results[0].text;
-  const stopping_string = "###";
-  if (answer.indexOf(stopping_string) !== -1) {
-    answer = answer.substring(0, answer.indexOf(stopping_string));
-  }
+  let answer = res.choices[0].message.content;
   return answer;
 };
+
+// export const customModelReply = async (
+//   content: string,
+//   api: string,
+//   messages: MessageModel[]
+// ) => {
+//   const url = `${api}/v1/generate`;
+//   const response = await fetch(url, {
+//     method: "POST",
+//     mode: "cors",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify({
+//       prompt: formPrompt(messages, content),
+//     }),
+//   });
+//   const res = await response.json();
+//   let answer = res.results[0].text;
+//   const stopping_string = "###";
+//   if (answer.indexOf(stopping_string) !== -1) {
+//     answer = answer.substring(0, answer.indexOf(stopping_string));
+//   }
+//   return answer;
+// };
 
 export const generateShortUrl = async (url: string, origin: string) => {
   const response = await fetch(`${backendServer}/api/generateshorturl`, {

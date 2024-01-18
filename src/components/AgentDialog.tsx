@@ -99,13 +99,13 @@ const AgentDialog: React.FC<{
           <MenuItem value={"gpt3.5"}>ChatGPT (gpt-3.5-turbo)</MenuItem>
           <MenuItem value={"gpt4"}>ChatGPT (gpt-4)</MenuItem>
           <MenuItem value={"llama70b"}>LLaMA 2 70B 🆕</MenuItem>
-          <MenuItem value={"yourmodel"}>Your Model (Google Colab)</MenuItem>
+          <MenuItem value={"yourmodel"}>Your LLM</MenuItem>
           <MenuItem value={"python"}>Python (Runtime)</MenuItem>
         </Select>
         {agent === "yourmodel" && <TextField id="standard-basic"
-          label="Your model api url"
+          label="Your LLM API url"
           variant="standard"
-          placeholder="Example: https://detected-move-folders-legends.trycloudflare.com/api"
+          placeholder="Example: https://detected-move-folders-legends.trycloudflare.com"
           value={yourmodelUrl}
           onChange={onUrlChange}
           InputProps={{
@@ -119,7 +119,7 @@ const AgentDialog: React.FC<{
             ),
           }}
         />}
-        {agent === "yourmodel" && <div className={linkClasses.link}><a target="_blank" href="https://colab.research.google.com/drive/1teDosN4zxuTuqRq5rIzidgrqf0P9XmKJ?usp=sharing">How to generate one?</a></div>}
+        {agent === "yourmodel" && <div className={linkClasses.link}><a target="_blank" href="https://github.com/oobabooga/text-generation-webui/wiki/12-%E2%80%90-OpenAI-API/47806cac93e0365a39f8ce5cb53b0dd699d26b4a">How to generate one?</a></div>}
         {agent === "yourmodel" && <Button variant="text" onClick={handleSaveYourModel}>Save</Button>}
       </Dialog>
     </div>
