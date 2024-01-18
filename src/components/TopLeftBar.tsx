@@ -344,6 +344,9 @@ const TopLeftBar: React.FC<{
                   return (
                     <Box component="li" {...props} onClick={() => {
                       if (item.type === "post") {
+                        context.setIsFirstLoad(true);
+                        context.setMessages([]);
+                        context.setIsLoadingMessages(true);
                         navigate(`/${item.username}/${item.pid}`);
                       } else {
                         setSearchBoxText(item.keyword);
