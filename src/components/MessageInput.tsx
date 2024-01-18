@@ -52,13 +52,13 @@ export const MessageInput: React.FC<{
   const handleSend = async () => {
     if (!inputRef.current) return;
     if (context.isSendingMessage || context.isTypingMessage) return;
-    if (context.agent === "yourmodel") {
-      const isConnected = await context.pingYourmodel();
-      if (!isConnected) {
-        context.showSnack("Opps, Seems your model is disconnected! Please check your model and try again.");
-        return;
-      }
-    }
+    // if (context.agent === "yourmodel") {
+    //   const isConnected = await context.pingYourmodel();
+    //   if (!isConnected) {
+    //     context.showSnack("Opps, Seems your model is disconnected! Please check your model and try again.");
+    //     return;
+    //   }
+    // }
     const ref = inputRef.current!;
     if (ref.value.toLowerCase().replaceAll("@ai", "").trim().length !== 0) {
       let content = ref.value;
