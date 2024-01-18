@@ -18,15 +18,22 @@ import { LocalPostModel } from "../models/LocalPostModel";
 import { MessageModel } from "../models/MessageModel";
 import { PostModel } from "../models/PostModel";
 import { TagModel } from "../models/TagModel";
+import { getPostsFromCache } from "../util/cache";
 import { GUEST_POST_LIMIT, GUEST_USERNAME, backendServer } from "../util/constants";
-import { findTopKSearch, forkPost, getCustomModelName, getDailyAILimit, getTags, getTodayAIUsage, verify } from "../util/db";
+import { forkPost, getCustomModelName, getDailyAILimit, getTags, getTodayAIUsage, verify } from "../util/db";
 import useDidMountEffect from "../util/useDidMountEffect";
 import { dateDiffInDays } from '../util/util';
-import { getPostsFromCache } from "../util/cache" 
 
 type AuthObj = {
   loggedEmail: string;
   token: string;
+}
+
+export type AutocompleteItem = {
+  keyword: string;
+  type: "post" | "plaintext";
+  pid?: string;
+  username?: string;
 }
 
 export type Agent = "gpt3.5" | "gpt4" | "python" | "yourmodel" | "none" | "llama70b";
@@ -63,7 +70,7 @@ type AppContextObj = {
   yourmodelUrl: string;
   yourmodelName: string;
   isYourmodelConnected: boolean;
-  searchBoxAutoComplete: string[];
+  searchBoxAutoComplete: AutocompleteItem[];
   isForking: boolean;
   showLoadingBackdrop: boolean;
   showQrReader: boolean;
@@ -271,7 +278,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
   const [yourmodelUrl, setYourmodelUrl] = useState(localStorage.getItem("yourmodelUrl") || "");
   const [yourmodelName, setYourmodelName] = useState(localStorage.getItem("yourmodelName") || "");
   const [isYourmodelConnected, setIsYourmodelConnected] = useState(false);
-  const [searchBoxAutoComplete, setSearchBoxAutoComplete] = useState<string[]>([]);
+  const [searchBoxAutoComplete, setSearchBoxAutoComplete] = useState<AutocompleteItem[]>([]);
   const [isForking, setIsForking] = useState(false);
   const [snackAction, setSnackAction] = useState<ReactNode>(undefined);
   const [showLoadingBackdrop, setShowLoadingBackdrop] = useState(false);
@@ -402,58 +409,46 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
   }
   const refreshKeywords = (loggedEmail?: string) => {
     getPostsFromCache(loggedEmail).then(response => {
-      const keywords: { keyword: string, from: "server" | "local" }[] = [];
-      const localKeywords = localStorage.getItem("keywords");
-      if (localKeywords) {
-        const localKeywordsObj = JSON.parse(localKeywords) as string[];
-        // Only care about the latest 3 local keywords
-        const localKeywordsObjLatest = localKeywordsObj.slice(Math.max(localKeywordsObj.length - 3, 0));
-        localKeywordsObjLatest.forEach(x => {
-          if (!keywords.find(y => y.keyword === x)) {
-            keywords.push({ keyword: x, from: "local" });
-          }
-        });
-      }
-      keywords.reverse();
+      const autocompleteItems: AutocompleteItem[] = [];
       if (!response) {
         console.warn("Couldn't load cached posts for keywords");
       } else {
         response.forEach(x => {
-          if (!keywords.find(y => y.keyword === x.title)) {
-            keywords.push({ keyword: x.title, from: "server" });
+          if (!autocompleteItems.find(y => y.keyword === x.title)) {
+            autocompleteItems.push({ keyword: x.title, type: "post", pid: x.pid, username: x.username });
           }
         });
       }
-      setSearchBoxAutoComplete(keywords.map(x => x.keyword));
+      setSearchBoxAutoComplete(autocompleteItems);
     });
   }
   // const refreshKeywords = (loggedUser?: string, token?: string) => {
-    // findTopKSearch(100, loggedUser, token).then(response => {
-    //   if (response.message !== "SUCCESS") {
-    //     showSnack(response.message);
-    //     return;
-    //   }
-    //   const keywords: { keyword: string, from: "server" | "local" }[] = [];
+  // findTopKSearch(100, loggedUser, token).then(response => {
+  //   if (response.message !== "SUCCESS") {
+  //     showSnack(response.message);
+  //     return;
+  //   }
+  //   const keywords: { keyword: string, from: "server" | "local" }[] = [];
 
-    //   const localKeywords = localStorage.getItem("keywords");
-    //   if (localKeywords) {
-    //     const localKeywordsObj = JSON.parse(localKeywords) as string[];
-    //     // Only care about the latest 3 local keywords
-    //     const localKeywordsObjLatest = localKeywordsObj.slice(Math.max(localKeywordsObj.length - 3, 0));
-    //     localKeywordsObjLatest.forEach(x => {
-    //       if (!keywords.find(y => y.keyword === x)) {
-    //         keywords.push({ keyword: x, from: "local" });
-    //       }
-    //     });
-    //   }
-    //   keywords.reverse();
-    //   response.result.forEach((x: any) => {
-    //     if (!keywords.find(y => y.keyword === x.keyword)) {
-    //       keywords.push({ keyword: x.keyword, from: "server" });
-    //     }
-    //   });
-    //   setSearchBoxAutoComplete(keywords.map(x => x.keyword));
-    // });
+  //   const localKeywords = localStorage.getItem("keywords");
+  //   if (localKeywords) {
+  //     const localKeywordsObj = JSON.parse(localKeywords) as string[];
+  //     // Only care about the latest 3 local keywords
+  //     const localKeywordsObjLatest = localKeywordsObj.slice(Math.max(localKeywordsObj.length - 3, 0));
+  //     localKeywordsObjLatest.forEach(x => {
+  //       if (!keywords.find(y => y.keyword === x)) {
+  //         keywords.push({ keyword: x, from: "local" });
+  //       }
+  //     });
+  //   }
+  //   keywords.reverse();
+  //   response.result.forEach((x: any) => {
+  //     if (!keywords.find(y => y.keyword === x.keyword)) {
+  //       keywords.push({ keyword: x.keyword, from: "server" });
+  //     }
+  //   });
+  //   setSearchBoxAutoComplete(keywords.map(x => x.keyword));
+  // });
   // }
   const addLocalKeyword = (keyword: string) => {
     if (keyword.startsWith("!")) return;

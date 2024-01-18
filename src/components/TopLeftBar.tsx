@@ -10,6 +10,7 @@ import LightModeIcon from '@mui/icons-material/LightMode';
 import LoginIcon from '@mui/icons-material/Login';
 import MenuIcon from "@mui/icons-material/Menu";
 import PersonIcon from '@mui/icons-material/Person';
+import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import SearchIcon from "@mui/icons-material/Search";
 import { Autocomplete, Avatar, Box, CircularProgress, FilterOptionsState, TextField } from "@mui/material";
@@ -32,7 +33,7 @@ import { useMatch, useNavigate, useParams, useSearchParams } from "react-router-
 import logo from "../images/logo.png";
 import { DummyPostModel } from "../models/DummyPostModel";
 import { PostModel } from "../models/PostModel";
-import { AppContext } from "../store/AppContext";
+import { AppContext, AutocompleteItem } from "../store/AppContext";
 import { removePostsFromCache } from "../util/cache";
 import { GUEST_EMAIL, GUEST_USERNAME } from "../util/constants";
 import { chatgptReply, findPostsByAuthoremail, getPostByUsernameAndPid, insertMessage, insertPostByUsernameAndTitle } from "../util/db";
@@ -228,9 +229,7 @@ const TopLeftBar: React.FC<{
       result.push(inputValue);
     }
     if (inputValue.trim() !== "" && !inputValue.trim().startsWith("@") && !inputValue.trim().startsWith("!")) {
-      // if (context.loggedUser) {
       result.push("!Ask: " + inputValue);
-      // }
     }
     return result;
   };
@@ -328,6 +327,7 @@ const TopLeftBar: React.FC<{
             <Search sx={{ flexGrow: 1, marginTop: "5px" }}>
               <Autocomplete
                 open={isSearchAutocompleteOpen}
+                getOptionLabel={(option) => typeof option === "string" ? option : (option as AutocompleteItem).keyword}
                 id="free-solo-demo"
                 freeSolo
                 filterOptions={filterOptions}
@@ -335,19 +335,29 @@ const TopLeftBar: React.FC<{
                 autoComplete={true}
                 value={searchBoxText}
                 renderOption={(props, option) => {
-                  const optionStr = option as string;
+                  let item: AutocompleteItem;
+                  if (typeof option === "string") {
+                    item = { keyword: option as string, type: "plaintext" };
+                  } else {
+                    item = option as AutocompleteItem;
+                  }
                   return (
                     <Box component="li" {...props} onClick={() => {
-                      setSearchBoxText(optionStr);
-                      redirectSearch(optionStr);
+                      if (item.type === "post") {
+                        navigate(`/${item.username}/${item.pid}`);
+                      } else {
+                        setSearchBoxText(item.keyword);
+                        redirectSearch(item.keyword);
+                      }
                       setIsSearchAutocompleteOpen(false);
                     }}>
                       {
-                        optionStr.startsWith("@") ? <PersonIcon sx={{ marginRight: "5px" }} /> :
-                          optionStr.startsWith("!Ask") ? <ChatBubbleOutlineIcon sx={{ marginRight: "5px" }} /> :
-                            <SearchIcon sx={{ marginRight: "5px" }} />
+                        item.type === "post" ? <ChatBubbleOutlineIcon sx={{ marginRight: "5px" }} /> :
+                          item.keyword.startsWith("@") ? <PersonIcon sx={{ marginRight: "5px" }} /> :
+                            item.keyword.startsWith("!Ask") ? <QuestionAnswerIcon sx={{ marginRight: "5px" }} /> :
+                              <SearchIcon sx={{ marginRight: "5px" }} />
                       }
-                      {optionStr.startsWith("!") ? optionStr.slice(1) : optionStr}
+                      {item.keyword.startsWith("!") ? item.keyword.slice(1) : item.keyword}
                     </Box>
                   );
                 }}
