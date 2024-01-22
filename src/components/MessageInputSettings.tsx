@@ -19,7 +19,7 @@ const MessageInputSettings: React.FC<{
   const hasVoice = window.speechSynthesis.getVoices().length > 0;
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     // setAnchorEl(event.currentTarget);
-    context.pingYourmodel();
+    // context.pingYourmodel();
     handleAgentBtnClick();
   };
   const handleClose = () => {
