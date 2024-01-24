@@ -668,6 +668,10 @@ export const signupWithGoogle = async (idToken: string, username: string) => {
 };
 
 export const getCustomModelName = async (api: string) => {
+  // Remove `/` from the end of api if there is any
+  if (api.endsWith("/")) {
+    api = api.slice(0, -1);
+  }
   const url = `${api}/v1/chat/completions`;
   const response = await fetch(url, {
     method: "POST",
@@ -676,14 +680,16 @@ export const getCustomModelName = async (api: string) => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      messages: [{
-        role: "user",
-        content: "Hello"
-      }],
+      messages: [
+        {
+          role: "user",
+          content: "Hello",
+        },
+      ],
     }),
   });
   const res = await response.json();
-  return res.model
+  return res.model;
 };
 
 export const pythonReply = async (
@@ -823,6 +829,10 @@ export const customModelReply = async (
   api: string,
   messages: MessageModel[]
 ) => {
+  // Remove `/` from the end of api if there is any
+  if (api.endsWith("/")) {
+    api = api.slice(0, -1);
+  }
   const url = `${api}/v1/chat/completions`;
   const response = await fetch(url, {
     method: "POST",
@@ -831,13 +841,19 @@ export const customModelReply = async (
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      messages: [...messages.map(msg => ({
-        role: (!msg.authorusername || msg.authorusername === "undefined") ? "assistant" : "user",
-        content: msg.content
-      })), {
-        role: "user",
-        content: content
-      }],
+      messages: [
+        ...messages.map((msg) => ({
+          role:
+            !msg.authorusername || msg.authorusername === "undefined"
+              ? "assistant"
+              : "user",
+          content: msg.content,
+        })),
+        {
+          role: "user",
+          content: content,
+        },
+      ],
     }),
   });
   const res = await response.json();
