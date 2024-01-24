@@ -47,7 +47,7 @@ const MarkdownComponent: React.FC<{
             const formula = String(children).replaceAll("&nbsp;\n\n", "\n\n").replaceAll("\\\\ \\\\", "\\\\ \\ \\\\");
             content = <MathJax.Node inline formula={formula} />
           } else {
-            content = <CodeBlock content={String(children).replaceAll("&nbsp;\n", "\n").replace(/\n\n/g, "\n").replace(/\n$/, '')} language={language === "" ? undefined : language} />
+            content = <CodeBlock content={String(children).replaceAll("&nbsp;\n", "\n").replace(/\n\n/g, "\n").replace(/\n$/, '')} language={language === "" || language === "mask" ? undefined : language} isMasked={language === "mask"} />
           }
           if (isSecret) {
             content = <Collapsible trigger={<VisibilityIconToggleButton />}>
