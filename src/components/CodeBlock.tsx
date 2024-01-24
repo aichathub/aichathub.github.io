@@ -12,7 +12,7 @@ const CodeBlock: React.FC<{
   isMasked?: boolean;
 }> = (props) => {
   const context = useContext(AppContext);
-  const displayContent = props.isMasked ? props.content.trim().replace(/./g, "●") : props.content.trim();
+  const maskedContent = props.content.trim().replace(/./g, "●");
   const [isHovered, setIsHovered] = useState(false);
 
   const handleMouseEnter = () => {
@@ -29,7 +29,7 @@ const CodeBlock: React.FC<{
         <Highlight
           className={`${props.language} ${context.darkMode ? "onedark" : "onelight"}`}
         >
-          {isHovered ? props.content.trim() : displayContent}
+          {(!props.isMasked || isHovered) ? props.content.trim() : maskedContent}
         </Highlight>
       </div>
     </CopyWrapper>
