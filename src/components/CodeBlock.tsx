@@ -16,11 +16,13 @@ const CodeBlock: React.FC<{
   const [isHovered, setIsHovered] = useState(false);
 
   const handleMouseEnter = () => {
-    setIsHovered(true);
+    if (props.isMasked)
+      setIsHovered(true);
   };
 
   const handleMouseLeave = () => {
-    setIsHovered(false);
+    if (props.isMasked)
+      setIsHovered(false);
   };
 
   return (
