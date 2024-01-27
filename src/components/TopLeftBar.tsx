@@ -343,7 +343,7 @@ const TopLeftBar: React.FC<{
                     item = option as AutocompleteItem;
                   }
                   return (
-                    <Box component="li" {...props} onClick={() => {
+                    <Box id={`${item.username}/${item.pid}/${new Date()}`} component="li" {...props} onClick={() => {
                       if (item.type === "post" || item.type === "post-private") {
                         context.setIsFirstLoad(true);
                         context.setMessages([]);
@@ -357,18 +357,36 @@ const TopLeftBar: React.FC<{
                     }}>
                       {
                         item.type === "post" ? <ChatBubbleOutlineIcon sx={{ marginRight: "5px" }} /> :
-                        item.type === "post-private" ? <LockIcon sx={{ marginRight: "5px" }} /> :
-                          item.keyword.startsWith("@") ? <PersonIcon sx={{ marginRight: "5px" }} /> :
-                            item.keyword.startsWith("!Ask") ? <QuestionAnswerIcon sx={{ marginRight: "5px" }} /> :
-                              <SearchIcon sx={{ marginRight: "5px" }} />
+                          item.type === "post-private" ? <LockIcon sx={{ marginRight: "5px" }} /> :
+                            item.keyword.startsWith("@") ? <PersonIcon sx={{ marginRight: "5px" }} /> :
+                              item.keyword.startsWith("!Ask") ? <QuestionAnswerIcon sx={{ marginRight: "5px" }} /> :
+                                <SearchIcon sx={{ marginRight: "5px" }} />
                       }
                       {item.keyword.startsWith("!") ? item.keyword.slice(1) : item.keyword}
                     </Box>
                   );
                 }}
                 onChange={(event, value) => {
-                  if (!value || ((typeof value) !== "string")) return;
-                  redirectSearch(value as string);
+                  if (!value) return;
+                  if (typeof value === "string") {
+                    redirectSearch(value);
+                  } else {
+                    const post = value as AutocompleteItem;
+                    context.setIsFirstLoad(true);
+                    context.setMessages([]);
+                    context.setIsLoadingMessages(true);
+                    navigate(`/${post.username}/${post.pid}`);
+                  }
+                  setIsSearchAutocompleteOpen(false);
+                  if (typeof value === "string") {
+                    setSearchBoxText(value);
+                  } else {
+                    const item = value as AutocompleteItem;
+                    setSearchBoxText(item.keyword);
+                  }
+                  setTimeout(() => {
+                    inputRef.current!.blur();
+                  }, 100);
                 }}
                 renderInput={(params) => (
                   <TextField {...params}
@@ -392,14 +410,14 @@ const TopLeftBar: React.FC<{
                     onFocusCapture={() => {
                       setIsSearchAutocompleteOpen(true);
                     }}
-                    onKeyPress={(e) => {
-                      setIsSearchAutocompleteOpen(true);
-                      if (e.key === 'Enter') {
-                        if (!searchBoxText) return;
-                        navigate(`/search?q=${searchBoxText}`);
-                        context.addLocalKeyword(searchBoxText);
-                      }
-                    }}
+                  // onKeyPress={(e) => {
+                  //   setIsSearchAutocompleteOpen(true);
+                  //   if (e.key === 'Enter') {
+                  //     if (!searchBoxText) return;
+                  //     navigate(`/search?q=${searchBoxText}`);
+                  //     context.addLocalKeyword(searchBoxText);
+                  //   }
+                  // }}
                   />
                 )}
               />
