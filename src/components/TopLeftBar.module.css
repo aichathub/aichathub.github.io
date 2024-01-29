@@ -8,11 +8,7 @@
 }
 
 .rotate {
-  animation: rotation 2s infinite linear;
-}
-
-.rotate-slow {
-  animation: rotation 27s infinite linear;
+  animation: rotation 0.5s infinite linear;
 }
 
 @keyframes rotation {
@@ -20,6 +16,31 @@
     transform: rotate(0deg);
   }
   to {
-    transform: rotate(359deg);
+    transform: rotate(360deg);
+  }
+}
+
+.rotate-slowstop {
+  animation: slowstop 5s linear;
+}
+
+@keyframes slowstop {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  10% {
+    -webkit-transform: rotate(360deg);
+  }
+  20% {
+    -webkit-transform: rotate(720deg);
+  }
+  40% {
+    -webkit-transform: rotate(1080deg);
+  }
+  70% {
+    -webkit-transform: rotate(1440deg);
+  }
+  100% {
+    -webkit-transform: rotate(1800deg);
   }
 }
