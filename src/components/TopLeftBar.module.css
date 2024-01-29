@@ -21,7 +21,7 @@
 }
 
 .rotate-slowstop {
-  animation: slowstop 5s linear;
+  animation: slowstop 1.5s linear;
 }
 
 @keyframes slowstop {
@@ -29,18 +29,18 @@
     -webkit-transform: rotate(0deg);
   }
   10% {
-    -webkit-transform: rotate(360deg);
+    -webkit-transform: rotate(90deg);
   }
   20% {
-    -webkit-transform: rotate(720deg);
+    -webkit-transform: rotate(180deg);
   }
   40% {
-    -webkit-transform: rotate(1080deg);
+    -webkit-transform: rotate(270deg);
   }
   70% {
-    -webkit-transform: rotate(1440deg);
+    -webkit-transform: rotate(360deg);
   }
   100% {
-    -webkit-transform: rotate(1800deg);
+    -webkit-transform: rotate(450deg);
   }
 }
