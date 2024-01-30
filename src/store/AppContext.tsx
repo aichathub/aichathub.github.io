@@ -631,9 +631,6 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
       }
 
       setDarkMode(shouldDark);
-      if (document.querySelector(':root')) {
-        (document.querySelector(':root') as HTMLElement).style.setProperty("color-scheme", shouldDark ? "dark" : "light");
-      }
     }
 
     window.addEventListener('storage', checkDarkMode)
@@ -642,6 +639,12 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
       window.removeEventListener('storage', checkDarkMode)
     }
   }, []);
+
+  useEffect(() => {
+    if (document.querySelector(':root')) {
+      (document.querySelector(':root') as HTMLElement).style.setProperty("color-scheme", shouldDark ? "dark" : "light");
+    }
+  }, [darkMode]);
 
   useEffect(() => {
     if (isLoadingMessages)
