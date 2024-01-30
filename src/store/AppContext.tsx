@@ -642,7 +642,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
 
   useEffect(() => {
     if (document.querySelector(':root')) {
-      (document.querySelector(':root') as HTMLElement).style.setProperty("color-scheme", shouldDark ? "dark" : "light");
+      (document.querySelector(':root') as HTMLElement).style.setProperty("color-scheme", darkMode ? "dark" : "light");
     }
   }, [darkMode]);
 
