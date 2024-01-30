@@ -6,6 +6,7 @@ import { Result } from '@zxing/library';
 import React, { ReactNode, createContext, useCallback, useEffect, useState } from 'react';
 import { QrReader } from 'react-qr-reader';
 import { useMatch, useNavigate } from "react-router-dom";
+import LoadingBar from 'react-top-loading-bar';
 import { io } from "socket.io-client";
 import Alert from "../components/Alert";
 import AuthInput from '../components/AuthInput';
@@ -858,9 +859,9 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
         />
       </>
     }</Backdrop>;
-
   return (
     <AppContext.Provider value={contextValue}>
+      <LoadingBar color="#dd3300" progress={(isInitializing || isLeftBarPostLoading || isLoadingMessages) ? 50 : 100} />
       <ThemeProvider theme={theme}>
         {
           !snackAction ?
