@@ -631,7 +631,9 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
       }
 
       setDarkMode(shouldDark);
-      document.querySelector(':root').style.setProperty("color-scheme", shouldDark ? "dark" : "light");
+      if (document.querySelector(':root')) {
+        (document.querySelector(':root') as HTMLElement).style.setProperty("color-scheme", shouldDark ? "dark" : "light");
+      }
     }
 
     window.addEventListener('storage', checkDarkMode)
