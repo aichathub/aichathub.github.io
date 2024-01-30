@@ -751,7 +751,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
   const showInputMessage = hasRightToSendMsg && !isLoadingMessages;
   const showAskFollowupButton = !showInputMessage && isOnPostPage && curPost && !isLoadingMessages;
 
-  const mainBody = <Box sx={{ display: isInitializing ? "none" : "flex", marginBottom: "30px" }}>
+  const mainBody = <Box sx={{ display: isInitializing ? "none" : "flex", marginBottom: "30px", colorScheme: darkMode ? "dark" : "light" }}>
     <CssBaseline />
     <TopLeftBar
       open={topLeftBarOpen}
