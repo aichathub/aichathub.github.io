@@ -620,18 +620,18 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
   useEffect(() => {
     function checkDarkMode() {
       const darkMode = localStorage.getItem("darkMode");
+      let shouldDark = false;
 
       if (darkMode == null) {
         if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-          setDarkMode(true);
-        } else {
-          setDarkMode(false);
+          shouldDark = true;
         }
       } else if (darkMode === "true") {
-        setDarkMode(true);
-      } else {
-        setDarkMode(false);
+        shouldDark = true;
       }
+
+      setDarkMode(shouldDark);
+      document.querySelector(':root').style.setProperty("color-scheme", shouldDark ? "dark" : "light");
     }
 
     window.addEventListener('storage', checkDarkMode)
@@ -751,7 +751,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
   const showInputMessage = hasRightToSendMsg && !isLoadingMessages;
   const showAskFollowupButton = !showInputMessage && isOnPostPage && curPost && !isLoadingMessages;
 
-  const mainBody = <Box sx={{ display: isInitializing ? "none" : "flex", marginBottom: "30px", colorScheme: darkMode ? "dark" : "light" }}>
+  const mainBody = <Box sx={{ display: isInitializing ? "none" : "flex", marginBottom: "30px" }}>
     <CssBaseline />
     <TopLeftBar
       open={topLeftBarOpen}
