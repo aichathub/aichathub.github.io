@@ -3,10 +3,10 @@ import { Backdrop, Box, Button, CircularProgress, CssBaseline, ThemeProvider, cr
 import Snackbar from '@mui/material/Snackbar';
 import { styled } from "@mui/material/styles";
 import { Result } from '@zxing/library';
-import React, { ReactNode, createContext, useCallback, useEffect, useState } from 'react';
+import React, { ReactNode, createContext, useCallback, useEffect, useRef, useState } from 'react';
 import { QrReader } from 'react-qr-reader';
 import { useMatch, useNavigate } from "react-router-dom";
-import LoadingBar from 'react-top-loading-bar';
+import LoadingBar, { LoadingBarRef } from 'react-top-loading-bar';
 import { io } from "socket.io-client";
 import Alert from "../components/Alert";
 import AuthInput from '../components/AuthInput';
@@ -286,6 +286,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
   const [showQrReader, setShowQrReader] = useState(false);
   const [detectedSessionid, setDetectedSessionid] = useState("");
   const [justForked, setJustForked] = useState(false);
+  const loadingBarRef = useRef<LoadingBarRef>(null);
 
   const isOnPostPage = useMatch("/:username/:postid");
   const isPostFresh = curPost && dateDiffInDays(new Date(curPost.createdate), new Date()) <= 1 && messages.length < GUEST_POST_LIMIT;
@@ -698,6 +699,14 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
     refreshKeywords(auth.loggedEmail);
   }, [loggedUser, auth.token]);
 
+  useEffect(() => {
+    if (isInitializing || isLeftBarPostLoading || isLoadingMessages) {
+      loadingBarRef.current?.continuousStart();
+    } else {
+      loadingBarRef.current?.complete();
+    }
+  }, [isInitializing, isLeftBarPostLoading, isLoadingMessages]);
+
   const getSeverity = (message: string) => {
     if (message.toLowerCase().indexOf("error") !== -1) return "error";
     if (message.toLowerCase().indexOf("success") !== -1) return "success";
@@ -861,7 +870,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
     }</Backdrop>;
   return (
     <AppContext.Provider value={contextValue}>
-      <LoadingBar color="#dd3300" progress={(isInitializing || isLeftBarPostLoading || isLoadingMessages) ? 50 : 100} />
+      <LoadingBar color="#dd3300" ref={loadingBarRef} />
       <ThemeProvider theme={theme}>
         {
           !snackAction ?
