@@ -24,6 +24,7 @@ import { useNavigate } from "react-router-dom";
 import { adjectives, animals, colors, uniqueNamesGenerator } from 'unique-names-generator';
 import { TagModel } from "../models/TagModel";
 import { AppContext } from "../store/AppContext";
+import { removePostsFromCache } from "../util/cache";
 import { insertPostByUsernameAndTitle } from "../util/db";
 import TagsInput from "./TagsInput";
 
@@ -73,6 +74,11 @@ const NewPostDialog: React.FC<{
     setOpen(false);
   };
 
+  const handleHardRefresh = async () => {
+    await removePostsFromCache(context.auth.loggedEmail);
+    context.setLastPostsRefresh(new Date());
+  }
+
   const handleSave = async () => {
     handleClose();
     const response = await insertPostByUsernameAndTitle(
@@ -83,6 +89,7 @@ const NewPostDialog: React.FC<{
       isprivate
     );
     if (response.message === "SUCCESS") {
+      handleHardRefresh();
       context.setLastPostsRefresh(new Date());
       context.setMessages([]);
       navigate(`/${context.loggedUser}/${response.result.pid}`);
