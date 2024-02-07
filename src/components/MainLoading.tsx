@@ -15,7 +15,7 @@ const MainLoading: React.FC<{
       context.setIsInitializing(false);
     }, 2000);
   }, []);
-  return <Box style={{ height: "100vh", background: props.darkMode ? "black" : "white" }}>
+  return <Box style={{ height: "85vh" }}>
     <div
       style={{
         position: "absolute",
