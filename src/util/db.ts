@@ -116,7 +116,6 @@ export const insertMessage = async (insertMsgObj: {
 };
 
 export const findPostsByAuthoremail = async (authoremail: string) => {
-  console.log("findPostsByAuthoremail");
   // Check if the result is cached in indexedDB
   const cachedResult = await getPostsFromCache(authoremail);
 

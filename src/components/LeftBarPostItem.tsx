@@ -5,7 +5,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import ForkLeftIcon from '@mui/icons-material/ForkLeft';
 import LockIcon from '@mui/icons-material/Lock';
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import { ListItemButton, ListItemIcon, Skeleton, Tooltip } from "@mui/material";
+import { ListItemButton, ListItemIcon, Skeleton } from "@mui/material";
 import ListItem from "@mui/material/ListItem";
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -27,7 +27,12 @@ const LeftBarPostItem: React.FC<{ post: PostModel; removePost: (post: PostModel)
   const isMobile = window.innerWidth <= 600;
   const isLoading = props.isLoading;
 
-  const handleClickPostItem = () => {
+  const handleClickPostItem = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+    e.preventDefault();
+    if (e.button === 1 || e.ctrlKey || e.metaKey) {
+      window.open(e.currentTarget.href, "_blank");
+      return;
+    }
     if (isLoading) return;
     context.setIsFirstLoad(true);
     context.setMessages([]);
@@ -73,17 +78,17 @@ const LeftBarPostItem: React.FC<{ post: PostModel; removePost: (post: PostModel)
     <>
       {showEditPostDialog && <EditPostDialog handleClose={handleCloseEditPostDialog} post={post} />}
       <ListItem key={post.pid} disablePadding style={style}>
-        <ListItemButton onClick={handleClickPostItem}>
+        <ListItemButton>
           {
             isLoading ? <Skeleton variant="circular" width={"30px"} height={"30px"} /> :
               post.forkedfrompid ? <ForkLeftIcon /> :
                 post.isprivate ? <LockIcon /> : <ChatBubbleOutlineIcon />
           }
-          <Tooltip title={isLoading ? "" : `${post.username}/${post.pid}`} placement="top" arrow>
-            {isLoading ? <Skeleton variant="rounded" height={"30px"} width={"80%"} sx={{ marginLeft: "5px" }} /> :
+          {isLoading ? <Skeleton variant="rounded" height={"30px"} width={"80%"} sx={{ marginLeft: "5px" }} /> :
+            <a href={`/${post.username}/${post.pid}`} style={{ width: "100%", textDecoration: "none", color: "inherit" }} onClick={handleClickPostItem}>
               <ListItemText primary={post.title} style={{ marginLeft: "10px", overflowWrap: "break-word" }} />
-            }
-          </Tooltip>
+            </a>
+          }
         </ListItemButton>
         <Grid>
           {!isLoading &&
