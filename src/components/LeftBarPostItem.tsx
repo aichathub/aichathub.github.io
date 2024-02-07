@@ -79,7 +79,7 @@ const LeftBarPostItem: React.FC<{ post: PostModel; removePost: (post: PostModel)
               post.forkedfrompid ? <ForkLeftIcon /> :
                 post.isprivate ? <LockIcon /> : <ChatBubbleOutlineIcon />
           }
-          <Tooltip title={isLoading ? "" : `${post.username}/${post.pid}`} placement="right">
+          <Tooltip title={isLoading ? "" : `${post.username}/${post.pid}`} placement="top" arrow>
             {isLoading ? <Skeleton variant="rounded" height={"30px"} width={"80%"} sx={{ marginLeft: "5px" }} /> :
               <ListItemText primary={post.title} style={{ marginLeft: "10px", overflowWrap: "break-word" }} />
             }
