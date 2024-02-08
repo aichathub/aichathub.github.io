@@ -24,6 +24,7 @@ const AutocompleteComponent: React.FC<{
   useEffect(() => {
     if (item.type === "python") {
       runPythonLocal(item.keyword).then((result) => {
+        localStorage.setItem("lastExecutionResult", result);
         setExecutionResult(result);
       });
     }

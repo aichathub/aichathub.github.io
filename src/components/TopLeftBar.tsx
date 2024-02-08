@@ -138,6 +138,7 @@ const TopLeftBar: React.FC<{
       setPost(p);
     });
   }, [username, postid]);
+
   const [openNewPostForm, setOpenNewPostForm] = useState(false);
   const navigate = useNavigate();
   const handleNewPostBtnClick = () => {
@@ -353,15 +354,21 @@ const TopLeftBar: React.FC<{
                   />;
                 }}
                 onChange={(event, value) => {
+                  event?.preventDefault();
                   if (!value) return;
                   if (typeof value === "string") {
                     redirectSearch(value);
                   } else {
-                    const post = value as AutocompleteItem;
-                    context.setIsFirstLoad(true);
-                    context.setMessages([]);
-                    context.setIsLoadingMessages(true);
-                    navigate(`/${post.username}/${post.pid}`);
+                    const item = value as AutocompleteItem;
+                    if (item.type === "post" || item.type === "post-private") {
+                      context.setIsFirstLoad(true);
+                      context.setMessages([]);
+                      context.setIsLoadingMessages(true);
+                      navigate(`/${item.username}/${item.pid}`);
+                    } else if (item.type === "python") {
+                      navigator.clipboard.writeText(localStorage.getItem("lastExecutionResult") || "");
+                      context.showSnack("Copied result to clipboard");
+                    }
                   }
                   setIsSearchAutocompleteOpen(false);
                   if (typeof value === "string") {
