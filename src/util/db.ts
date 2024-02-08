@@ -849,7 +849,7 @@ export const customModelReply = async (
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      messages: messages,
+      messages: messagesPayload,
     }),
   });
   const res = await response.json();
