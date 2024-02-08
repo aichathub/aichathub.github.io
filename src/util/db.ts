@@ -680,7 +680,7 @@ export const getCustomModelName = async (api: string) => {
     },
   });
   const res = await response.json();
-  return res.model.data[0].id;
+  return res.data[0].id;
 };
 
 export const pythonReply = async (
