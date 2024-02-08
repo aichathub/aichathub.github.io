@@ -10,7 +10,7 @@ declare global {
 }
 
 const captureStdOut =
-  "from random import randint\r\nimport sys\r\nimport io\r\nsys.stdout = io.StringIO()\r\n";
+  "import random\r\nfrom random import choice\r\nfrom random import randint\r\nimport sys\r\nimport io\r\nsys.stdout = io.StringIO()\r\n";
 
 export const runPythonLocal = async (code: string) => {
   let pyodide = window.pyodide;
@@ -26,11 +26,11 @@ export const runPythonLocal = async (code: string) => {
       result = await pyodide.runPythonAsync("sys.stdout.getvalue()");
     }
     if (typeof result === "function") {
-      result = "Unknown error occurred";
+      result = "[ERROR] Unknown error occurred";
     }
-    return result;
+    return result.toString();
   } catch (error: any) {
-    if (error instanceof Error) return error.message;
-    return String(error);
+    if (error instanceof Error) return `[ERROR] ${error.message}`;
+    return `[ERROR] ${String(error)}`;
   }
 };

@@ -20,7 +20,7 @@ const AutocompleteComponent: React.FC<{
   const { item, setSearchBoxText, setIsSearchAutocompleteOpen, redirectSearch, renderProps } = props;
   const context = useContext(AppContext);
   const navigate = useNavigate();
-  const [executionResult, setExecutionResult] = useState("Loading...");
+  const [executionResult, setExecutionResult] = useState("");
   useEffect(() => {
     if (item.type === "python") {
       runPythonLocal(item.keyword).then((result) => {
@@ -29,22 +29,26 @@ const AutocompleteComponent: React.FC<{
       });
     }
   }, []);
-  return <Box id={`${item.username}/${item.pid}/${new Date()}`} component="li" {...renderProps} onClick={(e) => {
-    e.preventDefault();
-    if (item.type === "python") {
-      navigator.clipboard.writeText(executionResult);
-      context.showSnack("Copied result to clipboard");
-    } else if (item.type === "post" || item.type === "post-private") {
-      context.setIsFirstLoad(true);
-      context.setMessages([]);
-      context.setIsLoadingMessages(true);
-      navigate(`/${item.username}/${item.pid}`);
-    } else {
-      setSearchBoxText(item.keyword);
-      redirectSearch(item.keyword);
-    }
-    setIsSearchAutocompleteOpen(false);
-  }}>
+  const shouldHide = item.type === "python" && (!executionResult || executionResult.startsWith("[ERROR]"));
+  return <Box style={{ display: shouldHide ? "none" : "flex" }}
+    id={`${item.username}/${item.pid}/${new Date()}`}
+    component="li" {...renderProps}
+    onClick={(e) => {
+      e.preventDefault();
+      if (item.type === "python") {
+        navigator.clipboard.writeText(executionResult);
+        context.showSnack("Copied result to clipboard");
+      } else if (item.type === "post" || item.type === "post-private") {
+        context.setIsFirstLoad(true);
+        context.setMessages([]);
+        context.setIsLoadingMessages(true);
+        navigate(`/${item.username}/${item.pid}`);
+      } else {
+        setSearchBoxText(item.keyword);
+        redirectSearch(item.keyword);
+      }
+      setIsSearchAutocompleteOpen(false);
+    }}>
     {
       item.type === "post" ? <ChatBubbleOutlineIcon sx={{ marginRight: "5px" }} /> :
         item.type === "post-private" ? <LockIcon sx={{ marginRight: "5px" }} /> :
