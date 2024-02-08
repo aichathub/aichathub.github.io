@@ -671,24 +671,16 @@ export const getCustomModelName = async (api: string) => {
   if (api.endsWith("/")) {
     api = api.slice(0, -1);
   }
-  const url = `${api}/v1/chat/completions`;
+  const url = `${api}/v1/models`;
   const response = await fetch(url, {
-    method: "POST",
+    method: "GET",
     mode: "cors",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
-      messages: [
-        {
-          role: "user",
-          content: "Hello",
-        },
-      ],
-    }),
   });
   const res = await response.json();
-  return res.model;
+  return res.model.data.id;
 };
 
 export const pythonReply = async (
