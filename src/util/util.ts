@@ -5,4 +5,14 @@ export const dateDiffInDays = (a: Date, b: Date) => {
   const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
 
   return Math.floor((utc2 - utc1) / _MS_PER_DAY);
-}
+};
+
+export const convertContentToPythonCode = (content: string) => {
+  if (content.startsWith("```python\n")) {
+    content = content.slice("```python\n".length);
+  }
+  if (content.endsWith("\n```")) {
+    content = content.slice(0, -"\n```".length);
+  }
+  return content;
+};

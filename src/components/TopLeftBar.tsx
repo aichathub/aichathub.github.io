@@ -1,20 +1,16 @@
 import { Grid, Tooltip } from "@material-ui/core";
 import AddIcon from "@mui/icons-material/Add";
 import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
-import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 import LightModeIcon from '@mui/icons-material/LightMode';
-import LockIcon from '@mui/icons-material/Lock';
 import LoginIcon from '@mui/icons-material/Login';
 import MenuIcon from "@mui/icons-material/Menu";
-import PersonIcon from '@mui/icons-material/Person';
-import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import SearchIcon from "@mui/icons-material/Search";
-import { Autocomplete, Avatar, Box, CircularProgress, FilterOptionsState, TextField } from "@mui/material";
+import { Autocomplete, Avatar, CircularProgress, FilterOptionsState, TextField } from "@mui/material";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import { createFilterOptions } from '@mui/material/Autocomplete';
 import Divider from "@mui/material/Divider";
@@ -38,6 +34,7 @@ import { AppContext, AutocompleteItem } from "../store/AppContext";
 import { removePostsFromCache } from "../util/cache";
 import { GUEST_EMAIL, GUEST_USERNAME } from "../util/constants";
 import { chatgptReply, findPostsByAuthoremail, getPostByUsernameAndPid, insertMessage, insertPostByUsernameAndTitle } from "../util/db";
+import AutocompleteComponent from "./AutocompleteComponent";
 import DrawerHeader from "./DrawerHeader";
 import LeftBarPostItem from "./LeftBarPostItem";
 import NewPostDialog from "./NewPostDialog";
@@ -232,6 +229,10 @@ const TopLeftBar: React.FC<{
     if (inputValue.trim() !== "" && !inputValue.trim().startsWith("@") && !inputValue.trim().startsWith("!")) {
       result.push("!Ask: " + inputValue);
     }
+
+    if (inputValue.trim() !== "") {
+      result.push({ type: "python", keyword: inputValue } as AutocompleteItem);
+    }
     return result;
   };
 
@@ -342,29 +343,14 @@ const TopLeftBar: React.FC<{
                   } else {
                     item = option as AutocompleteItem;
                   }
-                  return (
-                    <Box id={`${item.username}/${item.pid}/${new Date()}`} component="li" {...props} onClick={() => {
-                      if (item.type === "post" || item.type === "post-private") {
-                        context.setIsFirstLoad(true);
-                        context.setMessages([]);
-                        context.setIsLoadingMessages(true);
-                        navigate(`/${item.username}/${item.pid}`);
-                      } else {
-                        setSearchBoxText(item.keyword);
-                        redirectSearch(item.keyword);
-                      }
-                      setIsSearchAutocompleteOpen(false);
-                    }}>
-                      {
-                        item.type === "post" ? <ChatBubbleOutlineIcon sx={{ marginRight: "5px" }} /> :
-                          item.type === "post-private" ? <LockIcon sx={{ marginRight: "5px" }} /> :
-                            item.keyword.startsWith("@") ? <PersonIcon sx={{ marginRight: "5px" }} /> :
-                              item.keyword.startsWith("!Ask") ? <QuestionAnswerIcon sx={{ marginRight: "5px" }} /> :
-                                <SearchIcon sx={{ marginRight: "5px" }} />
-                      }
-                      {item.keyword.startsWith("!") ? item.keyword.slice(1) : item.keyword}
-                    </Box>
-                  );
+                  return <AutocompleteComponent
+                    key={`${item.type} ${item.keyword}`}
+                    item={item}
+                    setSearchBoxText={setSearchBoxText}
+                    setIsSearchAutocompleteOpen={setIsSearchAutocompleteOpen}
+                    redirectSearch={redirectSearch}
+                    renderProps={props}
+                  />;
                 }}
                 onChange={(event, value) => {
                   if (!value) return;

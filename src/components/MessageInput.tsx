@@ -8,7 +8,9 @@ import React, { useCallback, useContext, useEffect, useRef, useState } from "rea
 import { MessageModel } from "../models/MessageModel";
 import { AppContext } from "../store/AppContext";
 import { GUEST_EMAIL } from "../util/constants";
-import { chatgptReply, customModelReply, insertMessage, llama70BReply, pythonRuntimeReply, uploadImage } from "../util/db";
+import { chatgptReply, customModelReply, insertMessage, llama70BReply, uploadImage } from "../util/db";
+import { runPythonLocal } from "../util/python";
+import { convertContentToPythonCode } from "../util/util";
 import MessageInputSettings from "./MessageInputSettings";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -52,13 +54,6 @@ export const MessageInput: React.FC<{
   const handleSend = async () => {
     if (!inputRef.current) return;
     if (context.isSendingMessage || context.isTypingMessage) return;
-    // if (context.agent === "yourmodel") {
-    //   const isConnected = await context.pingYourmodel();
-    //   if (!isConnected) {
-    //     context.showSnack("Opps, Seems your model is disconnected! Please check your model and try again.");
-    //     return;
-    //   }
-    // }
     const ref = inputRef.current!;
     if (ref.value.toLowerCase().replaceAll("@ai", "").trim().length !== 0) {
       let content = ref.value;
@@ -136,7 +131,8 @@ export const MessageInput: React.FC<{
               top: document.body.offsetHeight,
             });
           }, 500);
-          const pythonReply = await pythonRuntimeReply(content);
+          // const pythonReply = await pythonRuntimeReply(content);
+          const pythonReply = await runPythonLocal(convertContentToPythonCode(content));
           await insertMessage({
             username: props.username,
             pid: props.postid,

@@ -22,6 +22,7 @@ import { TagModel } from "../models/TagModel";
 import { getPostsFromCache } from "../util/cache";
 import { GUEST_POST_LIMIT, GUEST_USERNAME, backendServer } from "../util/constants";
 import { forkPost, getCustomModelName, getDailyAILimit, getTags, getTodayAIUsage, verify } from "../util/db";
+import { runPythonLocal } from '../util/python';
 import useDidMountEffect from "../util/useDidMountEffect";
 import { dateDiffInDays } from '../util/util';
 
@@ -32,7 +33,7 @@ type AuthObj = {
 
 export type AutocompleteItem = {
   keyword: string;
-  type: "post" | "plaintext" | "post-private";
+  type: "post" | "plaintext" | "post-private" | "python";
   pid?: string;
   username?: string;
 }
@@ -693,6 +694,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
 
   useEffect(() => {
     refreshKeywords();
+    runPythonLocal("print('Python is running')");
   }, []);
 
   useEffect(() => {

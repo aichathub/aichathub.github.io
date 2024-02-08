@@ -11,7 +11,9 @@ import Timeago from "react-timeago";
 import { MessageModel } from "../models/MessageModel";
 import { AppContext } from "../store/AppContext";
 import { generateColor } from "../util/avatarColor";
-import { editMessage, pythonRuntimeReply, uploadImage } from "../util/db";
+import { editMessage, uploadImage } from "../util/db";
+import { runPythonLocal } from "../util/python";
+import { convertContentToPythonCode } from "../util/util";
 import LikeDislikePanel from "./LikeDislikePanel";
 import MarkdownComponent from "./MarkdownComponent";
 import MessageWrapper from "./MessageWrapper";
@@ -153,7 +155,8 @@ const Message: React.FC<{
           ...x,
           content: "Loading..."
         }));
-        pythonRuntimeReply(newContent).then(result => {
+        // pythonRuntimeReply(newContent).then(result => {
+        runPythonLocal(convertContentToPythonCode(newContent)).then(result => {
           const displayResult = "#### *Execution Result*\n```plaintext\n" + result + "\n```";
           context.setMessages(context.messages.map(x => x.mid !== nextMsg?.mid ? x : {
             ...x,
