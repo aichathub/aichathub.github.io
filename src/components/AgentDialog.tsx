@@ -103,7 +103,7 @@ const AgentDialog: React.FC<{
           <MenuItem value={"python"}>Python (Runtime)</MenuItem>
         </Select>
         {agent === "yourmodel" && <TextField id="standard-basic"
-          label="Your LLM API url"
+          label="Your LLM OpenAI-compatible API URL"
           variant="standard"
           placeholder="Example: https://detected-move-folders-legends.trycloudflare.com"
           value={yourmodelUrl}
