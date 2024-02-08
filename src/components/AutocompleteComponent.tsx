@@ -57,7 +57,7 @@ const AutocompleteComponent: React.FC<{
               item.keyword.startsWith("!Ask") ? <QuestionAnswerIcon sx={{ marginRight: "5px" }} /> :
                 <SearchIcon sx={{ marginRight: "5px" }} />
     }
-    {item.type === "python" ? executionResult :
+    {item.type === "python" ? `Copy execution result: ${executionResult}` :
       item.keyword.startsWith("!") ? item.keyword.slice(1) : item.keyword}
   </Box>
 }
