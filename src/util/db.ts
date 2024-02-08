@@ -825,6 +825,23 @@ export const customModelReply = async (
     api = api.slice(0, -1);
   }
   const url = `${api}/v1/chat/completions`;
+  let messages = [
+    ...messages.map((msg) => ({
+      role:
+        !msg.authorusername || msg.authorusername === "undefined"
+          ? "assistant"
+          : "user",
+      content: msg.content,
+    })),
+    {
+      role: "user",
+      content: content,
+    },
+  ];
+  const LIMIT = 1000; // Only view the latest 1000 words
+  while (messages.map(x => x.content.length).reduce((a, b) => a + b) > LIMIT) {
+    messages = messages.slice(1)
+  }
   const response = await fetch(url, {
     method: "POST",
     mode: "cors",
@@ -832,19 +849,7 @@ export const customModelReply = async (
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      messages: [
-        ...messages.map((msg) => ({
-          role:
-            !msg.authorusername || msg.authorusername === "undefined"
-              ? "assistant"
-              : "user",
-          content: msg.content,
-        })),
-        {
-          role: "user",
-          content: content,
-        },
-      ],
+      messages: messages,
     }),
   });
   const res = await response.json();
