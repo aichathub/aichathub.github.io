@@ -825,7 +825,7 @@ export const customModelReply = async (
     api = api.slice(0, -1);
   }
   const url = `${api}/v1/chat/completions`;
-  let messages = [
+  let messagesPayload = [
     ...messages.map((msg) => ({
       role:
         !msg.authorusername || msg.authorusername === "undefined"
@@ -839,8 +839,8 @@ export const customModelReply = async (
     },
   ];
   const LIMIT = 1000; // Only view the latest 1000 words
-  while (messages.map(x => x.content.length).reduce((a, b) => a + b) > LIMIT) {
-    messages = messages.slice(1)
+  while (messagesPayload.map(x => x.content.length).reduce((a, b) => a + b) > LIMIT) {
+    messagesPayload = messagesPayload.slice(1)
   }
   const response = await fetch(url, {
     method: "POST",
