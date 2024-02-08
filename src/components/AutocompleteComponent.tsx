@@ -3,7 +3,7 @@ import LockIcon from '@mui/icons-material/Lock';
 import PersonIcon from '@mui/icons-material/Person';
 import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
 import SearchIcon from '@mui/icons-material/Search';
-import TerminalIcon from '@mui/icons-material/Terminal';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { Box } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -52,12 +52,12 @@ const AutocompleteComponent: React.FC<{
     {
       item.type === "post" ? <ChatBubbleOutlineIcon sx={{ marginRight: "5px" }} /> :
         item.type === "post-private" ? <LockIcon sx={{ marginRight: "5px" }} /> :
-          item.type === "python" ? <TerminalIcon sx={{ marginRight: "5px" }} /> :
+          item.type === "python" ? <ContentCopyIcon sx={{ marginRight: "5px" }} /> :
             item.keyword.startsWith("@") ? <PersonIcon sx={{ marginRight: "5px" }} /> :
               item.keyword.startsWith("!Ask") ? <QuestionAnswerIcon sx={{ marginRight: "5px" }} /> :
                 <SearchIcon sx={{ marginRight: "5px" }} />
     }
-    {item.type === "python" ? `Copy execution result: ${executionResult}` :
+    {item.type === "python" ? executionResult :
       item.keyword.startsWith("!") ? item.keyword.slice(1) : item.keyword}
   </Box>
 }
