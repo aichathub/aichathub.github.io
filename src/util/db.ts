@@ -838,8 +838,8 @@ export const customModelReply = async (
       content: content,
     },
   ];
-  const LIMIT = 1000; // Only view the latest 1000 words
-  while (messagesPayload.map(x => x.content.length).reduce((a, b) => a + b) > LIMIT) {
+  const LIMIT = 1200; // Only view the latest 1200 words
+  while (messagesPayload.map(x => x.content.split(" ").length).reduce((a, b) => a + b) > LIMIT) {
     messagesPayload = messagesPayload.slice(1)
   }
   const response = await fetch(url, {
