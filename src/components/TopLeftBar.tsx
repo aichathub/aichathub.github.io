@@ -167,6 +167,15 @@ const TopLeftBar: React.FC<{
       const posts = response.result;
       if (posts) {
         setPosts(posts);
+
+        // Add posts to search box autocomplete
+        const autocompleteItems: AutocompleteItem[] = [];
+        posts.forEach(x => {
+          if (!autocompleteItems.find(y => y.keyword === x.title)) {
+            autocompleteItems.push({ keyword: x.title, type: x.isprivate ? "post-private" : "post", pid: x.pid, username: x.username });
+          }
+        });
+        context.setSearchBoxAutoComplete(autocompleteItems);
       }
     });
     if (context.auth.loggedEmail === "") {

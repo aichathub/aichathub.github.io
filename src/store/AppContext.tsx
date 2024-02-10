@@ -79,6 +79,7 @@ type AppContextObj = {
   justForked: boolean;
   openNewPostForm: boolean;
 
+  setSearchBoxAutoComplete: (searchBoxAutoComplete: AutocompleteItem[]) => void;
   setOpenNewPostForm: (openNewPostForm: boolean) => void;
   setJustForked: (justForked: boolean) => void;
   setShowQrReader: (showQrReader: boolean) => void;
@@ -173,6 +174,7 @@ export const AppContext = createContext<AppContextObj>({
   justForked: false,
   openNewPostForm: false,
 
+  setSearchBoxAutoComplete: () => { },
   setOpenNewPostForm: () => { },
   setJustForked: () => { },
   setShowQrReader: () => { },
@@ -516,6 +518,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
     justForked: justForked,
     openNewPostForm: openNewPostForm,
 
+    setSearchBoxAutoComplete: setSearchBoxAutoComplete,
     setOpenNewPostForm: setOpenNewPostForm,
     setJustForked: setJustForked,
     setShowQrReader: setShowQrReader,
