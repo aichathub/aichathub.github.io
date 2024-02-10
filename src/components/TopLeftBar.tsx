@@ -139,18 +139,17 @@ const TopLeftBar: React.FC<{
     });
   }, [username, postid]);
 
-  const [openNewPostForm, setOpenNewPostForm] = useState(false);
   const navigate = useNavigate();
   const handleNewPostBtnClick = () => {
     if (context.loggedUser === "") {
       context.showSnack("You need to sign in to create a new post.");
       return;
     }
-    setOpenNewPostForm(true);
+    context.setOpenNewPostForm(true);
   };
   const [posts, setPosts] = useState<PostModel[]>([]);
   const handleNewPostFormClose = () => {
-    setOpenNewPostForm(false);
+    context.setOpenNewPostForm(false);
   };
   const [show, setShow] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
@@ -567,7 +566,7 @@ const TopLeftBar: React.FC<{
           </ListItem> */}
         </List>
       </Drawer>
-      {openNewPostForm && newPostForm}
+      {context.openNewPostForm && newPostForm}
     </Grid>
   );
 };

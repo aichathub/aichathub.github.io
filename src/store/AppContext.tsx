@@ -77,7 +77,9 @@ type AppContextObj = {
   showLoadingBackdrop: boolean;
   showQrReader: boolean;
   justForked: boolean;
+  openNewPostForm: boolean;
 
+  setOpenNewPostForm: (openNewPostForm: boolean) => void;
   setJustForked: (justForked: boolean) => void;
   setShowQrReader: (showQrReader: boolean) => void;
   setShowLoadingBackdrop: (showLoadingBackdrop: boolean) => void;
@@ -169,7 +171,9 @@ export const AppContext = createContext<AppContextObj>({
   showLoadingBackdrop: false,
   showQrReader: false,
   justForked: false,
+  openNewPostForm: false,
 
+  setOpenNewPostForm: () => { },
   setJustForked: () => { },
   setShowQrReader: () => { },
   setShowLoadingBackdrop: () => { },
@@ -288,6 +292,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
   const [detectedSessionid, setDetectedSessionid] = useState("");
   const [justForked, setJustForked] = useState(false);
   const loadingBarRef = useRef<LoadingBarRef>(null);
+  const [openNewPostForm, setOpenNewPostForm] = useState(false);
 
   const isOnPostPage = useMatch("/:username/:postid");
   const isPostFresh = curPost && dateDiffInDays(new Date(curPost.createdate), new Date()) <= 1 && messages.length < GUEST_POST_LIMIT;
@@ -509,7 +514,9 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
     showLoadingBackdrop: showLoadingBackdrop,
     showQrReader: showQrReader,
     justForked: justForked,
+    openNewPostForm: openNewPostForm,
 
+    setOpenNewPostForm: setOpenNewPostForm,
     setJustForked: setJustForked,
     setShowQrReader: setShowQrReader,
     setShowLoadingBackdrop: setShowLoadingBackdrop,

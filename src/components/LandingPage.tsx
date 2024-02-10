@@ -8,9 +8,11 @@ import Container from "@mui/material/Container";
 import CssBaseline from "@mui/material/CssBaseline";
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
-import { createTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { createTheme } from "@mui/material/styles";
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { AppContext } from "../store/AppContext";
 
 const Copyright = () => {
   return (
@@ -47,11 +49,7 @@ const content = [
 const theme = createTheme();
 
 const LandPage = () => {
-  const pageRedirect = (url: string) => {
-    const page = window.open(url, "_blank");
-    if (page) page.focus();
-  };
-
+  const context = useContext(AppContext);
   const navigate = useNavigate();
   const handleSignInClick = () => {
     navigate("/signin");
@@ -59,6 +57,12 @@ const LandPage = () => {
   const handleSignUpClick = () => {
     navigate("/signup");
   };
+  const handleViewPostsClick = () => {
+    navigate(`/search?q=@${context.loggedUser}`);
+  };
+  const handleNewPostClick = () => {
+    context.setOpenNewPostForm(true);
+  }
   return (
     <>
       <CssBaseline />
@@ -103,12 +107,26 @@ const LandPage = () => {
               spacing={2}
               justifyContent="center"
             >
-              <Button variant="outlined" onClick={handleSignInClick}>
-                Sign In
-              </Button>
-              <Button variant="outlined" onClick={handleSignUpClick}>
-                Sign Up
-              </Button>
+              {context.loggedUser && (
+                <>
+                  <Button variant="outlined" onClick={handleNewPostClick}>
+                    New Post
+                  </Button>
+                  <Button variant="outlined" onClick={handleViewPostsClick}>
+                    Your Posts
+                  </Button>
+                </>
+              )}
+              {!context.loggedUser && (
+                <>
+                  <Button variant="outlined" onClick={handleSignInClick}>
+                    Sign In
+                  </Button>
+                  <Button variant="outlined" onClick={handleSignUpClick}>
+                    Sign Up
+                  </Button>
+                </>
+              )}
             </Stack>
           </Container>
         </Box>
