@@ -5,6 +5,7 @@ import { DummyPostModel } from "../models/DummyPostModel";
 import { PostModel } from "../models/PostModel";
 import { AppContext } from "../store/AppContext";
 import { getRecommendations } from "../util/db";
+import LandingPage from "./LandingPage";
 import SearchItem from "./SearchItem";
 
 const ExplorePage = () => {
@@ -49,7 +50,7 @@ const ExplorePage = () => {
     </Grid>
   }
 
-  return (
+  const result = (
     <>
       {bodyContent}
       <Box
@@ -62,5 +63,11 @@ const ExplorePage = () => {
       ></Box>
     </>
   );
+
+  if (!context.loggedUser) {
+    return <LandingPage />;
+  }
+
+  return result;
 };
 export default ExplorePage;

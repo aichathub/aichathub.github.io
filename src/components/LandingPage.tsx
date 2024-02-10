@@ -1,0 +1,165 @@
+import { Link } from "@mui/material";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
+import Container from "@mui/material/Container";
+import CssBaseline from "@mui/material/CssBaseline";
+import Grid from "@mui/material/Grid";
+import Stack from "@mui/material/Stack";
+import { createTheme } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
+import { useNavigate } from "react-router-dom";
+
+const Copyright = () => {
+  return (
+    <Typography variant="body2" color="text.secondary" align="center">
+      {"Copyright © "}
+      <Link color="inherit" href="/">
+        AIChatHub
+      </Link>{" "}
+      {new Date().getFullYear()}
+      {"."}
+    </Typography>
+  );
+};
+
+const cards = [1, 2, 3];
+const images = [
+  require("../resources/Python.png"),
+  require("../resources/Edit.png"),
+  require("../resources/CustomLLM.png"),
+];
+// const headings = ["AStar", "BFS", "DFS"];
+// const content = [
+//   "A* algorithm is a best-first search algorithm",
+//   "BFS is a breadth-first search algorithm",
+//   "DFS is a depth-first search algorithm",
+// ];
+const headings = ["Python", "Chat Control", "Custom LLM"];
+const content = [
+  "Interact with our Python bot for quick code execution",
+  "Edit the chat to nudge the AI in the right direction",
+  "Interact with your custom model from your localhost"
+];
+
+const theme = createTheme();
+
+const LandPage = () => {
+  const pageRedirect = (url: string) => {
+    const page = window.open(url, "_blank");
+    if (page) page.focus();
+  };
+
+  const navigate = useNavigate();
+  const handleSignInClick = () => {
+    navigate("/signin");
+  };
+  const handleSignUpClick = () => {
+    navigate("/signup");
+  };
+  return (
+    <>
+      <CssBaseline />
+      <main>
+        {/* Hero unit */}
+        <Box
+          sx={{
+            bgcolor: "background.paper",
+            pt: 8,
+            pb: 6,
+          }}
+        >
+          <Container maxWidth="sm">
+            <Typography
+              component="h1"
+              variant="h2"
+              align="center"
+              color="text.primary"
+              gutterBottom
+            >
+              AIChatHub
+            </Typography>
+            <Typography
+              variant="h5"
+              align="center"
+              color="text.secondary"
+              paragraph
+            >
+              Easily search and share your AI chats
+            </Typography>
+            <Typography
+              variant="h6"
+              align="center"
+              color="text.secondary"
+              paragraph
+            >
+              Or just use it as a note taking app with chat interface
+            </Typography>
+            <Stack
+              sx={{ pt: 4 }}
+              direction="row"
+              spacing={2}
+              justifyContent="center"
+            >
+              <Button variant="outlined" onClick={handleSignInClick}>
+                Sign In
+              </Button>
+              <Button variant="outlined" onClick={handleSignUpClick}>
+                Sign Up
+              </Button>
+            </Stack>
+          </Container>
+        </Box>
+        <Container sx={{ py: 8 }} maxWidth="md">
+          <Grid container spacing={4}>
+            {cards.map((card, idx) => (
+              <Grid item key={card} xs={12} sm={6} md={4}>
+                <Card
+                  sx={{
+                    height: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                  }}
+                >
+                  <CardMedia
+                    component="img"
+                    sx={{
+                      pt: "56.25%",
+                    }}
+                    image={images[idx]}
+                    alt={headings[idx]}
+                  />
+                  <CardContent sx={{ flexGrow: 1 }}>
+                    <Typography gutterBottom variant="h5" component="h2">
+                      {headings[idx]}
+                    </Typography>
+                    <Typography>{content[idx]}</Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        </Container>
+      </main>
+      {/* Footer */}
+      <Box sx={{ bgcolor: "background.paper", p: 6 }} component="footer">
+        <Typography variant="h6" align="center" gutterBottom>
+          AIChatHub
+        </Typography>
+        <Typography
+          variant="subtitle1"
+          align="center"
+          color="text.secondary"
+          component="p"
+        >
+          All rights reserved
+        </Typography>
+        <Copyright />
+      </Box>
+      {/* End footer */}
+    </>
+  );
+};
+export default LandPage;
