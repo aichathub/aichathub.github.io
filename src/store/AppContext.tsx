@@ -252,7 +252,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
   const [snackMessage, setSnackMessage] = useState("");
   const [pagePostId, setPagePostId] = useState("chat");
   const [auth, setAuth] = useState<AuthObj>(EMPTY_AUTH);
-  const [isLoadingMessages, setIsLoadingMessages] = useState(true);
+  const [isLoadingMessages, setIsLoadingMessages] = useState(false);
   const [posts, setPosts] = useState<LocalPostModel[]>([]);
   let defaultTriggerAIVoice = false;
   if (localStorage.getItem("sendTriggerAIVoice") === "true") {
@@ -272,7 +272,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
   const [isFirstLoad, setIsFirstLoad] = useState(true);
   const [speakingMid, setSpeakingMid] = useState(-1);
   const [lastMessagesRefresh, setLastMessagesRefresh] = useState(new Date());
-  const [isLeftBarPostLoading, setIsLeftBarPostLoading] = useState(true);
+  const [isLeftBarPostLoading, setIsLeftBarPostLoading] = useState(false);
   const [isInitializing, setIsInitializing] = useState(true);
   const [shouldDisplayTopLeftBar, setShouldDisplayTopLeftBar] = useState(true);
   const [dailyAIUsuage, setDailyAIUsuage] = useState(0);
@@ -709,6 +709,9 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
   }, [loggedUser, auth.token]);
 
   useEffect(() => {
+    console.log("isInitializing: " + isInitializing);
+    console.log("isLeftBarPostLoading: " + isLeftBarPostLoading);
+    console.log("isLoadingMessages: " + isLoadingMessages);
     if (isInitializing || isLeftBarPostLoading || isLoadingMessages) {
       loadingBarRef.current?.continuousStart();
     } else {

@@ -7,7 +7,6 @@ import {
   PYTHON_RUNTIME_API,
   backendServer,
 } from "../util/constants";
-import { getPostsFromCache, setPostsToCache } from "./cache";
 
 export const verify = async (authObj: object) => {
   const response = await fetch(`${backendServer}/verify/`, {
@@ -117,11 +116,11 @@ export const insertMessage = async (insertMsgObj: {
 
 export const findPostsByAuthoremail = async (authoremail: string) => {
   // Check if the result is cached in indexedDB
-  const cachedResult = await getPostsFromCache(authoremail);
+  // const cachedResult = await getPostsFromCache(authoremail);
 
-  if (cachedResult) {
-    return { message: "SUCCESS", result: cachedResult };
-  }
+  // if (cachedResult) {
+  //   return { message: "SUCCESS", result: cachedResult };
+  // }
   const response = await fetch(`${backendServer}/api/retrieve/posts`, {
     method: "POST",
     mode: "cors",
@@ -135,9 +134,9 @@ export const findPostsByAuthoremail = async (authoremail: string) => {
     result: PostModel[];
   };
   // Cache the result to indexedDB
-  if (responseJson.message === "SUCCESS") {
-    setPostsToCache(authoremail, responseJson.result);
-  }
+  // if (responseJson.message === "SUCCESS") {
+  //   setPostsToCache(authoremail, responseJson.result);
+  // }
   return responseJson;
 };
 
