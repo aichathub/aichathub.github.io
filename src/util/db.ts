@@ -649,6 +649,40 @@ export const loginWithGoogle = async (idToken: string) => {
   return responseJson;
 };
 
+export const loginWithGoogleUsingAccessToken = async (accessToken: string) => {
+  const response = await fetch(`${backendServer}/api/googlelogin`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    mode: "cors",
+    body: JSON.stringify({
+      accessToken: accessToken,
+    }),
+  });
+  const responseJson = await response.json();
+  return responseJson;
+};
+
+export const signupWithGoogleUsingAccessToken = async (
+  accessToken: string,
+  username: string
+) => {
+  const response = await fetch(`${backendServer}/api/googlesignup`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    mode: "cors",
+    body: JSON.stringify({
+      accessToken: accessToken,
+      username: username,
+    }),
+  });
+  const responseJson = await response.json();
+  return responseJson;
+};
+
 export const signupWithGoogle = async (idToken: string, username: string) => {
   const response = await fetch(`${backendServer}/api/googlesignup`, {
     method: "POST",
@@ -838,8 +872,12 @@ export const customModelReply = async (
     },
   ];
   const LIMIT = 1200; // Only view the latest 1200 words
-  while (messagesPayload.map(x => x.content.split(" ").length).reduce((a, b) => a + b) > LIMIT) {
-    messagesPayload = messagesPayload.slice(1)
+  while (
+    messagesPayload
+      .map((x) => x.content.split(" ").length)
+      .reduce((a, b) => a + b) > LIMIT
+  ) {
+    messagesPayload = messagesPayload.slice(1);
   }
   const response = await fetch(url, {
     method: "POST",

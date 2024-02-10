@@ -10,15 +10,15 @@ import Link from "@mui/material/Link";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { GoogleLogin } from "@react-oauth/google";
+import { useGoogleLogin } from "@react-oauth/google";
 import * as React from "react";
 import { useContext, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { GithubLoginButton } from "react-social-login-buttons";
+import { GithubLoginButton, GoogleLoginButton } from "react-social-login-buttons";
 import { NumberDictionary, adjectives, animals, colors, uniqueNamesGenerator } from 'unique-names-generator';
 import { AppContext } from "../store/AppContext";
 import { GITHUB_LOGIN_CLIENT_ID, backendServer } from "../util/constants";
-import { signupWithGoogle } from "../util/db";
+import { signupWithGoogleUsingAccessToken } from "../util/db";
 
 function Copyright(props: any) {
   return (
@@ -86,6 +86,27 @@ export default function SignUp() {
     context.setIsInitializing(false);
     context.setTopLeftBarOpen(false);
   }, []);
+  const customGoogleLogin = useGoogleLogin({
+    onSuccess: async credentialResponse => {
+      const accessToken = credentialResponse.access_token;
+      signupWithGoogleUsingAccessToken(accessToken, usernameRef.current!.value).then((responseJson) => {
+        if (responseJson.message === "SUCCESS") {
+          context.changeAuth({
+            loggedEmail: responseJson.loggedEmail,
+            token: responseJson.token
+          });
+          if (redirectUrl) {
+            window.location.href = redirectUrl;
+          } else {
+            window.location.href = "/";
+          }
+        } else {
+          context.showSnack("Login failed: " + responseJson.message);
+        }
+      });
+    }
+  });
+
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
@@ -128,43 +149,13 @@ export default function SignUp() {
                   required
                   fullWidth
                   id="email"
-                  label="Email Address"
+                  label="Email Address (Optional if use Google / Github Login)"
                   name="email"
                   autoComplete="email"
                   type="email"
                   autoFocus
                 />
               </Grid>
-              {/* <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="new-password"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="password-repeat"
-                  label="Enter your password again"
-                  type="password"
-                  id="password-repeat"
-                  autoComplete="new-password"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={
-                    <Checkbox value="allowExtraEmails" color="primary" />
-                  }
-                  label="I want to receive inspiration, marketing promotions and updates via email."
-                />
-              </Grid> */}
             </Grid>
             <Button
               type="submit"
@@ -177,35 +168,10 @@ export default function SignUp() {
             <Divider style={{ marginBottom: "10px" }}>
               <Chip label="OR" />
             </Divider>
-            <Box style={{ marginLeft: "5px" }}>
-              <GoogleLogin
-                shape="rectangular"
-                logo_alignment="left"
-                text="signup_with"
-                useOneTap={true}
-                onSuccess={credentialResponse => {
-                  const idToken = credentialResponse.credential;
-                  signupWithGoogle(idToken!, usernameRef.current!.value).then((responseJson) => {
-                    if (responseJson.message === "SUCCESS") {
-                      context.changeAuth({
-                        loggedEmail: responseJson.loggedEmail,
-                        token: responseJson.token
-                      });
-                      if (redirectUrl) {
-                        window.location.href = redirectUrl;
-                      } else {
-                        window.location.href = "/";
-                      }
-                    } else {
-                      context.showSnack("Login failed: " + responseJson.message);
-                    }
-                  });
-                }}
-                onError={() => {
-                  context.showSnack("Login failed");
-                }}
-              />
-            </Box>
+
+            <GoogleLoginButton
+              style={{ height: "40px", marginTop: "10px" }}
+              onClick={customGoogleLogin} text="Sign up with Google" />
             <GithubLoginButton
               style={{ height: "40px", marginTop: "10px" }}
               onClick={() => {

@@ -10,14 +10,14 @@ import Link from "@mui/material/Link";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { GoogleLogin } from "@react-oauth/google";
+import { useGoogleLogin } from "@react-oauth/google";
 import * as React from "react";
 import { useContext, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { GithubLoginButton } from "react-social-login-buttons";
+import { GithubLoginButton, GoogleLoginButton } from "react-social-login-buttons";
 import { AppContext } from "../store/AppContext";
 import { GITHUB_LOGIN_CLIENT_ID, backendServer } from "../util/constants";
-import { loginWithGoogle } from "../util/db";
+import { loginWithGoogleUsingAccessToken } from "../util/db";
 import QRCodeLoginButton from "./QRCodeLoginButton";
 
 function Copyright(props: any) {
@@ -64,6 +64,27 @@ export default function SignIn() {
     context.setShouldDisplayTopLeftBar(false);
     context.setIsInitializing(false);
   }, []);
+
+  const customGoogleLogin = useGoogleLogin({
+    onSuccess: async credentialResponse => {
+      const accessToken = credentialResponse.access_token;
+      loginWithGoogleUsingAccessToken(accessToken).then((responseJson) => {
+        if (responseJson.message === "SUCCESS") {
+          context.changeAuth({
+            loggedEmail: responseJson.loggedEmail,
+            token: responseJson.token
+          });
+          if (redirectUrl) {
+            window.location.href = redirectUrl;
+          } else {
+            window.location.href = "/";
+          }
+        } else {
+          context.showSnack("Login failed: " + responseJson.message);
+        }
+      });
+    }
+  });
 
   return (
     <ThemeProvider theme={theme}>
@@ -114,35 +135,9 @@ export default function SignIn() {
             <Divider style={{ marginBottom: "10px" }}>
               <Chip label="OR" />
             </Divider>
-            <Box style={{
-              transform: "translateX(5px)",
-              marginBottom: "10px"
-            }}>
-              <GoogleLogin
-                useOneTap={true}
-                onSuccess={credentialResponse => {
-                  const idToken = credentialResponse.credential;
-                  loginWithGoogle(idToken!).then((responseJson) => {
-                    if (responseJson.message === "SUCCESS") {
-                      context.changeAuth({
-                        loggedEmail: responseJson.loggedEmail,
-                        token: responseJson.token
-                      });
-                      if (redirectUrl) {
-                        window.location.href = redirectUrl;
-                      } else {
-                        window.location.href = "/";
-                      }
-                    } else {
-                      context.showSnack("Login failed: " + responseJson.message);
-                    }
-                  });
-                }}
-                onError={() => {
-                  context.showSnack("Login failed");
-                }}
-              />
-            </Box>
+            <GoogleLoginButton
+              style={{ height: "40px", marginTop: "10px" }}
+              onClick={customGoogleLogin} text="Sign in with Google" />
             <GithubLoginButton
               style={{ height: "40px" }}
               onClick={() => {
