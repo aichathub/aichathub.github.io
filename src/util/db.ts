@@ -136,9 +136,8 @@ export const findPostsByAuthoremail = async (authoremail: string) => {
   };
   // Cache the result to indexedDB
   if (responseJson.message === "SUCCESS") {
-    await setPostsToCache(authoremail, responseJson.result);
+    setPostsToCache(authoremail, responseJson.result);
   }
-
   return responseJson;
 };
 
