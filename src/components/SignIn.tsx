@@ -136,10 +136,11 @@ export default function SignIn() {
               <Chip label="OR" />
             </Divider>
             <GoogleLoginButton
-              style={{ height: "40px", marginTop: "10px" }}
+              style={{ background: "#293e69", height: "40px", color: "white" }}
+              activeStyle={{ background: "#3b5998", height: "40px", color: "white" }}
               onClick={customGoogleLogin} text="Sign in with Google" />
             <GithubLoginButton
-              style={{ height: "40px" }}
+              style={{ height: "40px", marginTop: "10px" }}
               onClick={() => {
                 window.location.href = `https://github.com/login/oauth/authorize?client_id=${GITHUB_LOGIN_CLIENT_ID}&scope=user`;
               }} text="Sign in with Github" />

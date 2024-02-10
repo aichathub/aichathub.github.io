@@ -1,9 +1,10 @@
-import { Grid, Link } from "@mui/material";
+import { Grid } from "@mui/material";
 import { useContext, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { io } from "socket.io-client";
 import { AppContext } from "../store/AppContext";
 import { backendServer } from "../util/constants";
+import CustomQRCodeLoginButton from "./CustomQRCodeLoginButton";
 import QRCodeDialog from "./QRCodeDialog";
 
 const QRCodeLoginButton: React.FC<{
@@ -42,9 +43,12 @@ const QRCodeLoginButton: React.FC<{
   }
   return <Grid container justifyContent="flex-end">
     <Grid item>
-      <Link href="/" variant="body2" onClick={handleSignInWithOtherDevicesClick}>
+      <span onClick={handleSignInWithOtherDevicesClick}>
+        <CustomQRCodeLoginButton />
+      </span>
+      {/* <Link href="/" variant="body2" onClick={handleSignInWithOtherDevicesClick}>
         Sign In With Other Devices
-      </Link>
+      </Link> */}
     </Grid>
     <QRCodeDialog url={authorizeUrl} onClose={handleQRClose} open={showQRCodeDialog} customDisplayText={authorizeUrl.slice(-4).toUpperCase()} />
   </Grid>

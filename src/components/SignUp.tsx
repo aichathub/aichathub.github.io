@@ -168,9 +168,9 @@ export default function SignUp() {
             <Divider style={{ marginBottom: "10px" }}>
               <Chip label="OR" />
             </Divider>
-
             <GoogleLoginButton
-              style={{ height: "40px", marginTop: "10px" }}
+              style={{ background: "#293e69", height: "40px", color: "white" }}
+              activeStyle={{ background: "#3b5998", height: "40px", color: "white" }}
               onClick={customGoogleLogin} text="Sign up with Google" />
             <GithubLoginButton
               style={{ height: "40px", marginTop: "10px" }}
