@@ -709,9 +709,6 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
   }, [loggedUser, auth.token]);
 
   useEffect(() => {
-    console.log("isInitializing: " + isInitializing);
-    console.log("isLeftBarPostLoading: " + isLeftBarPostLoading);
-    console.log("isLoadingMessages: " + isLoadingMessages);
     if (isInitializing || isLeftBarPostLoading || isLoadingMessages) {
       loadingBarRef.current?.continuousStart();
     } else {

@@ -17,7 +17,6 @@ import { useContext, useRef, useState } from 'react';
 import { PostModel } from '../models/PostModel';
 import { TagModel } from '../models/TagModel';
 import { AppContext } from '../store/AppContext';
-import { removePostsFromCache } from '../util/cache';
 import { updatePost } from '../util/db';
 import TagsInput from './TagsInput';
 
@@ -64,7 +63,7 @@ const EditPostDialog: React.FC<{
   };
 
   const handleHardRefresh = async () => {
-    await removePostsFromCache(context.auth.loggedEmail);
+    // await removePostsFromCache(context.auth.loggedEmail);
     context.setLastPostsRefresh(new Date());
   }
 

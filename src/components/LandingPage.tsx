@@ -10,7 +10,7 @@ import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { createTheme } from "@mui/material/styles";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../store/AppContext";
 
@@ -63,6 +63,9 @@ const LandPage = () => {
   const handleNewPostClick = () => {
     context.setOpenNewPostForm(true);
   }
+  useEffect(() => {
+    context.setIsInitializing(false);
+  }, []);
   return (
     <>
       <CssBaseline />

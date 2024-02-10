@@ -86,7 +86,6 @@ const ChatAppEdit = () => {
       }
 
       context.setIsFirstLoad(false);
-      context.setIsInitializing(false);
     });
   };
 
@@ -130,6 +129,7 @@ const ChatAppEdit = () => {
   }, [context.lastPostsRefresh, context.justForked]);
 
   useEffect(() => {
+    context.setIsInitializing(false);
     reloadMessage();
     const noAuth = !localStorage.getItem("auth");
     if (!username || !postid || (!noAuth && !context.auth)) return;

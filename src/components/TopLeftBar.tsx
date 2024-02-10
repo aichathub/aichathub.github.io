@@ -31,7 +31,6 @@ import logo from "../images/logo.png";
 import { DummyPostModel } from "../models/DummyPostModel";
 import { PostModel } from "../models/PostModel";
 import { AppContext, AutocompleteItem } from "../store/AppContext";
-import { removePostsFromCache } from "../util/cache";
 import { GUEST_EMAIL, GUEST_USERNAME } from "../util/constants";
 import { chatgptReply, findPostsByAuthoremail, getPostByUsernameAndPid, insertMessage, insertPostByUsernameAndTitle } from "../util/db";
 import AutocompleteComponent from "./AutocompleteComponent";
@@ -291,7 +290,7 @@ const TopLeftBar: React.FC<{
   }
 
   const handleHardRefresh = async () => {
-    await removePostsFromCache(context.auth.loggedEmail);
+    // await removePostsFromCache(context.auth.loggedEmail);
     context.setLastPostsRefresh(new Date());
   }
 
