@@ -889,8 +889,9 @@ export const customModelReply = async (
     }),
   });
   const res = await response.json();
-  let answer = res.choices[0].message.content;
-  return answer;
+  let aiResponse = res.choices[0].message.content as string;
+  let model = res.model as string;
+  return { aiResponse, model };
 };
 
 // export const customModelReply = async (

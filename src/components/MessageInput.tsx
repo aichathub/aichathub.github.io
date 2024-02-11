@@ -160,8 +160,8 @@ export const MessageInput: React.FC<{
           });
         }, 500);
         const api = context.yourmodelUrl;
-        const modelName = context.yourmodelName;
-        const aiResponse = await customModelReply(content, api, context.messages);
+        const { aiResponse, model } = await customModelReply(content, api, context.messages);
+        context.setYourmodelName(model);
         await insertMessage({
           username: props.username,
           pid: props.postid,
@@ -170,7 +170,7 @@ export const MessageInput: React.FC<{
           triggerAI: false,
           authoremail: context.auth.loggedEmail,
           triggerUserModel: true,
-          sendernickname: modelName
+          sendernickname: model
         });
         props.reloadMessage();
       }
