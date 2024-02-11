@@ -54,7 +54,7 @@ const MessageInputSettings: React.FC<{
   }
   let agent: string = context.agent;
   if (agent === "yourmodel") {
-    agent = context.yourmodelName;
+    agent = context.yourmodelUrl;
   }
   return <>
     <Tooltip title="Change Agent" arrow placement="left-start">
