@@ -12,7 +12,7 @@ declare global {
 const captureStdOut =
   "import random\r\nfrom random import choice\r\nfrom random import randint\r\nimport sys\r\nimport io\r\nsys.stdout = io.StringIO()\r\n";
 
-const extension = "def isprime(n): return not any(n % i == 0 for i in range(2,n))\r\n"
+const extension = "def isprime(n): print(not any(n % i == 0 for i in range(2,n)))\r\n"
 
 export const runPythonLocal = async (code: string) => {
   let pyodide = window.pyodide;
