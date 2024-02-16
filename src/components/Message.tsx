@@ -19,6 +19,7 @@ import MarkdownComponent from "./MarkdownComponent";
 import MessageWrapper from "./MessageWrapper";
 import UserLink from "./UserLink";
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import classes from "./Message.module.css";
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -80,7 +81,7 @@ const Message: React.FC<{
   if (justNow(props.message.time)) {
     timeText = <Typography variant="overline" color="common.grey">Now</Typography>;
   }
-  let invisibleIcon = <span style={{transform: "translateY(4px)", marginLeft: "5px"}}>
+  let invisibleIcon = <span class={classes["invisible-icon"]}>
     <Tooltip title="This message is currently hidden from the AI" placement="top" arrow>
       <VisibilityOffIcon fontSize="small" />
     </Tooltip>

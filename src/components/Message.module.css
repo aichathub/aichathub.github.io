@@ -22,3 +22,8 @@
   padding-left: 3em;
   border-left: 0.5em #d30 solid;
 }
+
+.invisible-icon svg {
+  transform: translateY(4px);
+  margin-left: 5px;
+}
