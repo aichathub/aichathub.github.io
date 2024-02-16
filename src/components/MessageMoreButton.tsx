@@ -38,6 +38,7 @@ const MessageMoreButton: React.FC<{
   const { username, postid } = useParams();
   const navigate = useNavigate();
   const [isHiddenFromAI, setIsHiddenFromAI] = useState(props.message.ishiddenfromai);
+  const [isTogglingVisibility, setIsTogglingVisibility] = useState(false);
   if (props.message.authorusername === undefined) {
     const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
     if (isSafari) {
@@ -141,14 +142,15 @@ const MessageMoreButton: React.FC<{
     });
   }
   const handleToggleVisibilityClick = async () => {
-    handleClose();
+    setIsTogglingVisibility(true);
     const result = await toggleIsHiddenFromAI(props.message.mid, context.auth.loggedEmail, context.auth.token);
+    setIsTogglingVisibility(false);
     if (result.message === "SUCCESS") {
       const isHiddenFromAIRes = result.result as boolean;
       setIsHiddenFromAI(isHiddenFromAIRes);
       props.message.ishiddenfromai = isHiddenFromAIRes;
       props.setIsHiddenFromAI(isHiddenFromAIRes);
-      context.showSnack("SUCCESS: NOW THE MESSAGE IS " + (isHiddenFromAIRes ? "HIDDEN" : "VISIBLE") + " TO AI");
+      handleClose()
     } else {
       context.showSnack("TOGGLE VISIBILITY FAILED: " + result.message);
     }
@@ -240,7 +242,8 @@ const MessageMoreButton: React.FC<{
                         onClick={handleToggleVisibilityClick}
                       >
                         <ListItemIcon>
-                          {isHiddenFromAI ? <VisibilityIcon fontSize="small" /> : <VisibilityOffIcon fontSize="small" />}
+                          { isTogglingVisibility ? <CircularProgress size={20} color="inherit" /> :
+                            isHiddenFromAI ? <VisibilityIcon fontSize="small" /> : <VisibilityOffIcon fontSize="small" />}
                         </ListItemIcon>
                         <ListItemText>{isHiddenFromAI ? "Show" : "Hide" }</ListItemText>
                       </MenuItem>
