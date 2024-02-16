@@ -18,6 +18,7 @@ import LikeDislikePanel from "./LikeDislikePanel";
 import MarkdownComponent from "./MarkdownComponent";
 import MessageWrapper from "./MessageWrapper";
 import UserLink from "./UserLink";
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -79,6 +80,9 @@ const Message: React.FC<{
   if (justNow(props.message.time)) {
     timeText = <Typography variant="overline" color="common.grey">Now</Typography>;
   }
+  let invisibleIcon = <Tooltip title="This message is current hidden to the AI">
+    <VisibilityOffIcon fontSize="small" />
+  </Tooltip>;
   const handleEditOnPaste = async (e: React.ClipboardEvent) => {
     const items = e.clipboardData.items;
     for (let i = 0; i < items.length; i++) {
@@ -253,7 +257,7 @@ const Message: React.FC<{
       sx={sx}
     >
       {anchorElement}
-      <Grid container wrap="nowrap" spacing={2} style={{ marginBottom: "2px", opacity: isHiddenFromAI ? .7 : 1 }}>
+      <Grid container wrap="nowrap" spacing={2} style={{ marginBottom: "2px" }}>
         <Grid item xs={!isExtraSmall && isMobile ? 12 : 10}>
           <MessageWrapper message={props.message} isEditing={isEditing} setIsEditing={setIsEditing} isLoading={isLoading} isPythonRuntime={props.isPythonRuntime} setIsHiddenFromAI={setIsHiddenFromAI}>
             <Grid container spacing={2}>
@@ -287,6 +291,7 @@ const Message: React.FC<{
                         {isLoading ? <Skeleton width="100px" /> : timeText}
                       </Typography>
                     </Tooltip>
+                    {isHiddenFromAI && invisibleIcon}
                   </ThemeProvider>
                 </Box>
                 <Box
