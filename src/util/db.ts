@@ -557,6 +557,27 @@ export const isDisliked = async (
   return responseJson;
 };
 
+export const toggleIsHiddenFromAI = async (
+  messageid: number,
+  useremail: string,
+  token: string
+) => {
+  const response = await fetch(`${backendServer}/api/toggleishiddenfromai`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    mode: "cors",
+    body: JSON.stringify({
+      mid: messageid,
+      useremail: useremail,
+      token: token,
+    }),
+  });
+  const responseJson = await response.json();
+  return responseJson;
+};
+
 export const editMessage = async (
   messageid: number,
   useremail: string,

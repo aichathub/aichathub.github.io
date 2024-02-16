@@ -160,7 +160,7 @@ export const MessageInput: React.FC<{
           });
         }, 500);
         const api = context.yourmodelUrl;
-        const { aiResponse, model } = await customModelReply(content, api, context.messages);
+        const { aiResponse, model } = await customModelReply(content, api, context.messages.filter(m => !m.ishiddenfromai));
         context.setYourmodelName(model);
         await insertMessage({
           username: props.username,

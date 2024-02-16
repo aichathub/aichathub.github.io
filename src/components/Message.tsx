@@ -181,6 +181,7 @@ const Message: React.FC<{
   const isSpeaking = props.message.mid === context.speakingMid && context.speakingMid !== -1;
   const isMobile = window.innerWidth <= 600;
   const isExtraSmall = window.innerWidth < 375;
+  const [isHiddenFromAI, setIsHiddenFromAI] = useState(props.message.ishiddenfromai);
   let sx: SxProps<Theme> = {
     my: 1,
     mx: "0%",
@@ -252,9 +253,9 @@ const Message: React.FC<{
       sx={sx}
     >
       {anchorElement}
-      <Grid container wrap="nowrap" spacing={2} style={{ marginBottom: "2px" }}>
+      <Grid container wrap="nowrap" spacing={2} style={{ marginBottom: "2px", opacity: isHiddenFromAI ? .7 : 1 }}>
         <Grid item xs={!isExtraSmall && isMobile ? 12 : 10}>
-          <MessageWrapper message={props.message} isEditing={isEditing} setIsEditing={setIsEditing} isLoading={isLoading} isPythonRuntime={props.isPythonRuntime}>
+          <MessageWrapper message={props.message} isEditing={isEditing} setIsEditing={setIsEditing} isLoading={isLoading} isPythonRuntime={props.isPythonRuntime} setIsHiddenFromAI={setIsHiddenFromAI}>
             <Grid container spacing={2}>
               <Grid item>
                 {isLoading ? <Skeleton variant="circular" width={40} height={40} /> : <Avatar sx={{ bgcolor: avatarColor }}>{avatarName}</Avatar>}

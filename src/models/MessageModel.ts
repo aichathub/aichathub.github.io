@@ -9,4 +9,5 @@ export type MessageModel = {
   justSent?: boolean;
   sendernickname?: string;
   isLoading?: boolean;
+  ishiddenfromai?: boolean;
 }

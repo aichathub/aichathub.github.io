@@ -13,19 +13,23 @@ import { useNavigate, useParams } from "react-router-dom";
 import { MessageModel } from "../models/MessageModel";
 import { PostModel } from "../models/PostModel";
 import { AppContext } from "../store/AppContext";
-import { deleteMessageByMid, forkPost } from "../util/db";
+import { deleteMessageByMid, forkPost, toggleIsHiddenFromAI } from "../util/db";
 import QRCodeDialog from "./QRCodeDialog";
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
 
 const MessageMoreButton: React.FC<{
   message: MessageModel;
   isEditing: boolean;
   setIsEditing: (isEditing: boolean) => void;
   isPythonRuntime?: boolean;
+  setIsHiddenFromAI: (isHiddenFromAI: boolean) => void;
 }> = (props) => {
   const context = useContext(AppContext);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const hasRightToEdit = context.curPost?.username === context.loggedUser;
+  const hasRightToToggleVisibility = hasRightToEdit;
   const hasRightToDelete = context.auth && context.curPost && context.curPost.username === context.loggedUser;
   const utterance = new SpeechSynthesisUtterance(props.message.content.replaceAll("@ai", "").replaceAll("@AI", ""));
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -33,6 +37,7 @@ const MessageMoreButton: React.FC<{
   const [isForking, setIsForking] = useState(false);
   const { username, postid } = useParams();
   const navigate = useNavigate();
+  const [isHiddenFromAI, setIsHiddenFromAI] = useState(props.message.ishiddenfromai);
   if (props.message.authorusername === undefined) {
     const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
     if (isSafari) {
@@ -135,6 +140,19 @@ const MessageMoreButton: React.FC<{
       setIsForking(false);
     });
   }
+  const handleToggleVisibilityClick = async () => {
+    handleClose();
+    const result = await toggleIsHiddenFromAI(props.message.mid, context.auth.loggedEmail, context.auth.token);
+    if (result.message === "SUCCESS") {
+      const isHiddenFromAIRes = result.result as boolean;
+      setIsHiddenFromAI(isHiddenFromAIRes);
+      props.message.ishiddenfromai = isHiddenFromAIRes;
+      props.setIsHiddenFromAI(isHiddenFromAIRes);
+      context.showSnack("SUCCESS: NOW THE MESSAGE IS " + (isHiddenFromAIRes ? "HIDDEN" : "VISIBLE") + " TO AI");
+    } else {
+      context.showSnack("TOGGLE VISIBILITY FAILED: " + result.message);
+    }
+  }
   return (
     <>
       <div
@@ -213,6 +231,18 @@ const MessageMoreButton: React.FC<{
                           }
                         </ListItemIcon>
                         <ListItemText>Fork</ListItemText>
+                      </MenuItem>
+                    </Tooltip>)
+                  }
+                  {hasRightToToggleVisibility && (
+                    <Tooltip placement="left" arrow title={isHiddenFromAI ? "Show this message to AI" : "Hide this message to AI"}>
+                      <MenuItem
+                        onClick={handleToggleVisibilityClick}
+                      >
+                        <ListItemIcon>
+                          {isHiddenFromAI ? <VisibilityIcon fontSize="small" /> : <VisibilityOffIcon fontSize="small" />}
+                        </ListItemIcon>
+                        <ListItemText>{isHiddenFromAI ? "Show" : "Hide" }</ListItemText>
                       </MenuItem>
                     </Tooltip>)
                   }
