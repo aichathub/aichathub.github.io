@@ -81,7 +81,7 @@ const Message: React.FC<{
   if (justNow(props.message.time)) {
     timeText = <Typography variant="overline" color="common.grey">Now</Typography>;
   }
-  let invisibleIcon = <span class={classes["invisible-icon"]}>
+  let invisibleIcon = <span className={classes["invisible-icon"]}>
     <Tooltip title="This message is currently hidden from the AI" placement="top" arrow>
       <VisibilityOffIcon fontSize="small" />
     </Tooltip>
