@@ -80,9 +80,11 @@ const Message: React.FC<{
   if (justNow(props.message.time)) {
     timeText = <Typography variant="overline" color="common.grey">Now</Typography>;
   }
-  let invisibleIcon = <Tooltip title="This message is current hidden to the AI">
-    <VisibilityOffIcon fontSize="small" />
-  </Tooltip>;
+  let invisibleIcon = <span style={{transform: "translateY(4px)", marginLeft: "5px"}}>
+    <Tooltip title="This message is currently hidden from the AI" placement="top" arrow>
+      <VisibilityOffIcon fontSize="small" />
+    </Tooltip>
+  </span>;
   const handleEditOnPaste = async (e: React.ClipboardEvent) => {
     const items = e.clipboardData.items;
     for (let i = 0; i < items.length; i++) {
