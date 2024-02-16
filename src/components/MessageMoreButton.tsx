@@ -150,7 +150,8 @@ const MessageMoreButton: React.FC<{
       setIsHiddenFromAI(isHiddenFromAIRes);
       props.message.ishiddenfromai = isHiddenFromAIRes;
       props.setIsHiddenFromAI(isHiddenFromAIRes);
-      handleClose()
+      handleClose();
+      context.showSnack("SUCCESS: NOW THE MESSAGE IS " + (isHiddenFromAIRes ? "HIDDEN" : "VISIBLE") + " TO AI");
     } else {
       context.showSnack("TOGGLE VISIBILITY FAILED: " + result.message);
     }
