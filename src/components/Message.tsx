@@ -1,6 +1,7 @@
 import { Box, Tooltip } from "@material-ui/core";
 import Editor from "@monaco-editor/react";
-import { Button, Grid, Skeleton, SxProps, TextField, Theme } from "@mui/material";
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import { Button, CircularProgress, Grid, Skeleton, SxProps, TextField, Theme } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
@@ -16,10 +17,9 @@ import { runPythonLocal } from "../util/python";
 import { convertContentToPythonCode } from "../util/util";
 import LikeDislikePanel from "./LikeDislikePanel";
 import MarkdownComponent from "./MarkdownComponent";
+import classes from "./Message.module.css";
 import MessageWrapper from "./MessageWrapper";
 import UserLink from "./UserLink";
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import classes from "./Message.module.css";
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -112,6 +112,9 @@ const Message: React.FC<{
     }
   }
   const fullHeight = window.innerHeight;
+  const [pythonEditorTimeout, setPythonEditorTimeout] = useState<NodeJS.Timeout | undefined>(undefined);
+  const [isAutoSyncing, setIsAutoSyncing] = useState(false);
+  const [isPythonRunning, setIsPythonRunning] = useState(false);
   const editor = <>
     {
       !props.isPythonRuntime && <TextField multiline
@@ -129,7 +132,28 @@ const Message: React.FC<{
         height={(Math.max(fullHeight * 0.2, Math.min(fullHeight * 0.7, numOfLines * 12))) + "px"}
         language="python"
         theme={context.darkMode ? "vs-dark" : "vs-light"}
-        onChange={val => { if (val) setPythonEditorText(val); }}
+        onChange={val => {
+          if (val) {
+
+            setPythonEditorText(val);
+
+            // Automatically edit the message after the user stops typing for 2 second
+            if (pythonEditorTimeout) {
+              clearTimeout(pythonEditorTimeout);
+            }
+            const newPythonEditorTimeout = setTimeout(() => {
+              const newContent = pythonCodeToMarkdown(val);
+              setContent(newContent);
+              props.message.editdate = new Date();
+              props.message.content = newContent;
+              setIsAutoSyncing(true);
+              editMessage(props.message.mid, context.auth.loggedEmail, context.auth.token, newContent).then(res => {
+                setIsAutoSyncing(false);
+              });
+            }, 2000);
+            setPythonEditorTimeout(newPythonEditorTimeout);
+          }
+        }}
         defaultValue={markdownPythonToCode(props.message.content)}
         options={{
           minimap: { enabled: false },
@@ -163,7 +187,9 @@ const Message: React.FC<{
           content: "Loading..."
         }));
         // pythonRuntimeReply(newContent).then(result => {
+        setIsPythonRunning(true);
         runPythonLocal(convertContentToPythonCode(newContent)).then(result => {
+          setIsPythonRunning(false);
           const displayResult = "#### *Execution Result*\n```plaintext\n" + result + "\n```";
           context.setMessages(context.messages.map(x => x.mid !== nextMsg?.mid ? x : {
             ...x,
@@ -176,11 +202,14 @@ const Message: React.FC<{
       editMessage(props.message.mid, context.auth.loggedEmail, context.auth.token, props.isPythonRuntime ? newContent : editedMsg).then(res => {
         context.showSnack(res.message);
       });
-      setIsEditing(false);
-    }}>{props.isPythonRuntime ? "Run" : "Save"}</Button>
+    }}>{props.isPythonRuntime ? <>
+      {isPythonRunning ? <CircularProgress size={20} color="inherit" /> : <> Run </>}
+    </> : <>Save</>}</Button>
     <Button variant="text" onClick={() => {
       setIsEditing(false);
-    }}>Cancel</Button>
+    }}>
+      {isAutoSyncing ? <CircularProgress size={20} color="inherit" /> : "Save & Close"}
+    </Button>
   </>;
   const anchorElement = <span id={"m" + props.message.mid} style={{ position: "absolute", transform: "translateY(-30vh)" }} />;
   const anchor = window.location.hash.slice(1);
