@@ -65,6 +65,7 @@ const Message: React.FC<{
   const [isEditing, setIsEditing] = useState(false);
   const [editedMsg, setEditedMsg] = useState(props.message.content);
   const [pythonEditorText, setPythonEditorText] = useState(markdownPythonToCode(props.message.content));
+  const [lastSyncedAt, setLastSyncedAt] = useState(new Date());
   const numOfLines = props.message.content.split("\n").length;
 
   const justNow = (date: Date, seconds = 60) => {
@@ -115,6 +116,9 @@ const Message: React.FC<{
   const [pythonEditorTimeout, setPythonEditorTimeout] = useState<NodeJS.Timeout | undefined>(undefined);
   const [isAutoSyncing, setIsAutoSyncing] = useState(false);
   const [isPythonRunning, setIsPythonRunning] = useState(false);
+  const lastSyncedTag = <>
+    Last synced at <Timeago date={lastSyncedAt} title="" />
+  </>
   const editor = <>
     {
       !props.isPythonRuntime && <TextField multiline
@@ -148,6 +152,7 @@ const Message: React.FC<{
               props.message.content = newContent;
               setIsAutoSyncing(true);
               editMessage(props.message.mid, context.auth.loggedEmail, context.auth.token, newContent).then(res => {
+                setLastSyncedAt(new Date());
                 setIsAutoSyncing(false);
               });
             }, 2000);
@@ -201,15 +206,18 @@ const Message: React.FC<{
       }
       editMessage(props.message.mid, context.auth.loggedEmail, context.auth.token, props.isPythonRuntime ? newContent : editedMsg).then(res => {
         context.showSnack(res.message);
+        setLastSyncedAt(new Date());
       });
     }}>{props.isPythonRuntime ? <>
       {isPythonRunning ? <CircularProgress size={20} color="inherit" /> : <> Run </>}
     </> : <>Save</>}</Button>
-    <Button variant="text" onClick={() => {
-      setIsEditing(false);
-    }}>
-      {isAutoSyncing ? <CircularProgress size={20} color="inherit" /> : "Save & Close"}
-    </Button>
+    <Tooltip title={lastSyncedTag} arrow>
+      <Button variant="text" onClick={() => {
+        setIsEditing(false);
+      }}>
+        {isAutoSyncing ? <CircularProgress size={20} color="inherit" /> : "Save & Close"}
+      </Button>
+    </Tooltip>
   </>;
   const anchorElement = <span id={"m" + props.message.mid} style={{ position: "absolute", transform: "translateY(-30vh)" }} />;
   const anchor = window.location.hash.slice(1);
