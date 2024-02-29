@@ -130,9 +130,11 @@ const Message: React.FC<{
       }
     });
     (window as any).require(["monaco-vim"], function (MonacoVim: any) {
-      const statusNode = document.querySelector(".status-node");
-      const vi = MonacoVim.initVimMode(editor, statusNode);
-      setMonacoVimEditor(vi);
+      if (isVimMode) {
+        const statusNode = document.querySelector(".status-node");
+        const vi = MonacoVim.initVimMode(editor, statusNode);
+        setMonacoVimEditor(vi);
+      }
       setMonacoVim(MonacoVim);
     });
     setMonacoEditor(editor);
