@@ -123,6 +123,7 @@ const Message: React.FC<{
   const [monacoEditor, setMonacoEditor] = useState<any>(undefined);
   const [monacoVimEditor, setMonacoVimEditor] = useState<any>(undefined);
   const [monacoVim, setMonacoVim] = useState<any>(undefined);
+  const [shouldUseMonaco, setShouldUseMonaco] = useState(false); // TODO: Optionally use TextField / Monaco for all messages
   const handleEditorDidMount = (editor: any, monaco: any) => {
     (window as any).require.config({
       paths: {
@@ -154,7 +155,7 @@ const Message: React.FC<{
   }, [isVimMode]);
   const editor = <>
     {
-      !props.isPythonRuntime && <TextField multiline
+      !props.isPythonRuntime && !shouldUseMonaco && <TextField multiline
         autoFocus
         value={editedMsg}
         style={{ width: "100%" }}
@@ -162,6 +163,25 @@ const Message: React.FC<{
           setEditedMsg(e.target.value);
         }}
         onPaste={handleEditOnPaste}
+      />
+    }
+    {
+      !props.isPythonRuntime && shouldUseMonaco &&
+      <Editor
+        height={(Math.max(fullHeight * 0.2, Math.min(fullHeight * 0.7, numOfLines * 12))) + "px"}
+        language="markdown"
+        theme={context.darkMode ? "vs-dark" : "vs-light"}
+        onMount={handleEditorDidMount}
+        onChange={(val) => {
+          if (val) {
+            setEditedMsg(val);
+          }
+        }}
+        options={{
+          minimap: { enabled: false },
+          scrollBeyondLastLine: false
+        }}
+        defaultValue={props.message.content}
       />
     }
     {
@@ -199,13 +219,15 @@ const Message: React.FC<{
         }}
       />
     }
-    <FormControlLabel control={
-      <Checkbox
-        checked={isVimMode}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-          setIsVimMode(e.target.checked);
-          localStorage.setItem("vimMode", e.target.checked ? "true" : "false");
-        }} />} label="Vim" />
+    {(props.isPythonRuntime || shouldUseMonaco) &&
+      <FormControlLabel control={
+        <Checkbox
+          checked={isVimMode}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            setIsVimMode(e.target.checked);
+            localStorage.setItem("vimMode", e.target.checked ? "true" : "false");
+          }} />} label="Vim" />
+    }
 
     <Button variant="text" onClick={() => {
       const newContent = props.isPythonRuntime ? pythonCodeToMarkdown(pythonEditorText) : editedMsg.replaceAll("\n", "\n\n");
@@ -249,17 +271,29 @@ const Message: React.FC<{
         context.showSnack(res.message);
         setLastSyncedAt(new Date());
       });
+      if (!props.isPythonRuntime) {
+        setIsEditing(false);
+      }
     }}>{props.isPythonRuntime ? <>
       {isPythonRunning ? <CircularProgress size={20} color="inherit" /> : <> Run </>}
     </> : <>Save</>}</Button>
-    <Tooltip title={lastSyncedTag} arrow>
-      <Button variant="text" onClick={() => {
+    {
+      props.isPythonRuntime && <Tooltip title={lastSyncedTag} arrow>
+        <Button variant="text" onClick={() => {
+          setIsEditing(false);
+        }}>
+          {isAutoSyncing ? <CircularProgress size={20} color="inherit" /> : "Save & Close"}
+        </Button>
+      </Tooltip>
+    }
+    {
+      !props.isPythonRuntime && <Button variant="text" onClick={() => {
         setIsEditing(false);
       }}>
-        {isAutoSyncing ? <CircularProgress size={20} color="inherit" /> : "Save & Close"}
+        Cancel
       </Button>
-    </Tooltip>
-    {isVimMode && <code className="status-node"></code>}
+    }
+    {isVimMode && (shouldUseMonaco || props.isPythonRuntime) && <code className="status-node"></code>}
   </>;
   const anchorElement = <span id={"m" + props.message.mid} style={{ position: "absolute", transform: "translateY(-30vh)" }} />;
   const anchor = window.location.hash.slice(1);
