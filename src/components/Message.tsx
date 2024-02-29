@@ -1,7 +1,7 @@
 import { Box, Tooltip } from "@material-ui/core";
 import Editor from "@monaco-editor/react";
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import { Button, CircularProgress, Grid, Skeleton, SxProps, TextField, Theme } from "@mui/material";
+import { Button, Checkbox, CircularProgress, FormControlLabel, Grid, Skeleton, SxProps, TextField, Theme } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
@@ -116,9 +116,40 @@ const Message: React.FC<{
   const [pythonEditorTimeout, setPythonEditorTimeout] = useState<NodeJS.Timeout | undefined>(undefined);
   const [isAutoSyncing, setIsAutoSyncing] = useState(false);
   const [isPythonRunning, setIsPythonRunning] = useState(false);
+  const [isVimMode, setIsVimMode] = useState(localStorage.getItem("vimMode") === "true");
   const lastSyncedTag = <>
     Last synced at <Timeago date={lastSyncedAt} title="" />
   </>
+  const [monacoEditor, setMonacoEditor] = useState<any>(undefined);
+  const [monacoVimEditor, setMonacoVimEditor] = useState<any>(undefined);
+  const [monacoVim, setMonacoVim] = useState<any>(undefined);
+  const handleEditorDidMount = (editor: any, monaco: any) => {
+    (window as any).require.config({
+      paths: {
+        "monaco-vim": "https://unpkg.com/monaco-vim/dist/monaco-vim"
+      }
+    });
+    (window as any).require(["monaco-vim"], function (MonacoVim: any) {
+      const statusNode = document.querySelector(".status-node");
+      const vi = MonacoVim.initVimMode(editor, statusNode);
+      setMonacoVimEditor(vi);
+      setMonacoVim(MonacoVim);
+    });
+    setMonacoEditor(editor);
+  };
+  useEffect(() => {
+    if (isVimMode) {
+      if (monacoEditor && monacoVim) {
+        const statusNode = document.querySelector(".status-node");
+        const vi = monacoVim.initVimMode(monacoEditor, statusNode);
+        setMonacoVimEditor(vi);
+      }
+    } else {
+      if (monacoVimEditor) {
+        monacoVimEditor.dispose();
+      }
+    }
+  }, [isVimMode]);
   const editor = <>
     {
       !props.isPythonRuntime && <TextField multiline
@@ -132,15 +163,15 @@ const Message: React.FC<{
       />
     }
     {
-      props.isPythonRuntime && <Editor
+      props.isPythonRuntime &&
+      <Editor
         height={(Math.max(fullHeight * 0.2, Math.min(fullHeight * 0.7, numOfLines * 12))) + "px"}
         language="python"
         theme={context.darkMode ? "vs-dark" : "vs-light"}
+        onMount={handleEditorDidMount}
         onChange={val => {
           if (val) {
-
             setPythonEditorText(val);
-
             // Automatically edit the message after the user stops typing for 2 second
             if (pythonEditorTimeout) {
               clearTimeout(pythonEditorTimeout);
@@ -166,6 +197,14 @@ const Message: React.FC<{
         }}
       />
     }
+    <FormControlLabel control={
+      <Checkbox
+        checked={isVimMode}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+          setIsVimMode(e.target.checked);
+          localStorage.setItem("vimMode", e.target.checked ? "true" : "false");
+        }} />} label="Vim" />
+
     <Button variant="text" onClick={() => {
       const newContent = props.isPythonRuntime ? pythonCodeToMarkdown(pythonEditorText) : editedMsg.replaceAll("\n", "\n\n");
       setContent(newContent);
@@ -218,6 +257,7 @@ const Message: React.FC<{
         {isAutoSyncing ? <CircularProgress size={20} color="inherit" /> : "Save & Close"}
       </Button>
     </Tooltip>
+    {isVimMode && <code className="status-node"></code>}
   </>;
   const anchorElement = <span id={"m" + props.message.mid} style={{ position: "absolute", transform: "translateY(-30vh)" }} />;
   const anchor = window.location.hash.slice(1);
