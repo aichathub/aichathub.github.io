@@ -7,6 +7,7 @@ const MessageWrapper: React.FC<{
   message: MessageModel;
   isEditing: boolean;
   setIsEditing: (isEditing: boolean) => void;
+  setShouldUseMonaco: (shouldUseMonaco: boolean) => void;
   isLoading?: boolean;
   isPythonRuntime?: boolean;
   setIsHiddenFromAI: (isHiddenFromAI: boolean) => void;
@@ -14,7 +15,13 @@ const MessageWrapper: React.FC<{
   return (
     <>
       <Grid style={{ position: "relative", opacity: props.message.ishiddenfromai ? .7 : 1 }}>
-        {!props.isLoading && <MessageMoreButton message={props.message} isEditing={props.isEditing} setIsEditing={props.setIsEditing} isPythonRuntime={props.isPythonRuntime} setIsHiddenFromAI={props.setIsHiddenFromAI} />}
+        {!props.isLoading && <MessageMoreButton
+          message={props.message}
+          isEditing={props.isEditing}
+          setIsEditing={props.setIsEditing}
+          setShouldUseMonaco={props.setShouldUseMonaco}
+          isPythonRuntime={props.isPythonRuntime}
+          setIsHiddenFromAI={props.setIsHiddenFromAI} />}
         {props.children}
       </Grid>
     </>

@@ -7,6 +7,8 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import QRCode2Icon from "@mui/icons-material/QrCode2";
 import StopIcon from '@mui/icons-material/Stop';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { Button, CircularProgress, ClickAwayListener, Grow, ListItemIcon, ListItemText, MenuItem, MenuList, Paper, Popper, Tooltip } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -15,13 +17,12 @@ import { PostModel } from "../models/PostModel";
 import { AppContext } from "../store/AppContext";
 import { deleteMessageByMid, forkPost, toggleIsHiddenFromAI } from "../util/db";
 import QRCodeDialog from "./QRCodeDialog";
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
 
 const MessageMoreButton: React.FC<{
   message: MessageModel;
   isEditing: boolean;
   setIsEditing: (isEditing: boolean) => void;
+  setShouldUseMonaco: (shouldUseMonaco: boolean) => void;
   isPythonRuntime?: boolean;
   setIsHiddenFromAI: (isHiddenFromAI: boolean) => void;
 }> = (props) => {
@@ -68,6 +69,12 @@ const MessageMoreButton: React.FC<{
   }
   const handleEditClick = () => {
     props.setIsEditing(true);
+    props.setShouldUseMonaco(false);
+    handleClose();
+  }
+  const handleIdeClick = () => {
+    props.setIsEditing(true);
+    props.setShouldUseMonaco(true);
     handleClose();
   }
   const handleSpeak = () => {
@@ -207,6 +214,16 @@ const MessageMoreButton: React.FC<{
                     </MenuItem>
                   )
                   }
+                  {hasRightToEdit && !props.isPythonRuntime && (
+                    <MenuItem
+                      onClick={handleIdeClick}
+                    >
+                      <ListItemIcon>
+                        {<CodeIcon fontSize="small" />}
+                      </ListItemIcon>
+                      <ListItemText>IDE</ListItemText>
+                    </MenuItem>
+                  )}
                   <MenuItem onClick={handleShareClick}>
                     <ListItemIcon>
                       <QRCode2Icon fontSize="small" />
@@ -243,10 +260,10 @@ const MessageMoreButton: React.FC<{
                         onClick={handleToggleVisibilityClick}
                       >
                         <ListItemIcon>
-                          { isTogglingVisibility ? <CircularProgress size={20} color="inherit" /> :
+                          {isTogglingVisibility ? <CircularProgress size={20} color="inherit" /> :
                             isHiddenFromAI ? <VisibilityIcon fontSize="small" /> : <VisibilityOffIcon fontSize="small" />}
                         </ListItemIcon>
-                        <ListItemText>{isHiddenFromAI ? "Show" : "Hide" }</ListItemText>
+                        <ListItemText>{isHiddenFromAI ? "Show" : "Hide"}</ListItemText>
                       </MenuItem>
                     </Tooltip>)
                   }

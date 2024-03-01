@@ -123,7 +123,7 @@ const Message: React.FC<{
   const [monacoEditor, setMonacoEditor] = useState<any>(undefined);
   const [monacoVimEditor, setMonacoVimEditor] = useState<any>(undefined);
   const [monacoVim, setMonacoVim] = useState<any>(undefined);
-  const [shouldUseMonaco, setShouldUseMonaco] = useState(false); // TODO: Optionally use TextField / Monaco for all messages
+  const [shouldUseMonaco, setShouldUseMonaco] = useState(false);
   const handleEditorDidMount = (editor: any, monaco: any) => {
     (window as any).require.config({
       paths: {
@@ -181,7 +181,7 @@ const Message: React.FC<{
           minimap: { enabled: false },
           scrollBeyondLastLine: false
         }}
-        defaultValue={props.message.content}
+        defaultValue={editedMsg}
       />
     }
     {
@@ -375,7 +375,14 @@ const Message: React.FC<{
       {anchorElement}
       <Grid container wrap="nowrap" spacing={2} style={{ marginBottom: "2px" }}>
         <Grid item xs={!isExtraSmall && isMobile ? 12 : 10}>
-          <MessageWrapper message={props.message} isEditing={isEditing} setIsEditing={setIsEditing} isLoading={isLoading} isPythonRuntime={props.isPythonRuntime} setIsHiddenFromAI={setIsHiddenFromAI}>
+          <MessageWrapper
+            message={props.message}
+            isEditing={isEditing}
+            setIsEditing={setIsEditing}
+            setShouldUseMonaco={setShouldUseMonaco}
+            isLoading={isLoading}
+            isPythonRuntime={props.isPythonRuntime}
+            setIsHiddenFromAI={setIsHiddenFromAI}>
             <Grid container spacing={2}>
               <Grid item>
                 {isLoading ? <Skeleton variant="circular" width={40} height={40} /> : <Avatar sx={{ bgcolor: avatarColor }}>{avatarName}</Avatar>}
