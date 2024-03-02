@@ -271,7 +271,7 @@ const Message: React.FC<{
         context.showSnack(res.message);
         setLastSyncedAt(new Date());
       });
-      if (!props.isPythonRuntime) {
+      if (!props.isPythonRuntime && !shouldUseMonaco) {
         setIsEditing(false);
       }
     }}>{props.isPythonRuntime ? <>
@@ -287,11 +287,20 @@ const Message: React.FC<{
       </Tooltip>
     }
     {
-      !props.isPythonRuntime && <Button variant="text" onClick={() => {
+      !props.isPythonRuntime && !shouldUseMonaco && <Button variant="text" onClick={() => {
         setIsEditing(false);
       }}>
         Cancel
       </Button>
+    }
+    {
+      !props.isPythonRuntime && shouldUseMonaco && <Tooltip title={lastSyncedTag} arrow>
+        <Button variant="text" onClick={() => {
+          setIsEditing(false);
+        }}>
+          Close
+        </Button>
+      </Tooltip>
     }
     {isVimMode && (shouldUseMonaco || props.isPythonRuntime) && <code className="status-node"></code>}
   </>;
