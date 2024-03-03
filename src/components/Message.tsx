@@ -203,6 +203,7 @@ const Message: React.FC<{
               setContent(newContent);
               props.message.editdate = new Date();
               props.message.content = newContent;
+              localStorage.setItem(`code_backup_${props.message.mid}`, newContent);
               setIsAutoSyncing(true);
               editMessage(props.message.mid, context.auth.loggedEmail, context.auth.token, newContent).then(res => {
                 setLastSyncedAt(new Date());
