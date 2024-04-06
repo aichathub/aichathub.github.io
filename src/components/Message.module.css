@@ -27,3 +27,7 @@
   transform: translateY(4px);
   margin-left: 5px;
 }
+
+.double-tick-button svg:last-child {
+  transform: translateX(-10px);
+}

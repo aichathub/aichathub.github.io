@@ -282,11 +282,11 @@ const Message: React.FC<{
     </> : <>Save</>}</Button>
     {
       props.isPythonRuntime && <Tooltip title={lastSyncedTag} arrow>
-        <Button variant="text" onClick={() => {
+        <Button variant="text" className={classes["double-tick-button"]} onClick={() => {
           setIsEditing(false);
         }}>
-          {isAutoSyncing ? <CheckIcon fontSize="small"/> : <><CheckIcon fontSize="small"/><CheckIcon fontSize="small"/></>}
           Close
+          {isAutoSyncing ? <CheckIcon fontSize="small"/> : <><CheckIcon fontSize="small"/><CheckIcon fontSize="small"/></>}
         </Button>
       </Tooltip>
     }
