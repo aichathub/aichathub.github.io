@@ -20,6 +20,7 @@ import MarkdownComponent from "./MarkdownComponent";
 import classes from "./Message.module.css";
 import MessageWrapper from "./MessageWrapper";
 import UserLink from "./UserLink";
+import CheckIcon from '@mui/icons-material/Check';
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -204,6 +205,7 @@ const Message: React.FC<{
               props.message.editdate = new Date();
               props.message.content = newContent;
               localStorage.setItem(`code_backup_${props.message.mid}`, newContent);
+              localStorage.setItem(`code_backup_time_${props.message.mid}`, new Date().toUTCString());
               setIsAutoSyncing(true);
               editMessage(props.message.mid, context.auth.loggedEmail, context.auth.token, newContent).then(res => {
                 setLastSyncedAt(new Date());
@@ -283,7 +285,8 @@ const Message: React.FC<{
         <Button variant="text" onClick={() => {
           setIsEditing(false);
         }}>
-          {isAutoSyncing ? <CircularProgress size={20} color="inherit" /> : "Save & Close"}
+          {isAutoSyncing ? <CheckIcon fontSize="small"/> : <><CheckIcon fontSize="small"/><CheckIcon fontSize="small"/></>}
+          Close
         </Button>
       </Tooltip>
     }
