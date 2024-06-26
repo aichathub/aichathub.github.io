@@ -1,5 +1,6 @@
 import { ContentCopy } from "@mui/icons-material";
 import CodeIcon from '@mui/icons-material/Code';
+import ContentCutIcon from '@mui/icons-material/ContentCut';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import ForkLeftIcon from '@mui/icons-material/ForkLeft';
@@ -26,12 +27,14 @@ const MessageMoreButton: React.FC<{
   isPythonRuntime?: boolean;
   setIsHiddenFromAI: (isHiddenFromAI: boolean) => void;
 }> = (props) => {
+  const isAI = props.message.authorusername === undefined;
   const context = useContext(AppContext);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const hasRightToEdit = context.curPost?.username === context.loggedUser;
   const hasRightToToggleVisibility = hasRightToEdit;
   const hasRightToDelete = context.auth && context.curPost && context.curPost.username === context.loggedUser;
+  const hasRightToCut = !isAI && context.curPost && context.curPost.username === context.loggedUser;
   const utterance = new SpeechSynthesisUtterance(props.message.content.replaceAll("@ai", "").replaceAll("@AI", ""));
   const [isSpeaking, setIsSpeaking] = useState(false);
   const hasVoice = window.speechSynthesis.getVoices().length > 0;
@@ -40,7 +43,7 @@ const MessageMoreButton: React.FC<{
   const navigate = useNavigate();
   const [isHiddenFromAI, setIsHiddenFromAI] = useState(props.message.ishiddenfromai);
   const [isTogglingVisibility, setIsTogglingVisibility] = useState(false);
-  if (props.message.authorusername === undefined) {
+  if (isAI) {
     const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
     if (isSafari) {
       utterance.pitch = 1;
@@ -163,6 +166,10 @@ const MessageMoreButton: React.FC<{
       context.showSnack("TOGGLE VISIBILITY FAILED: " + result.message);
     }
   }
+  const handleCutClick = () => {
+    handleCopyClick();
+    handleDeleteClick();
+  }
   return (
     <>
       <div
@@ -203,6 +210,14 @@ const MessageMoreButton: React.FC<{
                     </ListItemIcon>
                     <ListItemText>Copy</ListItemText>
                   </MenuItem>
+                  {hasRightToCut && (<Tooltip placement="left" arrow title="Copy the content to the clipboard, then delete the message.">
+                    <MenuItem onClick={handleCutClick}>
+                      <ListItemIcon>
+                        <ContentCutIcon fontSize="small" />
+                      </ListItemIcon>
+                      <ListItemText>Cut</ListItemText>
+                    </MenuItem>
+                  </Tooltip>)}
                   {hasRightToEdit && (
                     <MenuItem
                       onClick={handleEditClick}
@@ -282,7 +297,7 @@ const MessageMoreButton: React.FC<{
             </Paper>
           </Grow>
         )}
-      </Popper>
+      </Popper >
       <QRCodeDialog url={window.location.href.split('#')[0] + "#m" + props.message.mid} onClose={handleQRClose} open={showQRCodeDialog} genShortUrl={true} />
     </>
   );
