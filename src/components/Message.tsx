@@ -1,5 +1,6 @@
 import { Box, Tooltip } from "@material-ui/core";
 import Editor from "@monaco-editor/react";
+import CheckIcon from '@mui/icons-material/Check';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { Button, Checkbox, CircularProgress, FormControlLabel, Grid, Skeleton, SxProps, TextField, Theme } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
@@ -20,7 +21,6 @@ import MarkdownComponent from "./MarkdownComponent";
 import classes from "./Message.module.css";
 import MessageWrapper from "./MessageWrapper";
 import UserLink from "./UserLink";
-import CheckIcon from '@mui/icons-material/Check';
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -42,6 +42,10 @@ const Message: React.FC<{
   isLoading?: boolean;
   isPythonRuntime?: boolean;
 }> = (props) => {
+  const massageMsg = (input: string) => {
+    // Massage the message from database before it can be displayed in the front-end properly
+    return input.replaceAll("\n", "\n\n");
+  }
   const markdownPythonToCode = (input: string) => {
     if (input.startsWith("```python\n")) {
       input = input.replace("```python\n", "");
@@ -76,7 +80,7 @@ const Message: React.FC<{
     return diff < 1000 * seconds;
   };
   const shouldAnimate = isAI && props.message.justSent;
-  const [content, setContent] = useState(shouldAnimate ? "" : props.message.content.replaceAll("\n", "\n\n"));
+  const [content, setContent] = useState(shouldAnimate ? "" : massageMsg(props.message.content));
 
   let timeText = <Timeago date={props.message.time} title="" />;
   // if under one minute, just show Now
@@ -233,7 +237,7 @@ const Message: React.FC<{
     }
 
     <Button variant="text" onClick={() => {
-      const newContent = props.isPythonRuntime ? pythonCodeToMarkdown(pythonEditorText) : editedMsg.replaceAll("\n", "\n\n");
+      const newContent = props.isPythonRuntime ? pythonCodeToMarkdown(pythonEditorText) : massageMsg(editedMsg);
       setContent(newContent);
       props.message.editdate = new Date();
       props.message.content = newContent;
@@ -286,7 +290,7 @@ const Message: React.FC<{
           setIsEditing(false);
         }}>
           Close
-          {isAutoSyncing ? <CheckIcon fontSize="small"/> : <><CheckIcon fontSize="small"/><CheckIcon fontSize="small"/></>}
+          {isAutoSyncing ? <CheckIcon fontSize="small" /> : <><CheckIcon fontSize="small" /><CheckIcon fontSize="small" /></>}
         </Button>
       </Tooltip>
     }
@@ -371,7 +375,7 @@ const Message: React.FC<{
         while (nextStart + 1 < props.message.content.length && props.message.content[nextStart] != ' ') {
           nextStart++;
         }
-        return props.message.content.substring(0, nextStart);
+        return massageMsg(props.message.content.substring(0, nextStart));
       })
     }, 50);
     return () => clearInterval(interval);
