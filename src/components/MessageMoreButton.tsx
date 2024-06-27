@@ -210,14 +210,6 @@ const MessageMoreButton: React.FC<{
                     </ListItemIcon>
                     <ListItemText>Copy</ListItemText>
                   </MenuItem>
-                  {hasRightToCut && (<Tooltip placement="left" arrow title="Copy the content to the clipboard, then delete the message.">
-                    <MenuItem onClick={handleCutClick}>
-                      <ListItemIcon>
-                        <ContentCutIcon fontSize="small" />
-                      </ListItemIcon>
-                      <ListItemText>Cut</ListItemText>
-                    </MenuItem>
-                  </Tooltip>)}
                   {hasRightToEdit && (
                     <MenuItem
                       onClick={handleEditClick}
@@ -282,6 +274,14 @@ const MessageMoreButton: React.FC<{
                       </MenuItem>
                     </Tooltip>)
                   }
+                  {hasRightToCut && (<Tooltip placement="left" arrow title="Copy the content to the clipboard, then delete the message.">
+                    <MenuItem onClick={handleCutClick}>
+                      <ListItemIcon>
+                        <ContentCutIcon fontSize="small" />
+                      </ListItemIcon>
+                      <ListItemText>Cut</ListItemText>
+                    </MenuItem>
+                  </Tooltip>)}
                   {hasRightToDelete && (
                     <MenuItem
                       onClick={handleDeleteClick}
