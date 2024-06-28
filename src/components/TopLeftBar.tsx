@@ -274,9 +274,11 @@ const TopLeftBar: React.FC<{
       return;
     }
     context.showSnack("Your question has been posted. The AI will reply to you soon.");
-    const replyResponse = await chatgptReply(post.pid, post.username, context.auth.token, false);
+    const replyResponse = await chatgptReply(post.pid, post.username, context.auth.token, true);
     if (replyResponse.message.indexOf("ERROR") === -1) {
-      context.addDailyAIUsuage();
+      for (let i = 0; i < 2; i++) {
+        context.addDailyAIUsuage();
+      }
     } else {
       context.showSnack("CHATREPLY: " + replyResponse.message);
       setIsAskingQuestion(false);
