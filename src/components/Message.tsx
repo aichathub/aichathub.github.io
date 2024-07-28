@@ -71,6 +71,7 @@ const Message: React.FC<{
   const [editedMsg, setEditedMsg] = useState(props.message.content);
   const [pythonEditorText, setPythonEditorText] = useState(markdownPythonToCode(props.message.content));
   const [lastSyncedAt, setLastSyncedAt] = useState(new Date());
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const numOfLines = props.message.content.split("\n").length;
 
   const justNow = (date: Date, seconds = 60) => {
@@ -179,6 +180,7 @@ const Message: React.FC<{
         onMount={handleEditorDidMount}
         onChange={(val) => {
           if (val) {
+            setHasUnsavedChanges(true);
             setEditedMsg(val);
           }
         }}
@@ -277,13 +279,14 @@ const Message: React.FC<{
       editMessage(props.message.mid, context.auth.loggedEmail, context.auth.token, props.isPythonRuntime ? newContent : editedMsg).then(res => {
         context.showSnack(res.message);
         setLastSyncedAt(new Date());
+        setHasUnsavedChanges(false);
       });
       if (!props.isPythonRuntime && !shouldUseMonaco) {
         setIsEditing(false);
       }
     }}>{props.isPythonRuntime ? <>
       {isPythonRunning ? <CircularProgress size={20} color="inherit" /> : <> Run </>}
-    </> : <>Save</>}</Button>
+    </> : <>{hasUnsavedChanges ? "SAVE (*)" : "SAVE"}</>}</Button>
     {
       props.isPythonRuntime && <Tooltip title={lastSyncedTag} arrow>
         <Button variant="text" className={classes["double-tick-button"]} onClick={() => {
