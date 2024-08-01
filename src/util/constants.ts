@@ -1,6 +1,8 @@
-export const backendServer = "https://aichathub.azurewebsites.net";
+export const backendServer = "https://aichathub.adaptable.app";
+// export const backendServer = "https://aichathub.azurewebsites.net";
 // export const backendServer = "http://localhost:3001";
 // export const backendServer = "https://aichathubbackend-aichathubapp.replit.app/";
+
 export const GUEST_EMAIL = "guest@example.com";
 export const GUEST_USERNAME = "guest";
 export const AI_EMAIL = "ai@example.com";
