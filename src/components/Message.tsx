@@ -305,7 +305,7 @@ const Message: React.FC<{
         Close
       </Button>
     }
-    {!isAutoSyncing && <Tooltip title="Everything synced to the cloud"><CheckIcon fontSize="small" style={{
+    {(!isAutoSyncing && (props.isPythonRuntime || shouldUseMonaco)) && <Tooltip title="Everything synced to the cloud"><CheckIcon fontSize="small" style={{
       marginLeft: "10px",
       transform: "translateY(5px)",
       color: "green"
