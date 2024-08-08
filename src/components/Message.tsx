@@ -184,6 +184,7 @@ const Message: React.FC<{
             setIsAutoSyncing(true);
             try {
               editMessage(props.message.mid, context.auth.loggedEmail, context.auth.token, val).then(res => {
+                setContent(val);
                 setLastSyncedAt(new Date());
                 setHasUnsavedChanges(false);
                 setIsAutoSyncing(false);
@@ -298,31 +299,23 @@ const Message: React.FC<{
     </> : <>{hasUnsavedChanges ? "SAVE (*)" : "SAVE"}</>}
     </Button>
     {
-      props.isPythonRuntime && <Tooltip title={lastSyncedTag} arrow>
-        <Button variant="text" className={classes["double-tick-button"]} onClick={() => {
-          setIsEditing(false);
-        }}>
-          Close
-          {isAutoSyncing ? <CheckIcon fontSize="small" /> : <><CheckIcon fontSize="small" /><CheckIcon fontSize="small" /></>}
-        </Button>
-      </Tooltip>
+      (props.isPythonRuntime || shouldUseMonaco) && <Button variant="text" className={classes["double-tick-button"]} onClick={() => {
+        setIsEditing(false);
+      }}>
+        Close
+      </Button>
     }
+    {!isAutoSyncing && <Tooltip title="Everything synced to the cloud"><CheckIcon fontSize="small" style={{
+      marginLeft: "10px",
+      transform: "translateY(5px)",
+      color: "green"
+    }} /></Tooltip>}
     {
       !props.isPythonRuntime && !shouldUseMonaco && <Button variant="text" onClick={() => {
         setIsEditing(false);
       }}>
         Cancel
       </Button>
-    }
-    {
-      !props.isPythonRuntime && shouldUseMonaco && <Tooltip title={lastSyncedTag} arrow>
-        <Button variant="text" onClick={() => {
-          setIsEditing(false);
-        }}>
-          Close
-          {isAutoSyncing ? <CheckIcon fontSize="small" /> : <><CheckIcon fontSize="small" /><CheckIcon fontSize="small" /></>}
-        </Button>
-      </Tooltip>
     }
     {isVimMode && (shouldUseMonaco || props.isPythonRuntime) && <code className="status-node"></code>}
   </>;
