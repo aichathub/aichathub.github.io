@@ -180,8 +180,17 @@ const Message: React.FC<{
         onMount={handleEditorDidMount}
         onChange={(val) => {
           if (val) {
-            setHasUnsavedChanges(true);
             setEditedMsg(val);
+            setIsAutoSyncing(true);
+            try {
+              editMessage(props.message.mid, context.auth.loggedEmail, context.auth.token, val).then(res => {
+                setLastSyncedAt(new Date());
+                setHasUnsavedChanges(false);
+                setIsAutoSyncing(false);
+              });
+            } catch (err) {
+              setHasUnsavedChanges(true);
+            }
           }
         }}
         options={{
@@ -286,7 +295,8 @@ const Message: React.FC<{
       }
     }}>{props.isPythonRuntime ? <>
       {isPythonRunning ? <CircularProgress size={20} color="inherit" /> : <> Run </>}
-    </> : <>{hasUnsavedChanges ? "SAVE (*)" : "SAVE"}</>}</Button>
+    </> : <>{hasUnsavedChanges ? "SAVE (*)" : "SAVE"}</>}
+    </Button>
     {
       props.isPythonRuntime && <Tooltip title={lastSyncedTag} arrow>
         <Button variant="text" className={classes["double-tick-button"]} onClick={() => {
@@ -310,6 +320,7 @@ const Message: React.FC<{
           setIsEditing(false);
         }}>
           Close
+          {isAutoSyncing ? <CheckIcon fontSize="small" /> : <><CheckIcon fontSize="small" /><CheckIcon fontSize="small" /></>}
         </Button>
       </Tooltip>
     }
