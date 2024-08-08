@@ -55,43 +55,43 @@ export const MessageInput: React.FC<{
     if (!inputRef.current) return;
     if (context.isSendingMessage || context.isTypingMessage) return;
     const ref = inputRef.current!;
-    if (ref.value.toLowerCase().replaceAll("@ai", "").trim().length !== 0) {
-      let content = ref.value;
-      const triggerAI = context.agent === "gpt3.5" || context.agent === "gpt4";
-      const triggerPython = context.agent === "python";
-      const isGuest = !context.loggedUser;
-      if (!isGuest && triggerAI && +context.dailyAIUsuage + 1 > +context.dailyAILimit) {
-        context.showSnack("Opps, Seems you have reached your daily @AI limit! Let's continue tomorrow!");
-        return;
+    let content = ref.value;
+    const triggerAI = context.agent === "gpt3.5" || context.agent === "gpt4";
+    const triggerPython = context.agent === "python";
+    const isGuest = !context.loggedUser;
+    if (!isGuest && triggerAI && +context.dailyAIUsuage + 1 > +context.dailyAILimit) {
+      context.showSnack("Opps, Seems you have reached your daily @AI limit! Let's continue tomorrow!");
+      return;
+    }
+    setInputText("");
+    // Focus back to the input field if the user is from desktop
+    const isMobile = window.innerWidth <= 600;
+    if (!isMobile) {
+      ref.focus();
+    } else {
+      // If the user is from mobile, hide the keyboard
+      ref.blur();
+    }
+    if (triggerAI || triggerPython) {
+      context.setIsSendingMessage(true);
+      setTimeout(() => {
+        window.scroll({
+          top: document.body.offsetHeight,
+        });
+      }, 500);
+    }
+    let optionalSocketId: string | undefined;
+    if (localStorage.getItem("socketId")) {
+      optionalSocketId = localStorage.getItem("socketId")!;
+    }
+    let response = "";
+    if (triggerPython) {
+      if (!content.startsWith("```")) {
+        content = "```python\n" + content + "\n```";
       }
-      setInputText("");
-      // Focus back to the input field if the user is from desktop
-      const isMobile = window.innerWidth <= 600;
-      if (!isMobile) {
-        ref.focus();
-      } else {
-        // If the user is from mobile, hide the keyboard
-        ref.blur();
-      }
-      if (triggerAI || triggerPython) {
-        context.setIsSendingMessage(true);
-        setTimeout(() => {
-          window.scroll({
-            top: document.body.offsetHeight,
-          });
-        }, 500);
-      }
-      let optionalSocketId: string | undefined;
-      if (localStorage.getItem("socketId")) {
-        optionalSocketId = localStorage.getItem("socketId")!;
-      }
-      let response = "";
-      if (triggerPython) {
-        if (!content.startsWith("```")) {
-          content = "```python\n" + content + "\n```";
-        }
-      }
-
+    }
+    const isEmptyMsg = ref.value.toLowerCase().replaceAll("@ai", "").trim().length === 0;
+    if (!isEmptyMsg) {
       props.addMessage({
         mid: -1,
         sender: context.auth.loggedEmail,
@@ -110,92 +110,92 @@ export const MessageInput: React.FC<{
         triggerPython: false
       });
       response = result.message;
-      if (response.indexOf("ERROR") === -1) {
-        props.reloadMessage();
-        if (triggerAI) {
-          const isGpt4 = context.agent === "gpt4";
-          const result = await chatgptReply(props.postid, props.username, context.auth.token, isGpt4);
-          if (result.message.indexOf("ERROR") === -1) {
-            let rep = isGpt4 ? 2 : 1;
-            for (let i = 0; i < rep; i++) {
-              context.addDailyAIUsuage();
-            }
-          } else {
-            context.showSnack(result.message);
+    }
+    if (isEmptyMsg || response.indexOf("ERROR") === -1) {
+      props.reloadMessage();
+      if (triggerAI) {
+        const isGpt4 = context.agent === "gpt4";
+        const result = await chatgptReply(props.postid, props.username, context.auth.token, isGpt4);
+        if (result.message.indexOf("ERROR") === -1) {
+          let rep = isGpt4 ? 2 : 1;
+          for (let i = 0; i < rep; i++) {
+            context.addDailyAIUsuage();
           }
-          props.reloadMessage();
-        } else if (triggerPython) {
-          context.setIsSendingMessage(true);
-          setTimeout(() => {
-            window.scroll({
-              top: document.body.offsetHeight,
-            });
-          }, 500);
-          // const pythonReply = await pythonRuntimeReply(content);
-          const pythonReply = await runPythonLocal(convertContentToPythonCode(content));
-          await insertMessage({
-            username: props.username,
-            pid: props.postid,
-            content: "#### *Execution Result*\n```plaintext\n" + pythonReply + "\n```",
-            token: context.auth.token,
-            triggerAI: false,
-            authoremail: context.auth.loggedEmail,
-            triggerUserModel: true,
-            sendernickname: "Python Runtime"
-          });
-          props.reloadMessage();
+        } else {
+          context.showSnack(result.message);
         }
-      } else {
-        context.showSnack(response);
-        return;
-      }
-
-      const triggerCustomModel = context.agent === "yourmodel";
-
-      if (triggerCustomModel) {
+        props.reloadMessage();
+      } else if (triggerPython) {
         context.setIsSendingMessage(true);
         setTimeout(() => {
           window.scroll({
             top: document.body.offsetHeight,
           });
         }, 500);
-        const api = context.yourmodelUrl;
-        const { aiResponse, model } = await customModelReply(content, api, context.messages.filter(m => !m.ishiddenfromai));
-        context.setYourmodelName(model);
+        // const pythonReply = await pythonRuntimeReply(content);
+        const pythonReply = await runPythonLocal(convertContentToPythonCode(content));
         await insertMessage({
           username: props.username,
           pid: props.postid,
-          content: aiResponse,
+          content: "#### *Execution Result*\n```plaintext\n" + pythonReply + "\n```",
           token: context.auth.token,
           triggerAI: false,
           authoremail: context.auth.loggedEmail,
           triggerUserModel: true,
-          sendernickname: model
+          sendernickname: "Python Runtime"
         });
         props.reloadMessage();
       }
+    } else {
+      context.showSnack(response);
+      return;
+    }
 
-      const triggerLLaMA70B = context.agent === "llama70b";
-      if (triggerLLaMA70B) {
-        context.setIsSendingMessage(true);
-        setTimeout(() => {
-          window.scroll({
-            top: document.body.offsetHeight,
-          });
-        }, 500);
-        const aiResponse = await llama70BReply(content, context.messages);
-        await insertMessage({
-          username: props.username,
-          pid: props.postid,
-          content: aiResponse,
-          token: context.auth.token,
-          triggerAI: false,
-          authoremail: context.auth.loggedEmail,
-          triggerUserModel: true,
-          sendernickname: "LLaMA-2 70B"
+    const triggerCustomModel = context.agent === "yourmodel";
+
+    if (triggerCustomModel) {
+      context.setIsSendingMessage(true);
+      setTimeout(() => {
+        window.scroll({
+          top: document.body.offsetHeight,
         });
-        props.reloadMessage();
-      }
+      }, 500);
+      const api = context.yourmodelUrl;
+      const { aiResponse, model } = await customModelReply(content, api, context.messages.filter(m => !m.ishiddenfromai));
+      context.setYourmodelName(model);
+      await insertMessage({
+        username: props.username,
+        pid: props.postid,
+        content: aiResponse,
+        token: context.auth.token,
+        triggerAI: false,
+        authoremail: context.auth.loggedEmail,
+        triggerUserModel: true,
+        sendernickname: model
+      });
+      props.reloadMessage();
+    }
+
+    const triggerLLaMA70B = context.agent === "llama70b";
+    if (triggerLLaMA70B) {
+      context.setIsSendingMessage(true);
+      setTimeout(() => {
+        window.scroll({
+          top: document.body.offsetHeight,
+        });
+      }, 500);
+      const aiResponse = await llama70BReply(content, context.messages);
+      await insertMessage({
+        username: props.username,
+        pid: props.postid,
+        content: aiResponse,
+        token: context.auth.token,
+        triggerAI: false,
+        authoremail: context.auth.loggedEmail,
+        triggerUserModel: true,
+        sendernickname: "LLaMA-2 70B"
+      });
+      props.reloadMessage();
     }
   };
   const handleInputOnKeyUp = (event: React.KeyboardEvent) => {
@@ -233,18 +233,20 @@ export const MessageInput: React.FC<{
       }
     }
   }
-  const sendBtn = <Tooltip title={context.isSendingMessage ? "Loading" :
-    context.isTypingMessage ? "Stop" : "Send"} arrow>
-    <>
-      <IconButton
-        onClick={context.isTypingMessage ? handleStop : handleSend}
-        style={{ borderRadius: 0, borderLeft: '0.1em solid lightgrey', padding: '0.5em' }}
-        disabled={context.isSendingMessage}
-      >
-        {context.isSendingMessage ? <CircularProgress color="inherit" size="24px" /> :
-          context.isTypingMessage ? <StopIcon /> : <SendIcon />}
-      </IconButton>
-    </>
+  const sendBtn = <Tooltip title={
+    context.isSendingMessage ? "Loading" :
+      context.isTypingMessage ? "Stop" :
+        inputText.length === 0 ? "Send an empty message to trigger response" : "Send"} arrow
+    placement="top"
+  >
+    <IconButton
+      onClick={context.isTypingMessage ? handleStop : handleSend}
+      style={{ borderRadius: 0, borderLeft: '0.1em solid lightgrey', padding: '0.5em' }}
+      disabled={context.isSendingMessage}
+    >
+      {context.isSendingMessage ? <CircularProgress color="inherit" size="24px" /> :
+        context.isTypingMessage ? <StopIcon /> : <SendIcon />}
+    </IconButton>
   </Tooltip>;
   useEffect(() => {
     const onScroll = () => {
