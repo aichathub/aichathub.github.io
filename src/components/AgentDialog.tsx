@@ -98,6 +98,7 @@ const AgentDialog: React.FC<{
           <MenuItem value={"none"}>None</MenuItem>
           <MenuItem value={"gpt3.5"}>ChatGPT (gpt-3.5-turbo)</MenuItem>
           <MenuItem value={"gpt4"}>ChatGPT (gpt-4)</MenuItem>
+          <MenuItem value={"gemini1.5"}>Gemini</MenuItem>
           <MenuItem value={"yourmodel"}>Your LLM</MenuItem>
           <MenuItem value={"python"}>Python (Runtime)</MenuItem>
         </Select>

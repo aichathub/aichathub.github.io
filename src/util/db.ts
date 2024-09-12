@@ -782,6 +782,27 @@ export const chatgptReply = async (
   return responseJson;
 };
 
+export const googleaiReply = async (
+  pid: string,
+  username: string,
+  token: string
+) => {
+  const response = await fetch(`${backendServer}/api/googleaireply`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    mode: "cors",
+    body: JSON.stringify({
+      pid: pid,
+      username: username,
+      token: token,
+    }),
+  });
+  const responseJson = await response.json();
+  return responseJson;
+};
+
 const formPrompt = (
   messages: MessageModel[],
   content: string,

@@ -1,8 +1,11 @@
+import 'katex/dist/katex.min.css';
 import React, { memo, useContext } from "react";
 import Collapsible from "react-collapsible";
 import ReactMarkdown from "react-markdown";
 import MathJax from "react-mathjax";
+import rehypeKatex from "rehype-katex";
 import remarkGfm from "remark-gfm";
+import remarkMath from "remark-math";
 import { MessageModel } from "../models/MessageModel";
 import { AppContext } from "../store/AppContext";
 import CodeBlock from "./CodeBlock";
@@ -19,7 +22,9 @@ const MarkdownComponent: React.FC<{
   const content = props.content.replace(/\n\n/gi, "&nbsp;\n\n").replace(/```(.*)&nbsp;/gi, "```$1");
   return <MathJax.Provider>
     <ReactMarkdown
-      remarkPlugins={[remarkGfm]}
+      remarkPlugins={[remarkGfm, remarkMath]}
+      // @ts-expect-error
+      rehypePlugins={[rehypeKatex]}
       children={content + ((props.message && props.content.length < props.message.content.length && context.isTypingMessage) ? "▌" : "")}
       linkTarget="_blank"
       components={{

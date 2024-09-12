@@ -8,7 +8,7 @@ import React, { useCallback, useContext, useEffect, useRef, useState } from "rea
 import { MessageModel } from "../models/MessageModel";
 import { AppContext } from "../store/AppContext";
 import { GUEST_EMAIL } from "../util/constants";
-import { chatgptReply, customModelReply, insertMessage, llama70BReply, uploadImage } from "../util/db";
+import { chatgptReply, customModelReply, googleaiReply, insertMessage, llama70BReply, uploadImage } from "../util/db";
 import { runPythonLocal } from "../util/python";
 import { convertContentToPythonCode } from "../util/util";
 import MessageInputSettings from "./MessageInputSettings";
@@ -56,10 +56,11 @@ export const MessageInput: React.FC<{
     if (context.isSendingMessage || context.isTypingMessage) return;
     const ref = inputRef.current!;
     let content = ref.value;
-    const triggerAI = context.agent === "gpt3.5" || context.agent === "gpt4";
+    const triggerOpenAI = context.agent === "gpt3.5" || context.agent === "gpt4";
+    const triggerGoogleAI = context.agent === "gemini1.5";
     const triggerPython = context.agent === "python";
     const isGuest = !context.loggedUser;
-    if (!isGuest && triggerAI && +context.dailyAIUsuage + 1 > +context.dailyAILimit) {
+    if (!isGuest && (triggerOpenAI || triggerGoogleAI) && +context.dailyAIUsuage + 1 > +context.dailyAILimit) {
       context.showSnack("Opps, Seems you have reached your daily @AI limit! Let's continue tomorrow!");
       return;
     }
@@ -72,7 +73,7 @@ export const MessageInput: React.FC<{
       // If the user is from mobile, hide the keyboard
       ref.blur();
     }
-    if (triggerAI || triggerPython) {
+    if (triggerOpenAI || triggerPython || triggerGoogleAI) {
       context.setIsSendingMessage(true);
       setTimeout(() => {
         window.scroll({
@@ -104,7 +105,7 @@ export const MessageInput: React.FC<{
         pid: props.postid,
         content: content,
         token: context.auth.token,
-        triggerAI: triggerAI,
+        triggerAI: triggerOpenAI || triggerGoogleAI,
         authoremail: !context.loggedUser ? GUEST_EMAIL : context.auth.loggedEmail,
         socketId: optionalSocketId,
         triggerPython: false
@@ -113,7 +114,7 @@ export const MessageInput: React.FC<{
     }
     if (isEmptyMsg || response.indexOf("ERROR") === -1) {
       props.reloadMessage();
-      if (triggerAI) {
+      if (triggerOpenAI) {
         const isGpt4 = context.agent === "gpt4";
         const result = await chatgptReply(props.postid, props.username, context.auth.token, isGpt4);
         if (result.message.indexOf("ERROR") === -1) {
@@ -144,6 +145,14 @@ export const MessageInput: React.FC<{
           triggerUserModel: true,
           sendernickname: "Python Runtime"
         });
+        props.reloadMessage();
+      } else if (triggerGoogleAI) {
+        const result = await googleaiReply(props.postid, props.username, context.auth.token);
+        if (result.message.indexOf("ERROR") === -1) {
+          context.addDailyAIUsuage();
+        } else {
+          context.showSnack(result.message);
+        }
         props.reloadMessage();
       }
     } else {
