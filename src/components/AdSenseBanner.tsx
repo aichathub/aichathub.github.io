@@ -12,7 +12,6 @@ interface AdSenseProps {
 
 function AdSenseBanner({ slot }: AdSenseProps) {
   useEffect(() => {
-    // eslint-disable-next-line prettier/prettier
     (window.adsbygoogle = window.adsbygoogle || []).push({})
   }, []);
 
