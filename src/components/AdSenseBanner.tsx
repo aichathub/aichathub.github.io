@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import React from "react";
 
 declare global {
   interface Window {
@@ -10,10 +10,20 @@ interface AdSenseProps {
   slot: string
 }
 
-function AdSenseBanner({ slot }: AdSenseProps) {
-  useEffect(() => {
-    (window.adsbygoogle = window.adsbygoogle || []).push({})
+const useEffectOnce = (callback: () => void) => {
+  const hasRunOnce = React.useRef(false);
+  React.useEffect(() => {
+    if (!hasRunOnce.current) {
+      callback();
+      hasRunOnce.current = true;
+    }
   }, []);
+};
+
+function AdSenseBanner({ slot }: AdSenseProps) {
+  useEffectOnce(() => {
+    (window.adsbygoogle = window.adsbygoogle || []).push({})
+  });
 
   return (
     <div style={{ border: '1px solid white' }}>
@@ -23,8 +33,7 @@ function AdSenseBanner({ slot }: AdSenseProps) {
         style={{ display: 'block' }}
         data-ad-client="ca-pub-8900122686773204"
         data-ad-slot={slot}
-        data-ad-format="auto"
-        data-full-width-responsive="true"
+        data-ad-format="autorelaxed"
       ></ins>
     </div>
   )

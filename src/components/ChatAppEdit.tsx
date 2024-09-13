@@ -181,7 +181,7 @@ const ChatAppEdit = () => {
               typeEffect={index === context.messages.length - 1 && x.sender === 'ai'}
               isPythonRuntime={index + 1 < context.messages.length && context.messages[index + 1].sendernickname?.toUpperCase() === "PYTHON RUNTIME"}
             />
-            {index % 5 == 0 && <AdSenseBanner slot={"6316905685"} />}
+            {index % 5 == 0 && <AdSenseBanner slot={"8937521554"} />}
           </>
         ))}
         {context.isSendingMessage && <Message message={DummyMessageModel} typeEffect={false} isLoading={true} />}
