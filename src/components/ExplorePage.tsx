@@ -5,7 +5,6 @@ import { PostModel } from "../models/PostModel";
 import { AppContext } from "../store/AppContext";
 import { getRecommendations } from "../util/db";
 import AdSenseBanner from "./AdSenseBanner";
-import LandingPage from "./LandingPage";
 import SearchItem from "./SearchItem";
 
 const ExplorePage = () => {
@@ -68,9 +67,9 @@ const ExplorePage = () => {
     </>
   );
 
-  if (!context.loggedUser) {
-    return <LandingPage />;
-  }
+  // if (!context.loggedUser) {
+  //   return <LandingPage />;
+  // }
 
   return result;
 };
