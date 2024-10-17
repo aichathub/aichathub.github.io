@@ -29,15 +29,15 @@ const Copyright = () => {
 
 const cards = [1, 2, 3];
 const images = [
-  require("../resources/Python.png"),
-  require("../resources/Edit.png"),
-  require("../resources/CustomLLM.png"),
+  require("../resources/Clipboard.png"),
+  require("../resources/EditNote.png"),
+  require("../resources/CodeNote.png"),
 ];
-const headings = ["Python", "Chat Control", "Custom LLM"];
+const headings = ["Clipboard", "Edit Note", "Code"];
 const content = [
-  "Interact with our Python bot for quick code execution",
-  "Edit the chat to nudge the bot in the right direction",
-  "Interact with your custom model from your localhost"
+  "Create your own cross-platform clipboard manager",
+  "Easily edit your notes after sending",
+  "Write your notes in code",
 ];
 
 const theme = createTheme();
@@ -74,8 +74,8 @@ const LandPage = () => {
         >
           <Container maxWidth="sm">
             <Typography
-              component="h1"
-              variant="h2"
+              component="h2"
+              variant="h3"
               align="center"
               color="text.primary"
               gutterBottom
@@ -83,12 +83,12 @@ const LandPage = () => {
               NoteMessages
             </Typography>
             <Typography
-              variant="h5"
+              variant="h6"
               align="center"
               color="text.secondary"
               paragraph
             >
-              Easily search and share your notes
+              A note taking app with chat interface
             </Typography>
             <Typography
               variant="h6"
@@ -96,7 +96,7 @@ const LandPage = () => {
               color="text.secondary"
               paragraph
             >
-              Or just use it as a note taking app with chat interface
+              Easily create, edit, search and share your notes
             </Typography>
             <Stack
               sx={{ pt: 4 }}
