@@ -55,7 +55,7 @@ const LeftBarPostItem: React.FC<{ post: PostModel; removePost: (post: PostModel)
       if (context.curPost && context.curPost.username === context.loggedUser && context.curPost.pid === post.pid) {
         context.setDoesPostExist(false);
         navigate("/");
-        document.title = "AIChatHub";
+        document.title = "NoteMessages";
       }
     }
     context.showSnack("DELETE POST: " + result.message);

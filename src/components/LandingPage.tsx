@@ -19,7 +19,7 @@ const Copyright = () => {
     <Typography variant="body2" color="text.secondary" align="center">
       {"Copyright © "}
       <Link color="inherit" href="/">
-        AIChatHub
+        NoteMessages
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}
@@ -33,16 +33,10 @@ const images = [
   require("../resources/Edit.png"),
   require("../resources/CustomLLM.png"),
 ];
-// const headings = ["AStar", "BFS", "DFS"];
-// const content = [
-//   "A* algorithm is a best-first search algorithm",
-//   "BFS is a breadth-first search algorithm",
-//   "DFS is a depth-first search algorithm",
-// ];
 const headings = ["Python", "Chat Control", "Custom LLM"];
 const content = [
   "Interact with our Python bot for quick code execution",
-  "Edit the chat to nudge the AI in the right direction",
+  "Edit the chat to nudge the bot in the right direction",
   "Interact with your custom model from your localhost"
 ];
 
@@ -86,7 +80,7 @@ const LandPage = () => {
               color="text.primary"
               gutterBottom
             >
-              AIChatHub
+              NoteMessages
             </Typography>
             <Typography
               variant="h5"
@@ -94,7 +88,7 @@ const LandPage = () => {
               color="text.secondary"
               paragraph
             >
-              Easily search and share your AI chats
+              Easily search and share your notes
             </Typography>
             <Typography
               variant="h6"
@@ -167,7 +161,7 @@ const LandPage = () => {
       {/* Footer */}
       <Box sx={{ bgcolor: "background.paper", p: 6 }} component="footer">
         <Typography variant="h6" align="center" gutterBottom>
-          AIChatHub
+          NoteMessages
         </Typography>
         <Typography
           variant="subtitle1"

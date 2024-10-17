@@ -1,6 +1,6 @@
-### What is this project
+### What is NoteMessages
 
-React + Typescript web app for chatbot using gpt-4, gpt-3.5, your own custom language model such as mistral and llama.
+React + Typescript web app for taking notes by messaging
 
 ### How to run this locally
 
@@ -15,8 +15,3 @@ docker build -t my-frontend .
 
 ```bash
 docker run -p 3000:3000 my-frontend
-```
-
-### Live Demo
-
-https://aichathub.app
