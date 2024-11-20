@@ -12,7 +12,6 @@ import { DummyMessageModel } from "../models/DummyMessageModel";
 import { MessageModel } from "../models/MessageModel";
 import { AppContext } from "../store/AppContext";
 import { getMessagesByUsernameAndPid, getPostByUsernameAndPid } from "../util/db";
-import AdSenseBanner from "./AdSenseBanner";
 import EmptyCard from "./EmptyCard";
 import Message from "./Message";
 import PostLink from "./PostLink";
@@ -181,7 +180,6 @@ const ChatAppEdit = () => {
               typeEffect={index === context.messages.length - 1 && x.sender === 'ai'}
               isPythonRuntime={index + 1 < context.messages.length && context.messages[index + 1].sendernickname?.toUpperCase() === "PYTHON RUNTIME"}
             />
-            {index % 5 == 0 && <AdSenseBanner slot={"8937521554"} />}
           </>
         ))}
         {context.isSendingMessage && <Message message={DummyMessageModel} typeEffect={false} isLoading={true} />}

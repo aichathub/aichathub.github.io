@@ -4,7 +4,6 @@ import { DummyPostModel } from "../models/DummyPostModel";
 import { PostModel } from "../models/PostModel";
 import { AppContext } from "../store/AppContext";
 import { getRecommendations } from "../util/db";
-import AdSenseBanner from "./AdSenseBanner";
 import SearchItem from "./SearchItem";
 
 const ExplorePage = () => {
@@ -36,7 +35,6 @@ const ExplorePage = () => {
         posts.map((post, index) =>
           <>
             <SearchItem key={index} post={post} typeEffect={true} />
-            {index % 5 == 0 && <AdSenseBanner slot={"8937521554"} />}
           </>
         )
       }
