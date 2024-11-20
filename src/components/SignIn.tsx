@@ -30,7 +30,7 @@ function Copyright(props: any) {
     >
       {"Copyright © "}
       <Link color="inherit" href="/">
-        NoteMessages
+        AIChatHub
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}

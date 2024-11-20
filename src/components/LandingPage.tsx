@@ -19,7 +19,7 @@ const Copyright = () => {
     <Typography variant="body2" color="text.secondary" align="center">
       {"Copyright © "}
       <Link color="inherit" href="/">
-        NoteMessages
+        AIChatHub
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}
@@ -29,15 +29,21 @@ const Copyright = () => {
 
 const cards = [1, 2, 3];
 const images = [
-  require("../resources/Clipboard.png"),
-  require("../resources/EditNote.png"),
-  require("../resources/CodeNote.png"),
+  require("../resources/Python.png"),
+  require("../resources/Edit.png"),
+  require("../resources/CustomLLM.png"),
 ];
-const headings = ["Clipboard", "Edit Note", "Code"];
+// const headings = ["AStar", "BFS", "DFS"];
+// const content = [
+//   "A* algorithm is a best-first search algorithm",
+//   "BFS is a breadth-first search algorithm",
+//   "DFS is a depth-first search algorithm",
+// ];
+const headings = ["Python", "Chat Control", "Custom LLM"];
 const content = [
-  "Create your own cross-platform clipboard manager",
-  "Easily edit your notes after sending",
-  "Write your notes in code",
+  "Interact with our Python bot for quick code execution",
+  "Edit the chat to nudge the AI in the right direction",
+  "Interact with your custom model from your localhost"
 ];
 
 const theme = createTheme();
@@ -74,13 +80,21 @@ const LandPage = () => {
         >
           <Container maxWidth="sm">
             <Typography
-              component="h2"
-              variant="h3"
+              component="h1"
+              variant="h2"
               align="center"
               color="text.primary"
               gutterBottom
             >
-              NoteMessages
+              AIChatHub
+            </Typography>
+            <Typography
+              variant="h5"
+              align="center"
+              color="text.secondary"
+              paragraph
+            >
+              Easily search and share your AI chats
             </Typography>
             <Typography
               variant="h6"
@@ -88,15 +102,7 @@ const LandPage = () => {
               color="text.secondary"
               paragraph
             >
-              A note taking app with chat interface
-            </Typography>
-            <Typography
-              variant="h6"
-              align="center"
-              color="text.secondary"
-              paragraph
-            >
-              Easily create, edit, search and share your notes
+              Or just use it as a note taking app with chat interface
             </Typography>
             <Stack
               sx={{ pt: 4 }}
@@ -161,7 +167,7 @@ const LandPage = () => {
       {/* Footer */}
       <Box sx={{ bgcolor: "background.paper", p: 6 }} component="footer">
         <Typography variant="h6" align="center" gutterBottom>
-          NoteMessages
+          AIChatHub
         </Typography>
         <Typography
           variant="subtitle1"

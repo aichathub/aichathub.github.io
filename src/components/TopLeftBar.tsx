@@ -329,7 +329,7 @@ const TopLeftBar: React.FC<{
               onClick={() => {
                 context.setCurPost(DummyPostModel);
                 navigate("/");
-                document.title = "NoteMessages";
+                document.title = "AIChatHub";
               }}
             >
               <Avatar src={logo} className={(context.isLoadingMessages || (context.loggedUser && context.isLeftBarPostLoading)) ? classes.rotate : classes['rotate-slowstop']} />
