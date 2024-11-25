@@ -1,10 +1,4 @@
-import { Box, Grid } from "@mui/material";
-import { useContext, useEffect, useState } from "react";
-import { DummyPostModel } from "../models/DummyPostModel";
-import { PostModel } from "../models/PostModel";
-import { AppContext } from "../store/AppContext";
-import { getRecommendations } from "../util/db";
-import SearchItem from "./SearchItem";
+import LandingPage from "./LandingPage";
 
 const ExplorePage = () => {
   return <LandingPage />;
