@@ -108,7 +108,7 @@ const TopBarAvatar = () => {
       onClose={handleClose}
     >
       <MenuItem>
-          <Tooltip title="The limit only aplies to GPT-3.5 and GPT-4 models">
+          <Tooltip title="The limit only aplies to GPT-o1 and GPT-4 models">
           <>
             <ListItemIcon>
               {context.dailyAILimit === context.dailyAIUsuage ? <ErrorIcon /> : <DataSaverOffIcon />}

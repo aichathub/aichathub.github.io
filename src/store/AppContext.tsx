@@ -38,7 +38,7 @@ export type AutocompleteItem = {
   username?: string;
 }
 
-export type Agent = "gpt3.5" | "gpt4" | "python" | "yourmodel" | "none" | "llama70b" | "gemini1.5";
+export type Agent = "o1-mini" | "gpt4" | "python" | "yourmodel" | "none" | "llama70b" | "gemini1.5";
 
 type AppContextObj = {
   pagePostId: string;
@@ -282,7 +282,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
   const [isTypingMessage, setIsTypingMessage] = useState(false);
   const [shouldStopTypingMessage, setShouldStopTypingMessage] = useState(false);
   const [isAutoScrolling, setIsAutoScrolling] = useState(false);
-  const [agent, setAgent] = useState<Agent>((localStorage.getItem("agent") || "gpt3.5") as Agent);
+  const [agent, setAgent] = useState<Agent>((localStorage.getItem("agent") || "gpt4") as Agent);
   const [yourmodelUrl, setYourmodelUrl] = useState(localStorage.getItem("yourmodelUrl") || "");
   const [yourmodelName, setYourmodelName] = useState(localStorage.getItem("yourmodelName") || "");
   const [isYourmodelConnected, setIsYourmodelConnected] = useState(false);

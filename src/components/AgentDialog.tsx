@@ -84,7 +84,7 @@ const AgentDialog: React.FC<{
         </InputLabel>
         <Select
           style={{ paddingTop: "10px", paddingBottom: "10px" }}
-          defaultValue={"gpt3.5"}
+          defaultValue={"gpt4"}
           value={agent}
           onChange={(event) => {
             const changedAgent = event.target.value as Agent;
@@ -96,9 +96,9 @@ const AgentDialog: React.FC<{
           }}
         >
           <MenuItem value={"none"}>None</MenuItem>
-          <MenuItem value={"gpt3.5"}>ChatGPT (gpt-3.5-turbo)</MenuItem>
-          <MenuItem value={"gpt4"}>ChatGPT (gpt-4)</MenuItem>
-          <MenuItem value={"gemini1.5"}>Gemini</MenuItem>
+          <MenuItem value={"o1-mini"}>OpenAI (o1-mini) (Slow but more accurate)</MenuItem>
+          <MenuItem value={"gpt4"}>OpenAI (gpt-4o)</MenuItem>
+          <MenuItem value={"gemini1.5"}>Google Gemini</MenuItem>
           <MenuItem value={"yourmodel"}>Your LLM</MenuItem>
           <MenuItem value={"python"}>Python (Runtime)</MenuItem>
         </Select>

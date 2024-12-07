@@ -56,7 +56,7 @@ export const MessageInput: React.FC<{
     if (context.isSendingMessage || context.isTypingMessage) return;
     const ref = inputRef.current!;
     let content = ref.value;
-    const triggerOpenAI = context.agent === "gpt3.5" || context.agent === "gpt4";
+    const triggerOpenAI = context.agent === "o1-mini" || context.agent === "gpt4";
     const triggerGoogleAI = context.agent === "gemini1.5";
     const triggerPython = context.agent === "python";
     const isGuest = !context.loggedUser;

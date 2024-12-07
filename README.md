@@ -1,6 +1,6 @@
 ### What is this project
 
-React + Typescript web app for chatbot using gpt-4, gpt-3.5, your own custom language model such as mistral and llama.
+React + Typescript web app for chatbot using gpt-4, gpt-o1, your own custom language model such as mistral and llama.
 
 ### How to run this locally
 
