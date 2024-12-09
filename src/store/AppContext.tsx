@@ -267,7 +267,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
   const [lastPostsRefresh, setLastPostsRefresh] = useState(new Date());
   const [doesPostExist, setDoesPostExist] = useState(false);
   const [tags, setTags] = useState<TagModel[]>([]);
-  const [topLeftBarOpen, setTopLeftBarOpen] = useState(false);
+  const [topLeftBarOpen, setTopLeftBarOpen] = useState(localStorage.getItem("topLeftBarOpen") === "true");
   const [darkMode, setDarkMode] = useState(localStorage.getItem("darkMode") === "true");
   const [curPost, setCurPost] = useState<PostModel>();
   const [messages, setMessages] = useState<MessageModel[]>([]);
@@ -579,6 +579,9 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
       }
       event.preventDefault();
     }
+  }, [topLeftBarOpen]);
+  useEffect(() => {
+    localStorage.setItem("topLeftBarOpen", topLeftBarOpen ? "true" : "false");
   }, [topLeftBarOpen]);
   useEffect(() => {
     window.addEventListener("keydown", keyDownHandler);
