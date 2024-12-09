@@ -195,7 +195,7 @@ const TopLeftBar: React.FC<{
   let menuBtnHint = "Sidebar";
   const platform = (navigator?.platform || 'unknown').toLowerCase();
   // If the client is windows, hint is "CTRL b"
-  if (platform.indexOf("win") > -1) {
+  if (platform.indexOf("win") > -1 || platform.indexOf("linux") > -1) {
     menuBtnHint += " (CTRL+B)";
     hint = "CTRL+SHIFT+F";
   }
