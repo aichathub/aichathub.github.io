@@ -77,10 +77,11 @@ const LeftBarPostItem: React.FC<{ post: PostModel; removePost: (post: PostModel)
   }
   const myRef = useRef<HTMLLIElement | null>(null);
   useEffect(() => {
+    const isCurPost = context.curPost && context.curPost.username === context.loggedUser && context.curPost.pid === post.pid;
     if (isCurPost && myRef.current) {
-      myRef.current.scrollIntoView();
+      myRef.current.scrollIntoView({ block: "center" });
     }
-  }, []);
+  }, [context.curPost]);
   return (
     <>
       {showEditPostDialog && <EditPostDialog handleClose={handleCloseEditPostDialog} post={post} />}
