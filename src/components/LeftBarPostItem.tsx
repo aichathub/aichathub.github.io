@@ -9,7 +9,7 @@ import { ListItemButton, ListItemIcon, Skeleton } from "@mui/material";
 import ListItem from "@mui/material/ListItem";
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { useContext, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { PostModel } from "../models/PostModel";
 import { AppContext } from "../store/AppContext";
@@ -68,16 +68,23 @@ const LeftBarPostItem: React.FC<{ post: PostModel; removePost: (post: PostModel)
     handleCloseMenu();
   }
   let style = {};
-  if (context.curPost && context.curPost.username === context.loggedUser && context.curPost.pid === post.pid) {
+  const isCurPost = context.curPost && context.curPost.username === context.loggedUser && context.curPost.pid === post.pid;
+  if (isCurPost) {
     style = {
       backgroundColor: context.darkMode ? "rgba(39,30,20,0.7)" : "rgba(254,251,195,0.7)",
       borderLeft: isMobile ? "2px solid #d30" : "4px solid red"
     }
   }
+  const myRef = useRef<HTMLLIElement | null>(null);
+  useEffect(() => {
+    if (isCurPost && myRef.current) {
+      myRef.current.scrollIntoView();
+    }
+  }, []);
   return (
     <>
       {showEditPostDialog && <EditPostDialog handleClose={handleCloseEditPostDialog} post={post} />}
-      <ListItem key={post.pid} disablePadding style={style}>
+      <ListItem key={post.pid} disablePadding style={style} ref={myRef}>
         <ListItemButton>
           {
             isLoading ? <Skeleton variant="circular" width={"30px"} height={"30px"} /> :
