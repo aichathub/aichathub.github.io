@@ -206,7 +206,7 @@ const ChatAppEdit = () => {
         </Box>
         <Box sx={{ display: "flex", marginLeft: "40px", marginTop: "2px" }}>
           {icon}
-          <Box sx={{ marginTop: "-7px", marginLeft: "5px", maxWidth: "calc(100% - 150px)" }}>
+          <Box sx={{ marginTop: "-7px", marginLeft: "5px", maxWidth: "calc(100% - 150px)", wordWrap: "break-word" }}>
             <Typography variant="h6" component="h6" gutterBottom>
               {(context.curPost && context.curPost.title) ? context.curPost.title : <Skeleton width={90} />}
             </Typography>
