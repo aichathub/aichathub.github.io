@@ -63,6 +63,8 @@ const NewPostDialog: React.FC<{
 
   const [selectedTags, setSelectedTags] = useState<TagModel[]>(context.tags.length ? [context.tags[0]] : []);
 
+  const [selectedUsernames, setSelectedUsernames] = useState<TagModel[]>(context.usernames.length ? [context.usernames[0]] : []);
+
   const randomTitle = uniqueNamesGenerator({
     dictionaries: [adjectives, Math.random() > .5 ? animals : colors],
     separator: ' ',
@@ -86,7 +88,8 @@ const NewPostDialog: React.FC<{
       titleRef.current?.value!,
       context.auth.token,
       selectedTags,
-      isprivate
+      isprivate,
+      selectedUsernames
     );
     if (response.message === "SUCCESS") {
       handleHardRefresh();
@@ -134,7 +137,8 @@ const NewPostDialog: React.FC<{
             defaultValue={randomTitle}
           />
         </List>
-        <TagsInput value={selectedTags} setValue={setSelectedTags} />
+        <TagsInput value={selectedTags} setValue={setSelectedTags} helperText="Enter your tags" options={context.tags} />
+        <TagsInput value={selectedUsernames} setValue={setSelectedUsernames} helperText="Shared Users" options={context.usernames} />
         <Tooltip title="After checking your post cannot be searched or viewed except yourself.">
           <FormGroup className={classes.textField}>
             <FormControlLabel

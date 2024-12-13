@@ -24,13 +24,14 @@ export const verify = async (authObj: object) => {
 export const getPostByUsernameAndPid = async (
   username: string,
   pid: string,
-  token = ""
+  token = "",
+  curUserEmail = ""
 ) => {
   const response = await fetch(`${backendServer}/api/post/${username}/${pid}`, {
     method: "GET",
     mode: "cors",
     headers: {
-      Authorization: token,
+      Authorization: token + "|" + curUserEmail,
     },
   });
   const responseJson = await response.json();
@@ -40,7 +41,8 @@ export const getPostByUsernameAndPid = async (
 export const getMessagesByUsernameAndPid = async (
   username: string,
   pid: string,
-  token = ""
+  token = "",
+  curUserEmail = ""
 ) => {
   const response = await fetch(
     `${backendServer}/api/messages/${username}/${pid}`,
@@ -48,7 +50,7 @@ export const getMessagesByUsernameAndPid = async (
       method: "GET",
       mode: "cors",
       headers: {
-        Authorization: token,
+        Authorization: token + "|" + curUserEmail,
       },
     }
   );
@@ -181,7 +183,8 @@ export const insertPostByUsernameAndTitle = async (
   title: string,
   token: string,
   tags: TagModel[],
-  isprivate: boolean
+  isprivate: boolean,
+  usernames: TagModel[]
 ) => {
   // Clear the cache
   await set(`posts-${username}`, null);
@@ -201,6 +204,7 @@ export const insertPostByUsernameAndTitle = async (
       token: token,
       tags: tags,
       isprivate: isprivate,
+      usernames: usernames
     }),
   });
   const responseJson = await response.json();
@@ -401,6 +405,23 @@ export const getTags = async () => {
     mode: "cors",
   });
   const responseJson = await response.json();
+  return responseJson;
+};
+
+export const getUsernames = async (useremail: string, token: string) => {
+  const response = await fetch(`${backendServer}/api/usernames`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    mode: "cors",
+    body: JSON.stringify({
+      useremail: useremail,
+      token: token,
+    }),
+  });
+  const responseJson = await response.json();
+  console.log(responseJson);
   return responseJson;
 };
 

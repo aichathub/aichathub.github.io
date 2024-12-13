@@ -31,7 +31,7 @@ const ChatAppEdit = () => {
     const noAuth = !(localStorage.getItem("auth"));
     const contextHasAuth = context.auth && context.auth.token && context.auth.token.trim() !== "";
     if (!username || !postid || (!noAuth && !contextHasAuth)) return;
-    getMessagesByUsernameAndPid(username, postid, context.auth.token).then(response => {
+    getMessagesByUsernameAndPid(username, postid, context.auth.token, context.auth.loggedEmail).then(response => {
       context.setIsLoadingMessages(false);
       if (response.message !== "SUCCESS") {
         context.setDoesPostExist(false);
@@ -95,20 +95,20 @@ const ChatAppEdit = () => {
     reloadMessage();
     const noAuth = !localStorage.getItem("auth");
     if (!username || !postid || (!noAuth && !context.auth)) return;
-    getPostByUsernameAndPid(username, postid, context.auth.token).then(response => {
+    getPostByUsernameAndPid(username, postid, context.auth.token, context.auth.loggedEmail).then(response => {
       if (response.message !== "SUCCESS") {
         return;
       }
       context.setCurPost(response.result);
       document.title = `${response.result.title} · ${username}/${postid}`;
     });
-  }, [username, postid, context.auth.token]);
+  }, [username, postid, context.auth.token, context.auth.loggedEmail]);
 
   useEffect(() => {
     reloadMessage();
     const noAuth = !localStorage.getItem("auth");
     if (!username || !postid || (!noAuth && !context.auth)) return;
-    getPostByUsernameAndPid(username, postid, context.auth.token).then(response => {
+    getPostByUsernameAndPid(username, postid, context.auth.token, context.auth.loggedEmail).then(response => {
       if (response.message !== "SUCCESS") {
         return;
       }
@@ -117,7 +117,7 @@ const ChatAppEdit = () => {
   }, [context.lastMessagesRefresh]);
 
   useEffect(() => {
-    getPostByUsernameAndPid(username ? username : "", postid ? postid : "", context.auth.token).then(response => {
+    getPostByUsernameAndPid(username ? username : "", postid ? postid : "", context.auth.token, context.auth.loggedEmail).then(response => {
       if (response.message !== "SUCCESS") {
         return;
       }
@@ -134,7 +134,7 @@ const ChatAppEdit = () => {
     reloadMessage();
     const noAuth = !localStorage.getItem("auth");
     if (!username || !postid || (!noAuth && !context.auth)) return;
-    getPostByUsernameAndPid(username, postid, context.auth.token).then(response => {
+    getPostByUsernameAndPid(username, postid, context.auth.token, context.auth.loggedEmail).then(response => {
       if (response.message !== "SUCCESS") {
         return;
       }

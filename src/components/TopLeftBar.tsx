@@ -252,6 +252,7 @@ const TopLeftBar: React.FC<{
       context.auth.token,
       [],
       context.loggedUser ? true : false,
+      []
     );
     if (response.message !== "SUCCESS") {
       context.showSnack("INSERT POST: " + response.message);

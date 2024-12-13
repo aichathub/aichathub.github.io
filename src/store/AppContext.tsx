@@ -21,7 +21,7 @@ import { PostModel } from "../models/PostModel";
 import { TagModel } from "../models/TagModel";
 import { getPostsFromCache } from "../util/cache";
 import { GUEST_POST_LIMIT, GUEST_USERNAME, backendServer } from "../util/constants";
-import { forkPost, getCustomModelName, getDailyAILimit, getTags, getTodayAIUsage, verify } from "../util/db";
+import { forkPost, getCustomModelName, getDailyAILimit, getTags, getTodayAIUsage, getUsernames, verify } from "../util/db";
 import { runPythonLocal } from '../util/python';
 import useDidMountEffect from "../util/useDidMountEffect";
 import { dateDiffInDays } from '../util/util';
@@ -78,7 +78,9 @@ type AppContextObj = {
   showQrReader: boolean;
   justForked: boolean;
   openNewPostForm: boolean;
+  usernames: TagModel[];
 
+  setUsernames: (usernames: TagModel[]) => void;
   setSearchBoxAutoComplete: (searchBoxAutoComplete: AutocompleteItem[]) => void;
   setOpenNewPostForm: (openNewPostForm: boolean) => void;
   setJustForked: (justForked: boolean) => void;
@@ -173,7 +175,9 @@ export const AppContext = createContext<AppContextObj>({
   showQrReader: false,
   justForked: false,
   openNewPostForm: false,
+  usernames: [],
 
+  setUsernames: () => { },
   setSearchBoxAutoComplete: () => { },
   setOpenNewPostForm: () => { },
   setJustForked: () => { },
@@ -267,6 +271,7 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
   const [lastPostsRefresh, setLastPostsRefresh] = useState(new Date());
   const [doesPostExist, setDoesPostExist] = useState(false);
   const [tags, setTags] = useState<TagModel[]>([]);
+  const [usernames, setUsernames] = useState<TagModel[]>([]);
   const [topLeftBarOpen, setTopLeftBarOpen] = useState(localStorage.getItem("topLeftBarOpen") === "true");
   const [darkMode, setDarkMode] = useState(localStorage.getItem("darkMode") === "true");
   const [curPost, setCurPost] = useState<PostModel>();
@@ -517,7 +522,9 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
     showQrReader: showQrReader,
     justForked: justForked,
     openNewPostForm: openNewPostForm,
+    usernames: usernames,
 
+    setUsernames: setUsernames,
     setSearchBoxAutoComplete: setSearchBoxAutoComplete,
     setOpenNewPostForm: setOpenNewPostForm,
     setJustForked: setJustForked,
@@ -632,7 +639,13 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
       }
     });
   }, []);
-
+  useEffect(() => {
+    getUsernames(auth.loggedEmail, auth.token).then(response => {
+      if (response.message === "SUCCESS") {
+        setUsernames(response.result);
+      }
+    });
+  }, [auth]);
   useEffect(() => {
     function checkDarkMode() {
       const darkMode = localStorage.getItem("darkMode");

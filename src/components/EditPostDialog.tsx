@@ -49,6 +49,8 @@ const EditPostDialog: React.FC<{
 
   const [selectedTags, setSelectedTags] = useState<TagModel[]>(props.post.tags);
 
+  const [selectedUsernames, setSelectedUsernames] = useState<TagModel[]>(props.post.usernames);
+
   const [isprivate, setIsprivate] = useState<boolean>(props.post.isprivate ? props.post.isprivate! : false);
 
   const classes = useStyles();
@@ -69,7 +71,7 @@ const EditPostDialog: React.FC<{
 
   const handleSave = async () => {
     handleClose();
-    const result = await updatePost({ ...props.post, title: titleRef.current?.value!, tags: selectedTags, isprivate: isprivate }, context.auth.token);
+    const result = await updatePost({ ...props.post, title: titleRef.current?.value!, tags: selectedTags, isprivate: isprivate, usernames: selectedUsernames }, context.auth.token);
     context.showSnack("Post Edited: " + result.message);
     if (result.message === "SUCCESS") {
       handleHardRefresh();
@@ -115,7 +117,8 @@ const EditPostDialog: React.FC<{
             autoFocus
           />
         </List>
-        <TagsInput value={selectedTags} setValue={setSelectedTags} />
+        <TagsInput value={selectedTags} setValue={setSelectedTags} helperText="Enter your tags" options={context.tags} />
+        <TagsInput value={selectedUsernames} setValue={setSelectedUsernames} helperText="Shared Users" options={context.usernames} />
         <Tooltip title={isForkedPost ? "Forked post must be private at the moment" : "After checking your post cannot be searched or viewed except yourself."}>
           <FormGroup className={classes.textField}>
             <FormControlLabel

@@ -3,7 +3,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import Chip from '@mui/material/Chip';
 import TextField from '@mui/material/TextField';
 import * as React from 'react';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { TagModel } from '../models/TagModel';
 import { AppContext } from '../store/AppContext';
 
@@ -18,24 +18,38 @@ const useStyles = makeStyles(theme => ({
 
 const TagsInput: React.FC<{
   value: TagModel[];
+  options: TagModel[];
   setValue: (value: TagModel[]) => void;
+  helperText: string;
 }> = (props) => {
   const classes = useStyles();
-  const context = useContext(AppContext);
+  const [open, setOpen] = useState(false);
 
   return (
     <Autocomplete
       multiple
       id="fixed-tags-demo"
       value={props.value}
+      open={open}
       className={classes.textField}
-      onChange={(event, newValue) => {
-        props.setValue([...newValue]);
-        // setValue([
-        //   ...newValue.filter((option) => tags.indexOf(option) === -1),
-        // ]);
+      onKeyUp={(event) => {
+        const val = (event.target as HTMLInputElement).value;
+        if (!val || val.length === 0) {
+          if (open) setOpen(false);
+        } else {
+          if (!open) setOpen(true);
+        }
       }}
-      options={context.tags}
+      onChange={(event, newValue) => {
+        const val = (event.target as HTMLInputElement).value;
+        if (!val || val.length === 0) {
+          if (open) setOpen(false);
+        } else {
+          if (!open) setOpen(true);
+        }
+        props.setValue([...newValue]);
+      }}
+      options={props.options}
       getOptionLabel={(option) => option.tag}
       renderTags={(tagValue, getTagProps) =>
         tagValue.map((option, index) => (
@@ -46,7 +60,7 @@ const TagsInput: React.FC<{
       }
       style={{ width: 500 }}
       renderInput={(params) => (
-        <TextField {...params} helperText="Enter your tags" />
+        <TextField {...params} helperText={props.helperText} />
       )}
     />
   );

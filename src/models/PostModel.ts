@@ -13,4 +13,5 @@ export type PostModel = {
   forkedfrompid?: string;
   forkedcount?: number;
   starcount?: number;
+  usernames: TagModel[];
 }
