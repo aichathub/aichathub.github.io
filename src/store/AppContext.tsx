@@ -303,7 +303,12 @@ export const AppContextProvider: React.FC<{ children: ReactNode }> = (
 
   const isOnPostPage = useMatch("/:username/:postid");
   const isPostFresh = curPost && dateDiffInDays(new Date(curPost.createdate), new Date()) <= 1 && messages.length < GUEST_POST_LIMIT;
-  const hasRightToSendMsg = isOnPostPage && curPost && ((curPost.username === GUEST_USERNAME && !loggedUser && isPostFresh) || curPost.username === loggedUser);
+  const hasRightToSendMsg = isOnPostPage &&
+    curPost &&
+    ((curPost.username === GUEST_USERNAME && !loggedUser && isPostFresh)
+      || curPost.username === loggedUser
+      || curPost.usernames.map(x => x.tag).includes(loggedUser)
+    );
   const isPostStarred = (authoremail: string, postId: string) => {
     // return starredPosts.filter(x => x.authoremail === authoremail && x.pid === postId).length > 0;
     return false;

@@ -31,10 +31,10 @@ const MessageMoreButton: React.FC<{
   const context = useContext(AppContext);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const hasRightToEdit = context.curPost?.username === context.loggedUser;
+  const hasRightToEdit = context.curPost?.username === context.loggedUser || context.curPost?.usernames.map(x => x.tag).includes(context.loggedUser);
   const hasRightToToggleVisibility = hasRightToEdit;
-  const hasRightToDelete = context.auth && context.curPost && context.curPost.username === context.loggedUser;
-  const hasRightToCut = context.auth && context.curPost && context.curPost.username === context.loggedUser;
+  const hasRightToDelete = hasRightToEdit;
+  const hasRightToCut = hasRightToEdit;
   const utterance = new SpeechSynthesisUtterance(props.message.content.replaceAll("@ai", "").replaceAll("@AI", ""));
   const [isSpeaking, setIsSpeaking] = useState(false);
   const hasVoice = window.speechSynthesis.getVoices().length > 0;
