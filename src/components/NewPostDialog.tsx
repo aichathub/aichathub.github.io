@@ -63,7 +63,7 @@ const NewPostDialog: React.FC<{
 
   const [selectedTags, setSelectedTags] = useState<TagModel[]>(context.tags.length ? [context.tags[0]] : []);
 
-  const [selectedUsernames, setSelectedUsernames] = useState<TagModel[]>(context.usernames.length ? [context.usernames[0]] : []);
+  const [selectedUsernames, setSelectedUsernames] = useState<TagModel[]>([]);
 
   const randomTitle = uniqueNamesGenerator({
     dictionaries: [adjectives, Math.random() > .5 ? animals : colors],
