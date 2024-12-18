@@ -13,7 +13,7 @@ const QRButton: React.FC<{
   const handleQRClose = () => {
     setShowQRCodeDialog(false);
   }
-  return <><Tooltip title="Generate QRCode link of this post" arrow>
+  return <><Tooltip title="Share" arrow>
     <Box style={{
       display: "flex",
       alignItems: "center",
