@@ -174,7 +174,7 @@ const Message: React.FC<{
     {
       !props.isPythonRuntime && shouldUseMonaco &&
       <Editor
-        height={(Math.max(fullHeight * 0.2, Math.min(fullHeight * 0.7, numOfLines * 12))) + "px"}
+        height={(fullHeight * 0.7) + "px"}
         language="markdown"
         theme={context.darkMode ? "vs-dark" : "vs-light"}
         onMount={handleEditorDidMount}
@@ -204,7 +204,7 @@ const Message: React.FC<{
     {
       props.isPythonRuntime &&
       <Editor
-        height={(Math.max(fullHeight * 0.2, Math.min(fullHeight * 0.7, numOfLines * 12))) + "px"}
+        height={(fullHeight * 0.7) + "px"}
         language="python"
         theme={context.darkMode ? "vs-dark" : "vs-light"}
         onMount={handleEditorDidMount}
