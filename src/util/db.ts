@@ -1067,6 +1067,7 @@ export const uploadImage = async (item: DataTransferItem) => {
   const response = await fetch(`${backendServer}/upload`, {
     method: "POST",
     body: data,
+    mode: "cors",
   });
   const responseData = await response.json();
   return responseData;
