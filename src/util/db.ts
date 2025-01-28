@@ -1063,11 +1063,11 @@ export const uploadImage = async (item: DataTransferItem) => {
     throw new Error("No file selected");
   }
   const data = new FormData();
+  const proxyUrl = 'https://cors-anywhere.herokuapp.com';
   data.append("file", blob);
-  const response = await fetch(`${backendServer}/upload`, {
+  const response = await fetch(`${proxyUrl}/${backendServer}/upload`, {
     method: "POST",
     body: data,
-    mode: "cors",
   });
   const responseData = await response.json();
   return responseData;
