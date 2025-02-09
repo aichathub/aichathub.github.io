@@ -38,7 +38,7 @@ export type AutocompleteItem = {
   username?: string;
 }
 
-export type Agent = "o1-mini" | "gpt4" | "python" | "yourmodel" | "none" | "llama70b" | "gemini1.5";
+export type Agent = "o1-mini" | "gpt4" | "python" | "yourmodel" | "none" | "llama70b" | "gemini2.0";
 
 type AppContextObj = {
   pagePostId: string;

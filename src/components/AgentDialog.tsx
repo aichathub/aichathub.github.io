@@ -98,7 +98,7 @@ const AgentDialog: React.FC<{
           <MenuItem value={"none"}>None</MenuItem>
           <MenuItem value={"o1-mini"}>OpenAI (o1-mini) (Slow but more accurate)</MenuItem>
           <MenuItem value={"gpt4"}>OpenAI (gpt-4o)</MenuItem>
-          <MenuItem value={"gemini1.5"}>Google Gemini</MenuItem>
+          <MenuItem value={"gemini2.0"}>Google Gemini</MenuItem>
           <MenuItem value={"yourmodel"}>Your LLM</MenuItem>
           <MenuItem value={"python"}>Python (Runtime)</MenuItem>
         </Select>

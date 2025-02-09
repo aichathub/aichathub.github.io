@@ -57,7 +57,7 @@ export const MessageInput: React.FC<{
     const ref = inputRef.current!;
     let content = ref.value;
     const triggerOpenAI = context.agent === "o1-mini" || context.agent === "gpt4";
-    const triggerGoogleAI = context.agent === "gemini1.5";
+    const triggerGoogleAI = context.agent === "gemini2.0";
     const triggerPython = context.agent === "python";
     const isGuest = !context.loggedUser;
     if (!isGuest && (triggerOpenAI || triggerGoogleAI) && +context.dailyAIUsuage + 1 > +context.dailyAILimit) {
